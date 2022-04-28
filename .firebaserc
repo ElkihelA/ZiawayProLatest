@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "ziaapp-ac0eb"
+  },
+  "targets": {
+    "ziaapp-ac0eb": {
+      "hosting": {
+        "staging": [
+          "proziawaytest"
+        ]
+      }
+    }
+  }
+}

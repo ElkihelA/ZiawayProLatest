@@ -1,0 +1,7 @@
+.badgeSpinner {
+  height: 8px;
+  width: 8px;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}

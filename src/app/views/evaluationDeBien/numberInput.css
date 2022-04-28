@@ -1,0 +1,14 @@
+.inline-group {
+  /* max-width: 18rem; */
+  padding: 0.5rem;
+}
+
+.inline-group .form-control {
+  text-align: center;
+}
+
+.form-control[type="number"]::-webkit-inner-spin-button,
+.form-control[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

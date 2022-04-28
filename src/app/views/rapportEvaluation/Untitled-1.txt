@@ -1,0 +1,130 @@
+{
+"nbCourtier" : 4,
+"municipalite": "Lévis",
+"genreProprietes": "Maison de plain-pied",
+ "typeBatiment": "Isolé (détaché)",
+"categorie": "UNI",
+"prixZia": 357761.40625
+
+}
+
+{
+"codePostal":"J0K3K0"   
+}
+
+{
+"nbComparable": 3,
+"categorie": "UNI",
+"nbrPieces": 18,
+"stationnements": "2",
+"anneeConstruction": 1995,
+"nbrChambres": 3,
+"evalMunicTot": 1324400,
+"superficieTerrain": 29934,
+"salleBains": 2,
+"taxesMunicipale": 11545,
+"typeBatiment": "Isolé (détaché)",
+"genreProprietes": "Maison à étages",
+"municipalite": "Lac-Beauport"
+}
+
+{
+"nbComparable": 3,
+"categorie": "UNI",
+"nbrPieces": 11,
+"stationnements": "2",
+"anneeConstruction": 2006,
+"nbrChambres": 3,
+"evalMunicTot": 208900,
+"superficieTerrain": 8100,
+"salleBains": 2,
+"taxesMunicipale": 3290,
+"typeBatiment": "Isolé (détaché)",
+"genreProprietes": "Maison de plain-pied",
+"municipalite": "Saint-Amable"
+}
+}
+
+anneeConstruction: 1995
+bains: 2
+ceBienEstReponse: ""
+chambres: 3
+emprunter: ""
+envisageVendreBienReponse: ""
+estProprietaireReponse: "non"
+evaluationMunicipale: 1324400
+formCompleted: true
+garages: "1"
+genreOptions: (3) [{…}, {…}, {…}]
+genreProprietes: "Maison à étages"
+location: {name: "9 Chemin du Versant-Nord", administrative: "Québec", county: "La Jacques-Cartier", city: "Lac-Beauport", country: "Canada", …}
+nbrComparables: 3
+ouiCommenceVenteReponse: ""
+ouiContacterParProfessionnel: ""
+pieces: 18
+pool: ""
+projectionFinancement: ""
+proprietaire: "false"
+raison: ""
+raisonEstimation: "information"
+standing: "bon"
+stationnement: "2"
+statutRecherche: ""
+steps: (15) [{…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}, {…}]
+superficie: 29934
+taxesMunicipale: 11545
+type: "Unifamiliale"
+typeBatiment: "Isolé (détaché)"
+
+}
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr categorie: 'UNI'
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr nbrPieces: 11,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr stationnements: '2',
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr anneeConstruction: 2006,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr nbrChambres: 3,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr evalMunicTot: 208900,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr superficieTerrain: 8100,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr salleBains: 2,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr taxesMunicipale: 3290,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr typeBatiment: 'Isolé (détaché)',
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr genreProprietes: 'Maison de plain-pied',
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr municipalite: 'Saint-Amable',
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enr nbComparable: 3,
+Default
+2020-10-17 09:00:55.301 EDT
+EvaluerBien3800qxw44enrDonnées comparables {
+
+
+
+
+    https://maps.googleapis.com/maps/api/js?key=AIzaSyCd2d_otf6zxLsyj9OVyzJoZVAPiGgpfsY&v=3.exp&libraries=geometry,drawing,places"
+ <script
+      src=" https://maps.googleapis.com/maps/api/js?key=AIzaSyCd2d_otf6zxLsyj9OVyzJoZVAPiGgpfsY&v=3.exp&libraries=geometry,drawing,places"
+      defer
+    ></script>

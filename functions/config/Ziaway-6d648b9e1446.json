@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "ziaway-dev",
+  "private_key_id": "6d648b9e144637c556f119d2bc7a99c6197bd0dc",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDo2oHGDmKClUjw\nG7R64ZyHGPfQW5sCt/rWCYfl4rR9ObzWRtcl4TO+XPTzkvi8DdYAiPszTvpXXrEZ\nPVc9lb6/2sAZlOOMf1ETnAkLqPYl58UFEyMx4XB8MZX3I71Rzg2//icRSbOvYweg\n1Hhd8Za/nMEkXCELqn5ZEAxe85XJP1SRh1RxwhLiA7eBcItgq/vrMiezHMoxfPUR\n+kMb7CcnYsSuLugDizFQTBxMQHs/kTyU0MZjI22Kl7q0gMuO+Vst0slmLzZ78It5\nb2gFDDmJAZyAHOQePzFW0qDHXfHPTQgOYtLlBQ3h+7XkM9L3ZZQNxLTQeQvWVXNf\nAJbL3TGlAgMBAAECggEAAn+LewioKUDekmsxrPuoev0mOycHiV1uNd88Gvqu36XQ\nLViGn8x1eBpPWt9qhwsCccgyVfpfpHD8DZOZOvkiBCLJqzRdbtkoCg6Md2Gos6rd\nshxXsfAQYbrmSmi3XgZyP+tZLZU7vxMgphEoXCCjD/ciMKnyfea8VS06t0NHDYKS\nbzpVB4yFNkNSke1MF9h1AGx/4Dy7+3lTi2YMNU/Z0OlzsZL3y+TlqQ251Y2Y2ggO\n30YC7a+TWpR+RGpAn8b61nbX1HeDxMJ/J4q1iUId2vBZ45x9Zbl2UcYrXjwWSdMo\nrOgAdGIY0XgTfYs1htuNJ3kRcIco3v3CBGdQOwxd9wKBgQD7X599kkBBWGKPJlwv\nOSzFz7UjuPyD1Dgu2SUT0Y5snMVJxMjxeN70o2/Y40388EyALxPPyh/E+6ePAgoZ\nSG0PIb7TBamFaz3vQZPKAp1ixMQmkAP8tV6u08zxjxzYzep6nBkct+W6L8C9YEx1\nhI/dUHDv2gY/vGdKE0Pf01vTwwKBgQDtI5/v8dwYWnkPRIycUR1WhfZq+BayjBT2\nhFDnedz43Ffyp9nA4kTvowJQmk0E8EpMyGgQCw4mhx6Bx6bMf/U6B5X8NuQM1GQ6\nPnNhxSn1ivzYioelSp2DIMEEk2rNoT5bYwKBV6EDpAHK60oAcRBegIQ9jLvCux3h\nMH9dL2kWdwKBgFjc9QTvLsfq9uykIvKOw8UqKF74hkwUOchV+0WGT1MWGKh7aI30\nrNzO6jtCH8/LI0AtZFOQoKqCTDnB/s/xSpyO0WbIGaWQw9RQ2m4PfpPr+2umfcJY\nW6ByP4Ello0OPlYZ2MbOO+gV+Yz4/g6NTk5uoX4pFQxzDhChvtzhWxUBAoGBAMdX\nYhP+2QhzzT4jXpvsp9/a3skO4W2XyetsUOI0k6dy+k9V//tfeZmECuccvk+/eoXP\nFYMe9/c1MFTiMvnHOqpcRB1vOwb554L6il2OsvXgrymMUfiFn6DiAL9K+MYAnH2P\n3kRCGG0KCiO85Ek4wgzetctTqWZJixWIghggSZODAoGBAIK48IF7AJ+eAWcrvre2\n3IiZ5A81vqkJSGaq6Gx/g1alep9pkYiQdV0KQZZQ8MstyvzBAyL3Zxjnn3O4v00j\nec4spBAEfeSyKyQtfPS1DQo/Mmhltedo1C97mj7h9vfCJBzJs96Nd7sCzugpnfAG\neVkGVoN58twRE8fJU/95WR7G\n-----END PRIVATE KEY-----\n",
+  "client_email": "predictor@ziaway-dev.iam.gserviceaccount.com",
+  "client_id": "104583848678110773936",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/predictor%40ziaway-dev.iam.gserviceaccount.com"
+}
