@@ -14,6 +14,7 @@ import MyNotes from "./MyNotes";
 import Zoom from "./Zoom";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 const NewLeadCard = ({ data, onClick, prospect }) => {
   const { t } = useTranslation();
@@ -101,7 +102,9 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
     call: "tbd",
   };
 
-  const handleOnChange = (id) => {
+  console.log("profile", profile);
+
+  const handleOnChange = (id, leadEmail) => {
     const today = new Date();
     var date =
       today.getFullYear() +
@@ -120,6 +123,32 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
       projectProgress: "New Prospect",
     };
 
+    const dateAccepted = new Date();
+    const [month, day, year] = [
+      ("0" + (dateAccepted.getMonth() + 1)).slice(-2),
+      ("0" + dateAccepted.getDate()).slice(-2),
+      dateAccepted.getFullYear(),
+    ];
+    const [hour, minutes, seconds] = [
+      ("0" + dateAccepted.getHours()).slice(-2),
+      ("0" + dateAccepted.getMinutes()).slice(-2),
+      ("0" + dateAccepted.getSeconds()).slice(-2),
+    ];
+
+    const json_data = {
+      info: {
+        data: [
+          {
+            Name: profile?.licenseId,
+            Email_Lead: leadEmail,
+            Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
+            Statut_Event: "Accepted",
+          },
+        ],
+      },
+      vmodule: "Brokers_Leads",
+    };
+
     firebase
       .firestore()
       .collection("RapportsEvaluations")
@@ -127,6 +156,16 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
       .update({ broker: [values] })
       .then((res) => {
         console.log(res);
+        axios
+          .post(
+            "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+            json_data,
+            {
+              crossdomain: true,
+            }
+          )
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
         HandleTabs(4);
       })
       .catch((err) => console.log(err));
@@ -254,7 +293,9 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                               <button
                                 type="button"
                                 className="btn btn-sm btn-primary text-uppercase rounded-lg w-100 font-weight-bold"
-                                onClick={() => handleOnChange(data?.id)}
+                                onClick={() =>
+                                  handleOnChange(data?.id, data?.userEmail)
+                                }
                               >
                                 {t("Leads.25")}
                               </button>
