@@ -1,6 +1,6 @@
 const functions = require("firebase-functions");
-// const stripe = require("stripe")("sk_live_05C3BY8ReOADl7ZKnydcOIS9004EcZIhsO");
-const stripe = require("stripe")("sk_test_qlNqURx6OLyTXPv46h9p7aTD00O0vK2yqh");
+
+
 // const { PubSub } = require("@google-cloud/pubsub");
 var request = require("request");
 var cheerio = require("cheerio");
@@ -9,12 +9,9 @@ const automl = require("@google-cloud/automl");
 const service_account = require("google-oauth2");
 const configZiaway = require("./config/Ziaway-6d648b9e1446.json");
 const nodemailer = require("nodemailer");
-<<<<<<< HEAD
 const twilio = require("twilio");
 const AccessToken = twilio.jwt.AccessToken;
 const { VideoGrant } = AccessToken;
-=======
->>>>>>> 60b93027eddc3e17168f35c2cdbd24c16298c491
 // require("firebase/auth");
 const cors = require("cors")({ origin: true });
 
@@ -533,7 +530,6 @@ exports.sendMail = functions.https.onRequest((req, res) => {
   });
 });
 
-<<<<<<< HEAD
 const generateToken = () => {
   return new AccessToken(
     "AC1286b4b8c0405ef81b5e8abf6c173607",
@@ -569,8 +565,6 @@ exports.GetToken = functions.https.onRequest((req, res) => {
   });
 });
 
-=======
->>>>>>> 60b93027eddc3e17168f35c2cdbd24c16298c491
 exports.GetAllBrokers = functions.https.onRequest((req, res) => {
   cors(req, res, () => {
     return axios

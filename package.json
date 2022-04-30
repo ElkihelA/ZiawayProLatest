@@ -104,6 +104,7 @@
     "redux": "^4.0.4",
     "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
+    "sass": "^1.51.0",
     "shortid": "^2.2.15",
     "styled-components": "^4.0.0",
     "sweetalert2": "^9.5.4",
@@ -135,7 +136,6 @@
     ]
   },
   "devDependencies": {
-    "axios-mock-adapter": "^1.17.0",
-    "node-sass": "^4.14.1"
+    "axios-mock-adapter": "^1.17.0"
   }
 }

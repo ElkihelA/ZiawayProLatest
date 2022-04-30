@@ -51,7 +51,8 @@ const IncomingVideoCall = () => {
     });
   }, []);
 
-  useEffect(async () => {
+  const attendCall = async () => {
+    console.log("i am running", meetingId);
     setConnecting(true);
     const data = await fetch(
       "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/GetToken",
@@ -79,7 +80,13 @@ const IncomingVideoCall = () => {
         console.error(err);
         setConnecting(false);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    if (meetingId) {
+      attendCall();
+    }
+  }, [meetingId]);
 
   useEffect(() => {
     if (room) {
@@ -102,13 +109,13 @@ const IncomingVideoCall = () => {
 
   useEffect(() => {
     if (Meetings) {
-      setMeetingId(Meetings[0]?.id);
+      setMeetingId(Meetings[0]);
     }
   }, [Meetings]);
 
   console.log("Meeting", Meetings, meetingId);
 
-  if (connecting === true) {
+  if (connecting === true || meetingId === null) {
     return <>loading...</>;
   }
 
