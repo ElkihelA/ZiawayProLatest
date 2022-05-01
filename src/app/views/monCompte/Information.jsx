@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import firebase from "../../services/firebase/firebase";
 import swal from "sweetalert2";
 import PhoneInput from "react-phone-number-input/input";
+import axios from "axios";
 
 import { useSelector } from "react-redux";
 
@@ -14,7 +15,42 @@ const Information = () => {
   const profile = useSelector((state) => state.firebase.profile);
 
   const updateDetails = (data) => {
-    console.log(data);
+    const json_data = {
+      info: {
+        data: [
+          {
+            Licence_Number: profile?.licenseId,
+
+            Last_Name: data?.officialName,
+
+            Mail_message: profile?.messages?.emailText,
+
+            SMS_Message: profile?.messages?.smsText,
+
+            Broker_Photo: profile?.image,
+
+            Agency_Logo: profile?.logo,
+
+            Cellulaire: profile?.phoneNumber,
+
+            Facebook: data?.facebook,
+
+            Linkedin: data?.linkedIn,
+
+            Twitter: data?.twitter,
+
+            Website: data?.website,
+
+            Instagram: data?.insta,
+          },
+        ],
+
+        duplicate_check_fields: ["Licence_Number"],
+      },
+
+      vmodule: "Contacts/upsert",
+    };
+
     firebase
       .firestore()
       .collection("users")
@@ -22,6 +58,16 @@ const Information = () => {
       .update({ officialInformation: data })
       .then((res) => {
         console.log(res);
+        axios
+          .post(
+            "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+            json_data,
+            {
+              crossdomain: true,
+            }
+          )
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
         swal.fire(
           "Profil mis à jour !!",
           "Votre profil a été mis à jour avec succès  ",

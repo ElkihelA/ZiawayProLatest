@@ -6,12 +6,50 @@ import { classList } from "@utils";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import swal from "sweetalert2";
+import axios from "axios";
 
 const UserMessages = () => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
   const updateDetails = (data) => {
-    console.log(data);
+    console.log("data", data, profile);
+
+    const json_data = {
+      info: {
+        data: [
+          {
+            Licence_Number: profile?.licenseId,
+
+            Last_Name: profile?.officialInformation?.officialName,
+
+            Mail_message: data?.emailText,
+
+            SMS_Message: data?.smsText,
+
+            Broker_Photo: profile?.image,
+
+            Agency_Logo: profile?.logo,
+
+            Cellulaire: profile?.phoneNumber,
+
+            Facebook: profile?.officialInformation?.facebook,
+
+            Linkedin: profile?.officialInformation?.linkedIn,
+
+            Twitter: profile?.officialInformation?.twitter,
+
+            Website: profile?.officialInformation?.website,
+
+            Instagram: profile?.officialInformation?.insta,
+          },
+        ],
+
+        duplicate_check_fields: ["Licence_Number"],
+      },
+
+      vmodule: "Contacts/upsert",
+    };
+
     firebase
       .firestore()
       .collection("users")
@@ -19,6 +57,16 @@ const UserMessages = () => {
       .update({ messages: data })
       .then((res) => {
         console.log(res);
+        axios
+          .post(
+            "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+            json_data,
+            {
+              crossdomain: true,
+            }
+          )
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
         swal.fire(
           "Profil mis à jour !!",
           "Votre profil a été mis à jour avec succès  ",
