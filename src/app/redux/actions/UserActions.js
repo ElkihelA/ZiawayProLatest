@@ -2,6 +2,8 @@ import history from "@history.js";
 import swal from "sweetalert2";
 import jwtAuthService from "../../services/jwtAuthService";
 import FirebaseAuthService from "../../services/firebase/firebaseAuthService";
+import firebase, { cloudFunctions } from "app/services/firebase/firebase";
+
 export const SET_USER_DATA = "USER_SET_DATA";
 export const REMOVE_USER_DATA = "USER_REMOVE_DATA";
 export const USER_LOGGED_OUT = "USER_LOGGED_OUT";
@@ -136,4 +138,59 @@ export function logoutUser() {
       type: USER_LOGGED_OUT,
     });
   };
+}
+
+export function manageSubscription() {
+  return (dispatch) => {
+    dispatch(setUserData({loading: true}));
+    const httpsCallable = cloudFunctions.httpsCallable("getCurrentUserPortal");
+    httpsCallable().then(res => {
+      if(res.data.error) {
+        console.log(res.data.message);
+        dispatch(setUserData({loading: false}));
+        swal.fire(
+          "Oups erreur!",
+          "Nous sommes désolés, une erreur s'est produite. Nos équipes ont été informées de l'incident.",
+          "error"
+        );
+      } else {
+        window.location.replace(res.data.url);
+      }
+    }).catch(err => {
+      dispatch(setUserData({loading: false}));
+      console.log(err);
+      swal.fire(
+        "Oups erreur!",
+        "Nous sommes désolés, une erreur s'est produite. Nos équipes ont été informées de l'incident.",
+        "error"
+      );
+    })
+  }
+}
+
+export function getUserSubscriptionDetails() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const uid = state.firebase.profile.id;
+    firebase.firestore().collection("account").doc(uid).get().then(res => {
+      if(res.exists) {
+        dispatch(setUserData({account: {id: res.id, ...res.data()}, loading: false}));
+      } else {
+        dispatch(setUserData({loading: false}));
+        swal.fire(
+          "Oups erreur!",
+          "Nous sommes désolés, une erreur s'est produite. Nos équipes ont été informées de l'incident.",
+          "error"
+        );
+      }
+    }).catch(err => {
+      console.log(err);
+      dispatch(setUserData({loading: false}));
+      swal.fire(
+        "Oups erreur!",
+        "Nous sommes désolés, une erreur s'est produite. Nos équipes ont été informées de l'incident.",
+        "error"
+      );
+    })
+  }
 }

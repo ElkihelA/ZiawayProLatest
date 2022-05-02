@@ -1,0 +1,32 @@
+.payment-form {
+    .StripeElement {
+        background: #f8f9fa;
+        border: 1px solid #e3e3e3;
+        box-sizing: border-box;
+        box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.02);
+        border-radius: 20px;
+        width: 100%;
+        padding: 8px 15px;
+        &--focus {
+            border-color: #a679d2;
+            background-color: #fff;
+        }
+      }
+
+      .cvc-data-container {
+        display: flex;
+        .StripeElement:first-child {
+            border-bottom-left-radius: 20px !important;
+            border-top-left-radius: 20px !important;
+            border-bottom: 1px solid #e3e3e3 !important;
+            border-radius: 0px;
+            width: 50%;
+          }
+          .StripeElement:last-child {
+            border-bottom-right-radius: 20px !important;
+            border-top-right-radius: 20px !important;
+            border-radius: 0px;
+            width: 50%;
+          }
+      }
+}

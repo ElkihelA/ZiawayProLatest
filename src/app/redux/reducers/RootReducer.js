@@ -11,6 +11,7 @@ import AbonnementReducer from "./AbonnementReducer";
 import CarteProspectionReducer from "./CarteProspectionReducer";
 import { firebaseReducer } from 'react-redux-firebase';
 import { firestoreReducer } from 'redux-firestore'
+import SubscriptionReducer from "./SubscriptionReducer";
 const RootReducer = combineReducers({
   login: LoginReducer,
   user: UserReducer,
@@ -23,7 +24,8 @@ const RootReducer = combineReducers({
   courtiers:CarteProspectionReducer,
   blog:BlogReducer,
   firebase: firebaseReducer,
-  firestore: firestoreReducer
+  firestore: firestoreReducer,
+  subscription: SubscriptionReducer
 });
 
 export default RootReducer;
