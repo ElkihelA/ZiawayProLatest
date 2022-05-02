@@ -142,7 +142,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
             Name: profile?.licenseId,
             Email_Lead: leadEmail,
             Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
-            Statut_Event: "Accepted",
+            Statut_Event: "New Prospect",
           },
         ],
       },
@@ -648,6 +648,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                               progress={data?.broker[0]?.projectProgress}
                               date={data?.broker[0]?.dateofAcceptance}
                               id={data?.id}
+                              email={data?.userEmail}
                             />
                           )}
 

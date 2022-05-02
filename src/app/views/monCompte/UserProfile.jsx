@@ -18,7 +18,9 @@ import UserMessages from "./UserMessages";
 import { storage } from "../../services/firebase/firebase";
 import placeholder from "./placeholder.png";
 import PreviewModal from "./PreviewModal";
+
 import ManageSubscription from "./ManageSubscription";
+
 
 class UserProfile extends Component {
   state = {
@@ -44,6 +46,55 @@ class UserProfile extends Component {
       show: true,
     });
   }
+
+  updateZoho = (values) => {
+    const json_data = {
+      info: {
+        data: [
+          {
+            Licence_Number: this.props.profile?.licenseId,
+
+            Last_Name: this.props.profile?.officialInformation?.officialName,
+
+            Mail_message: this.props.profile?.messages?.emailText,
+
+            SMS_Message: this.props.profile?.messages?.smsText,
+
+            Broker_Photo: this.props.profile?.image,
+
+            Agency_Logo: this.props.profile?.logo,
+
+            Cellulaire: values?.phoneNumber,
+
+            Facebook: this.props.profile?.officialInformation?.facebook,
+
+            Linkedin: this.props.profile?.officialInformation?.linkedIn,
+
+            Twitter: this.props.profile?.officialInformation?.twitter,
+
+            Website: this.props.profile?.officialInformation?.website,
+
+            Instagram: this.props.profile?.officialInformation?.insta,
+          },
+        ],
+
+        duplicate_check_fields: ["Licence_Number"],
+      },
+
+      vmodule: "Contacts/upsert",
+    };
+
+    axios
+      .post(
+        "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+        json_data,
+        {
+          crossdomain: true,
+        }
+      )
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
 
   addimage = async () => {
     const { image } = this.state;
@@ -273,6 +324,7 @@ class UserProfile extends Component {
                                             console.log(values);
                                             updateInfosPersonnelles(values);
                                             this.addimage();
+                                            this.updateZoho(values);
                                           }}
                                         >
                                           {({

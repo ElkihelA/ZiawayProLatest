@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import Autocomplete from "react-google-autocomplete";
 import placeholder from "./placeholder.png";
 import { storage } from "../../services/firebase/firebase";
+import axios from "axios";
 
 const Regulatory = () => {
   const { t } = useTranslation();
@@ -77,6 +78,52 @@ const Regulatory = () => {
                 .update({ logo: url })
                 .then((res) => {
                   console.log(res);
+                  const json_data = {
+                    info: {
+                      data: [
+                        {
+                          Licence_Number: profile?.licenseId,
+
+                          Last_Name: profile?.officialInformation?.officialName,
+
+                          Mail_message: profile?.messages?.emailText,
+
+                          SMS_Message: profile?.messages?.smsText,
+
+                          Broker_Photo: profile?.image,
+
+                          Agency_Logo: url,
+
+                          Cellulaire: profile?.phoneNumber,
+
+                          Facebook: profile?.officialInformation?.facebook,
+
+                          Linkedin: profile?.officialInformation?.linkedIn,
+
+                          Twitter: profile?.officialInformation?.twitter,
+
+                          Website: profile?.officialInformation?.website,
+
+                          Instagram: profile?.officialInformation?.insta,
+                        },
+                      ],
+
+                      duplicate_check_fields: ["Licence_Number"],
+                    },
+
+                    vmodule: "Contacts/upsert",
+                  };
+
+                  axios
+                    .post(
+                      "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+                      json_data,
+                      {
+                        crossdomain: true,
+                      }
+                    )
+                    .then((res) => console.log(res))
+                    .catch((err) => console.log(err));
                 })
                 .catch((err) => {
                   console.log(err);
@@ -138,7 +185,7 @@ const Regulatory = () => {
             <div className="col-lg-12 mb-4">
               <Formik
                 initialValues={{
-                  license: profile?.regulatory?.license,
+                  license: profile?.licenseId,
                   BusinessAddress: profile?.regulatory?.BusinessAddress,
                   status: profile?.regulatory?.status,
                   practice: profile?.regulatory?.practice,
@@ -252,6 +299,7 @@ const Regulatory = () => {
                                   onChange={handleChange}
                                   onBlur={handleBlur}
                                   value={values.license}
+                                  disabled
                                 />
                                 {errors.license && touched.license && (
                                   <div className="text-danger mt-1 ml-2">
