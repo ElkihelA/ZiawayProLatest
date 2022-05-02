@@ -6,13 +6,6 @@ import { updateInfosPersonnelles } from "app/redux/actions/UserActions";
 import { connect } from "react-redux";
 import firebase from "../../services/firebase/firebase";
 
-import {
-  CardElement,
-  Elements,
-  ElementsConsumer,
-} from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
-import { loadStripe } from "@stripe/stripe-js";
 import ResetPassword from "./ResetPassword";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
@@ -25,22 +18,7 @@ import UserMessages from "./UserMessages";
 import { storage } from "../../services/firebase/firebase";
 import placeholder from "./placeholder.png";
 import PreviewModal from "./PreviewModal";
-
-const InjectedCheckoutForm = (props) => (
-  <ElementsConsumer>
-    {({ stripe, elements, fncSubmit }) => (
-      <CheckoutForm
-        stripe={stripe}
-        elements={elements}
-        submit={fncSubmit}
-        clientInfo={props.clientInfo}
-      />
-    )}
-  </ElementsConsumer>
-);
-// Make sure to call `loadStripe` outside of a component’s render to avoid
-// recreating the `Stripe` object on every render.
-const stripePromise = loadStripe("pk_live_j1kzjRe8JQK4HuIIDTdUwrDy00pWwQGoC1");
+import ManageSubscription from "./ManageSubscription";
 
 class UserProfile extends Component {
   state = {
@@ -493,6 +471,9 @@ class UserProfile extends Component {
                 </Tab>
                 <Tab eventKey="reset" title={t("profile.16")}>
                   <ResetPassword t={t} />
+                </Tab>
+                <Tab eventKey="manage-subscription" title="Manage Subscription">
+                  <ManageSubscription />
                 </Tab>
               </Tabs>
             </div>

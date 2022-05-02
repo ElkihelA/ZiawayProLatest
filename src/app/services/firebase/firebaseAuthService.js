@@ -81,18 +81,8 @@ class FirebaseAuthService {
   };
 
   signInWithEmailAndPassword = (email, password) => {
-
-
     return this.auth
-      .signInWithEmailAndPassword(email, password)
-      .catch(function (error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log("erreur de login", errorCode);
-        // ...
-      });
-      
+      .signInWithEmailAndPassword(email, password)      
   };
 
   signInWithPopup = (media) => {
