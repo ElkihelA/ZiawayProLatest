@@ -16,7 +16,11 @@ const { VideoGrant } = AccessToken;
 const cors = require("cors")({ origin: true });
 
 const admin = require("firebase-admin");
-admin.initializeApp();
+const serviceAccount = require("./config/serviceAccount.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://ziaapp-ac0eb.firebaseio.com"
+});
 const db = admin.firestore();
 
 const axios = require("axios");
@@ -37,6 +41,17 @@ const clientSearch = algoliasearch(
   "a52238414f9363e6a1299609b9de92f0"
 );
 const index = clientSearch.initIndex("historique");
+
+const subscriptions = require("./subscription");
+/**
+ * Webhook stuff
+ */
+const webhooks = require("./webhooks");
+
+module.exports = {
+  ...subscriptions,
+  ...webhooks
+};
 
 function EvaluerCoproprietes(evalData) {
   const valeursForm = req.body.evalData;

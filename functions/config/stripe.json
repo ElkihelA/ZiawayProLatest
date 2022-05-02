@@ -1,0 +1,14 @@
+{
+   "dev": {
+    "stripe_public_key": "pk_test_51GczkeBdgxbr2FVSwOob9lHC7AE01Wj6BQlVboQ70sIEcS1QlQRxIpaetoYZPlMjlckEWChVJqmhT8yTloh8hobV003tJZFM3F",
+    "stripe_private_key": "sk_test_51GczkeBdgxbr2FVSSnfrmmWvB4ru6sGPCMj7P2O2GQqVsEu8InsNPltrPJ4v67zpQfam1RXzkThNwBYnyR7xdjGO000iZfewdA",
+    "endpointSecret": "whsec_3ab877434e73c4a94dd9553eb0f33d2f7debee9b4106f4829cddd8ebc854f7cd",
+    "fronturl": "http://localhost:4444"
+   },
+   "prod": {
+    "stripe_public_key": "pk_test_51GczkeBdgxbr2FVSwOob9lHC7AE01Wj6BQlVboQ70sIEcS1QlQRxIpaetoYZPlMjlckEWChVJqmhT8yTloh8hobV003tJZFM3F",
+    "stripe_private_key": "sk_test_51GczkeBdgxbr2FVSSnfrmmWvB4ru6sGPCMj7P2O2GQqVsEu8InsNPltrPJ4v67zpQfam1RXzkThNwBYnyR7xdjGO000iZfewdA",
+    "endpointSecret": "whsec_PwTukV192OHErZYPLNV5diWk0uGbDhpQ",
+    "fronturl": "https://proziawaytest.web.app"
+   }
+}

@@ -1,6 +1,6 @@
 import jwtAuthService from "../../services/jwtAuthService";
 import FirebaseAuthService from "../../services/firebase/firebaseAuthService";
-
+import {cloudFunctions} from "../../services/firebase/firebase"
 import { setUserData, setSecretKey } from "./UserActions";
 import history from "@history.js";
 import { useSelector } from "react-redux";
@@ -15,6 +15,7 @@ import {
 } from "../actions/AbonnementActions";
 import { truncate } from "lodash";
 import swal from "sweetalert2";
+import { actions, setSubscriptionData } from "./SubscriptionActions";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_LOADING = "LOGIN_LOADING";
@@ -349,7 +350,7 @@ export function firebaseloginVMZform(value, t) {
   };
 }
 
-export function firebaseLoginEmailPassword(value, t) {
+export function firebaseLoginEmailPassword(value, t, nextStep) {
   return (dispatch, getState, getFirebase) => {
     FirebaseAuthService.signInWithEmailAndPassword(value.email, value.password)
       .then((user) => {
@@ -377,16 +378,6 @@ export function firebaseLoginEmailPassword(value, t) {
                   ...user,
                 })
               );
-              // if (user.emailVerified === false) {
-              //   history.push({
-              //     pathname: "/emailnotVerfied",
-              //   });
-              // } else {
-              //   history.push({
-              //     pathname: "/dashboard/v0",
-              //   });
-              // }
-
               history.push({
                 pathname: "/dashboard/v0",
               });
@@ -397,7 +388,6 @@ export function firebaseLoginEmailPassword(value, t) {
             });
         } else {
           console.log("i am running", user);
-          swal.fire(t("swal.1"), t("swal.9"), "error");
           return dispatch({
             type: LOGIN_ERROR,
             payload: "Login Failed",
@@ -406,9 +396,37 @@ export function firebaseLoginEmailPassword(value, t) {
       })
       .catch((error) => {
         console.log("erreur dans le catch de logingactions");
-
-        swal.fire(t("swal.1"), t("swal.10") + error.message, "error");
-
+        if(error.code === "auth/user-disabled") {
+            swal.fire({
+              title: 'Your account has been suspended, please reactive your subscription by clicking on Continue',
+              showCancelButton: true,
+              confirmButtonText: 'Continue',
+              showLoaderOnConfirm: true,
+              preConfirm: () => {
+                const httpsCallable = cloudFunctions.httpsCallable("fixCustomerSubscription");
+                return httpsCallable({email: value.email}).then(res => {
+                  if(res.data.error) {
+                    swal.fire(t("swal.1"), t("swal.9"), "error");
+                  } else {
+                    dispatch(setSubscriptionData({current: res.data.current}))
+                    if(nextStep) {
+                      nextStep()
+                    }
+                  }
+                }).catch(err => {
+                  swal.showValidationMessage(
+                    `Request failed: ${err.message}`
+                  )
+                })
+              },
+              allowOutsideClick: () => !swal.isLoading()
+            }).then(res => {
+              console.log(res);
+            })
+          } else {
+            swal.fire(t("swal.1"), t("swal.9"), "error");
+          }
+          console.log("error", error.code, error.message);
         return dispatch({
           type: LOGIN_ERROR,
           payload: error,
