@@ -1,8 +1,9 @@
 import React from "react";
 import firebase from "../../../services/firebase/firebase";
 import { useSelector } from "react-redux";
+import axios from "axios";
 
-const NewLeadStatus = ({ progress, id, date }) => {
+const NewLeadStatus = ({ progress, id, date, email }) => {
   const profile = useSelector((state) => state.firebase.profile);
   const list = [
     { name: "New Prospect" },
@@ -26,6 +27,32 @@ const NewLeadStatus = ({ progress, id, date }) => {
       projectProgress: data,
     };
 
+    const dateAccepted = new Date();
+    const [month, day, year] = [
+      ("0" + (dateAccepted.getMonth() + 1)).slice(-2),
+      ("0" + dateAccepted.getDate()).slice(-2),
+      dateAccepted.getFullYear(),
+    ];
+    const [hour, minutes, seconds] = [
+      ("0" + dateAccepted.getHours()).slice(-2),
+      ("0" + dateAccepted.getMinutes()).slice(-2),
+      ("0" + dateAccepted.getSeconds()).slice(-2),
+    ];
+
+    const json_data = {
+      info: {
+        data: [
+          {
+            Name: profile?.licenseId,
+            Email_Lead: email,
+            Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
+            Statut_Event: data,
+          },
+        ],
+      },
+      vmodule: "Brokers_Leads",
+    };
+
     firebase
       .firestore()
       .collection("RapportsEvaluations")
@@ -33,6 +60,16 @@ const NewLeadStatus = ({ progress, id, date }) => {
       .set({ broker: [values] }, { merge: true })
       .then((res) => {
         console.log(res);
+        axios
+          .post(
+            "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+            json_data,
+            {
+              crossdomain: true,
+            }
+          )
+          .then((res) => console.log(res))
+          .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
   };
