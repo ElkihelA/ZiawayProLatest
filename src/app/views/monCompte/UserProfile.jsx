@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { updateInfosPersonnelles } from "app/redux/actions/UserActions";
 import { connect } from "react-redux";
 import firebase from "../../services/firebase/firebase";
-
+import axios from "axios";
 import ResetPassword from "./ResetPassword";
 import { withTranslation } from "react-i18next";
 import { Button } from "react-bootstrap";
@@ -20,7 +20,6 @@ import placeholder from "./placeholder.png";
 import PreviewModal from "./PreviewModal";
 
 import ManageSubscription from "./ManageSubscription";
-
 
 class UserProfile extends Component {
   state = {
