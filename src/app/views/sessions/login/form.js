@@ -224,7 +224,7 @@ class Signin extends Component {
                         {t("Sign_in.15")}
                       </Link>
                       <FacebookLogin
-                        appId={"448032760458177"}
+                        appId={"162395348999161"}
                         callback={this.responseFacebook}
                         fields="name,email,picture"
                         scope="public_profile, email"
