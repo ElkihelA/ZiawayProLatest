@@ -18,7 +18,7 @@ import UserMessages from "./UserMessages";
 import { storage } from "../../services/firebase/firebase";
 import placeholder from "./placeholder.png";
 import PreviewModal from "./PreviewModal";
-
+import axios from "axios"
 import ManageSubscription from "./ManageSubscription";
 
 
