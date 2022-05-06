@@ -128,7 +128,7 @@ const DashboardGraphs = () => {
             },
             value: {
               formatter: function (val) {
-                return `${parseFloat(val).toFixed(0)}%`
+                return `${parseFloat(val).toFixed(0)}%`;
               },
               offsetY: 7,
               offsetX: 2,
@@ -157,78 +157,6 @@ const DashboardGraphs = () => {
         lineCap: "round",
       },
     };
-  };
-
-  const options3 = {
-    chart: {
-      height: 350,
-      type: "bar",
-      stacked: true,
-      toolbar: {
-        show: false,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-      },
-    },
-    stroke: {
-      width: 0,
-      colors: ["#fff"],
-    },
-    series: [
-      {
-        name: "Marine Sprite",
-        data: [44, 55, 41, 37, 22, 43, 21],
-      },
-      {
-        name: "Striking Calf",
-        data: [53, 32, 33, 52, 13, 43, 32],
-      },
-      {
-        name: "Tank Picture",
-        data: [12, 17, 11, 9, 15, 11, 20],
-      },
-      {
-        name: "Bucket Slope",
-        data: [9, 7, 5, 8, 6, 9, 4],
-      },
-      {
-        name: "Reborn Kid",
-        data: [25, 12, 19, 32, 25, 24, 10],
-      },
-    ],
-
-    xaxis: {
-      categories: [2008, 2009, 2010, 2011, 2012, 2013, 2014],
-      labels: {
-        formatter: function (val) {
-          return val + "K";
-        },
-      },
-    },
-    yaxis: {
-      title: {
-        text: undefined,
-      },
-    },
-    tooltip: {
-      y: {
-        formatter: function (val) {
-          return val + "K";
-        },
-      },
-    },
-    fill: {
-      opacity: 1,
-    },
-
-    legend: {
-      position: "top",
-      horizontalAlign: "left",
-      offsetX: 40,
-    },
   };
 
   const Sorted = (initialDate, finalDate) => {
@@ -411,251 +339,190 @@ const DashboardGraphs = () => {
 
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-        <Row>
-          <Col xs={12} sm={12} md={4} className="mb-2">
-            <SimpleCard className="h-100" title={t("DGraphs.1")}>
-              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
-                <div className="chart-small">
-                  <Chart
-                    options={options4()}
-                    series={options4(20).series}
-                    type={options4().chart.type}
-                  />
-                </div>
-                <div>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.2")}
-                    </span>{" "}
-                    {reports?.length}{" "}
-                  </p>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.3")}
-                    </span>{" "}
-                    {reports?.length}{" "}
-                  </p>
-                </div>
+      <Row>
+        <Col xs={12} sm={12} md={4} className="mb-2">
+          <SimpleCard className="h-100" title={t("DGraphs.1")}>
+            <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+              <div className="chart-small">
+                <Chart
+                  options={options4()}
+                  series={options4(40).series}
+                  type={options4().chart.type}
+                />
               </div>
-            </SimpleCard>
-          </Col>
-          <Col xs={12} sm={12} md={4} className="mb-2">
-            <SimpleCard className="h-100" title={t("DGraphs.4")}>
-              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
-                <div className="chart-small">
-                  <Chart
-                    options={options4()}
-                    series={
-                      options4(
-                        (
-                          (profile?.bookmarks?.length * 100) /
-                            prospects?.length || 0
-                        ).toFixed(2)
-                      ).series
-                    }
-                    type={options4().chart.type}
-                  />
-                </div>
-                <div>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.5")} {prospects?.length}
-                    </span>{" "}
-                  </p>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.6")} {profile?.bookmarks?.length}
-                    </span>{" "}
-                  </p>
-                </div>
+              <div>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.2")}
+                  </span>{" "}
+                  {reports?.length}{" "}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.3")}
+                  </span>{" "}
+                  {reports?.length}{" "}
+                </p>
               </div>
-            </SimpleCard>
-          </Col>
-          <Col xs={12} sm={12} md={4} className="mb-2">
-            <SimpleCard className="h-100" title={t("DGraphs.7")}>
-              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
-                <div className="chart-small">
-                  <Chart
-                    // options={options1()}
-                    // series={
-                    //   options1(
-                    //     ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                    //   )?.series
-                    // }
-                    // type="radialBar"
-                    options={options4()}
-                    series={
-                      options4(
-                        ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                      ).series
-                    }
-                    type={options4().chart.type}
-                  />
-                </div>
-                <div>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.8")} {leads?.length}
-                    </span>{" "}
-                  </p>
-                  <p>
-                    {" "}
-                    <span className="font-weight-bold">
-                      {t("DGraphs.9")} {myLeads?.length}
-                    </span>{" "}
-                  </p>
-                </div>
+            </div>
+          </SimpleCard>
+        </Col>
+        <Col xs={12} sm={12} md={4} className="mb-2">
+          <SimpleCard className="h-100" title={t("DGraphs.4")}>
+            <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+              <div className="chart-small">
+                <Chart
+                  options={options4()}
+                  series={
+                    options4(
+                      (
+                        (profile?.bookmarks?.length * 100) /
+                          prospects?.length || 0
+                      ).toFixed(2)
+                    ).series
+                  }
+                  type={options4().chart.type}
+                />
               </div>
-            </SimpleCard>
-          </Col>
-        </Row>
-        <div style={{ top: 100 }}>
-            <Tab.Content className="p-2">
-              <Tab.Pane eventKey="first">
-                <div>
-                  <div>
-                    <div>
-                      <div className="card">
-                        <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
-                          <h3 className="w-50 float-left card-title m-0">
-                            {t("DGraphs.10")}
-                          </h3>
-                        </div>
-                        <div className="pl-4">
-                          <ReactEcharts
-                            className="h-100 w-100"
-                            option={echartBasicLineOption}
-                          />
-                        </div>
-                      </div>
-                      <div className="card mt-4">
-                        <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
-                          <h3 className="w-50 float-left card-title m-0">
-                            {t("DGraphs.11")}
-                          </h3>
-                          <Dropdown alignRight>
-                            <Dropdown.Toggle
-                              as="span"
-                              className="toggle-hidden cursor-pointer"
-                            >
-                              <i className="nav-icon i-Gear-2"></i>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item>{t("DGraphs.12")}</Dropdown.Item>
-                              <Dropdown.Item>{t("DGraphs.13")}</Dropdown.Item>
-                              <Dropdown.Item>{t("DGraphs.14")}</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </div>
+              <div>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.5")} {prospects?.length}
+                  </span>{" "}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.6")} {profile?.bookmarks?.length}
+                  </span>{" "}
+                </p>
+              </div>
+            </div>
+          </SimpleCard>
+        </Col>
+        <Col xs={12} sm={12} md={4} className="mb-2">
+          <SimpleCard className="h-100" title={t("DGraphs.7")}>
+            <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+              <div className="chart-small">
+                <Chart
+                  options={options4()}
+                  series={
+                    options4(
+                      ((myLeads?.length * 100) / leads?.length).toFixed(2)
+                    ).series
+                  }
+                  type={options4().chart.type}
+                />
+              </div>
+              <div>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.8")} {leads?.length}
+                  </span>{" "}
+                </p>
+                <p>
+                  {" "}
+                  <span className="font-weight-bold">
+                    {t("DGraphs.9")} {myLeads?.length}
+                  </span>{" "}
+                </p>
+              </div>
+            </div>
+          </SimpleCard>
+        </Col>
+      </Row>
+      <div style={{ top: 100 }}>
+        <div>
+          <div className="card">
+            <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
+              <h3 className="w-50 float-left card-title m-0">
+                {t("DGraphs.10")}
+              </h3>
+            </div>
+            <div className="pl-4">
+              <ReactEcharts
+                className="h-100 w-100"
+                option={echartBasicLineOption}
+              />
+            </div>
+          </div>
+          <div className="card mt-4">
+            <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
+              <h3 className="w-50 float-left card-title m-0">
+                {t("DGraphs.11")}
+              </h3>
+              <Dropdown alignRight>
+                <Dropdown.Toggle
+                  as="span"
+                  className="toggle-hidden cursor-pointer"
+                >
+                  <i className="nav-icon i-Gear-2"></i>
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item>{t("DGraphs.12")}</Dropdown.Item>
+                  <Dropdown.Item>{t("DGraphs.13")}</Dropdown.Item>
+                  <Dropdown.Item>{t("DGraphs.14")}</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
 
-                        <div className="">
-                          <div className="table-responsive">
-                            <table
-                              id="user_table"
-                              className="table  text-center"
-                            >
-                              <thead>
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">{t("DGraphs.15")}</th>
-                                  <th
-                                    onClick={() => sortingByDate()}
-                                    scope="col"
-                                  >
-                                    {t("DGraphs.16")}
-                                    {asending === true ? (
-                                      <i className="i-Arrow-Down-3 pl-2"></i>
-                                    ) : (
-                                      <i className="i-Arrow-Up-3 pl-2"></i>
-                                    )}
-                                  </th>
-                                  <th scope="col">{t("DGraphs.17")}</th>
-                                  <th scope="col">{t("DGraphs.18")}</th>
-                                  {/* <th scope="col">Action</th> */}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {leadList?.map((user, index) => (
-                                  <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td className="text-justify">
-                                      {user.name}
-                                    </td>
-                                    <td>
-                                      {user?.dateCreation}
-                                      {/* <img
+            <div className="">
+              <div className="table-responsive">
+                <table id="user_table" className="table  text-center">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">{t("DGraphs.15")}</th>
+                      <th onClick={() => sortingByDate()} scope="col">
+                        {t("DGraphs.16")}
+                        {asending === true ? (
+                          <i className="i-Arrow-Down-3 pl-2"></i>
+                        ) : (
+                          <i className="i-Arrow-Up-3 pl-2"></i>
+                        )}
+                      </th>
+                      <th scope="col">{t("DGraphs.17")}</th>
+                      <th scope="col">{t("DGraphs.18")}</th>
+                      {/* <th scope="col">Action</th> */}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {leadList?.map((user, index) => (
+                      <tr key={index}>
+                        <th scope="row">{index + 1}</th>
+                        <td className="text-justify">{user.name}</td>
+                        <td>
+                          {user?.dateCreation}
+                          {/* <img
                                         className="rounded-circle m-0 avatar-sm-table "
                                         src={user.photoUrl}
                                         alt=""
                                       /> */}
-                                    </td>
+                        </td>
 
-                                    <td className="text-justify">
-                                      {user.email}
-                                    </td>
-                                    <td>
-                                      <span
-                                        className={`badge ${getUserStatusClass(
-                                          user.status
-                                        )}`}
-                                      >
-                                        {user.status}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="second">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-              <Tab.Pane eventKey="three">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-              <Tab.Pane eventKey="four">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-            </Tab.Content>
+                        <td className="text-justify">{user.email}</td>
+                        <td>
+                          <span
+                            className={`badge ${getUserStatusClass(
+                              user.status
+                            )}`}
+                          >
+                            {user.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
     </Tab.Container>
   );
 };
