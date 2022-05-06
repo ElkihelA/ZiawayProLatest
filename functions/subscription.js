@@ -41,7 +41,8 @@ exports.createNewAccount = functions.https.onCall(async (data, context) => {
       .doc(user.uid)
       .set({
         ...data,
-        id: user.uid,
+        userId: user.uid,
+        userEmail: data.email
     });
     return { id: user.uid, ...data };
   } catch (e) {
@@ -273,6 +274,8 @@ exports.createOrLoginWithGoogle = functions.https.onCall(
         ...profileObj,
         role: "membre",
         id: user.uid,
+        userId: user.uid,
+        userEmail: profileObj.email,
     });
     return {error: false, user: {id: user.uid, ...profileObj, role: "membre"}};
     } catch (e) {
@@ -334,6 +337,8 @@ exports.createOrLoginWithFacebook = functions.https.onCall(
           facebookId: userID,
           role: "membre",
           id: user.uid,
+          userId: user.uid,
+          userEmail:email,
       });
       return {error: false, user: {id: user.uid, name, email, role: "membre"}};
       } catch (e) {

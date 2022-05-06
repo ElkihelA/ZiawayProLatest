@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Col, Dropdown, Row, Tab } from "react-bootstrap";
-import { SimpleCard } from "@gull";
+import { Loading, SimpleCard } from "@gull";
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
 import ReactEcharts from "echarts-for-react";
 import { useTranslation } from "react-i18next";
+import { cloudFunctions } from "app/services/firebase/firebase";
 
 const DashboardGraphs = () => {
   const { t } = useTranslation();
@@ -14,67 +15,30 @@ const DashboardGraphs = () => {
   const [myLeads, setMyLeads] = useState();
   const [asending, setAsending] = useState(false);
   const [leadList, setLeadList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [contacts, setContacts] = useState([])
+  const [visibility, setVisiblity] = useState({})
+  const [myLineData, setMyLineData] = useState([]);
+  const [lineData, setLineData] = useState([])
+  const [totalContacts, setTotalContacts] = useState(0);
+  const [prospoectSize, setProspoectSize] = useState(0)
   const profile = useSelector((state) => state.firebase.profile);
-  useFirestoreConnect([
-    {
-      collection: "RapportsEvaluations",
-      // where: ["ouiContacterParProfessionnel", "==", "oui"],
-      orderBy: [["dateCreation", "desc"]],
-    },
-  ]);
 
-  const reports = useSelector(
-    (state) => state.firestore.ordered.RapportsEvaluations
-  );
-
-  const formatter = (data) => {
-    let sorted = data.map((v) => ({
-      name: v?.location?.value,
-      email: v?.userEmail,
-      status: v?.broker[0]?.projectProgress,
-      dateCreation: v?.dateCreation,
-      photoUrl: "/assets/images/faces/1.jpg",
-    }));
-
-    return sorted;
-  };
-
-  const myLeadSorted = (initialDate, finalDate) => {
-    var startDate = new Date(initialDate);
-    var endDate = new Date(finalDate);
-
-    var resultProductData = myLeads?.filter(function (a) {
-      var date = new Date(a.dateCreation);
-      return date >= startDate && date <= endDate;
-    });
-
-    return resultProductData;
-  };
 
   useEffect(() => {
-    if (reports && profile) {
-      let test = reports?.filter(
-        (v) => v.ouiContacterParProfessionnel === "non"
-      );
-
-      let test2 = reports?.filter(
-        (v) => v.ouiContacterParProfessionnel === "oui"
-      );
-
-      setLeads(test2);
-      setProspects(test);
-    }
-  }, [reports, profile]);
-
-  useEffect(() => {
-    if (leads) {
-      const test2 = leads?.filter(
-        (v) => v?.broker[0]?.brokerId === profile.userId
-      );
-      setMyLeads(test2);
-      setLeadList(formatter(test2));
-    }
-  }, [leads]);
+    const httpCallable = cloudFunctions.httpsCallable('dashboard');
+    httpCallable().then(res => {
+      if(res.data) {
+        setContacts(formatter(res.data.contacts));
+        setVisiblity(res.data.visibility);
+        setMyLineData(res.data.myLineData);
+        setLineData(res.data.lineData);
+        setTotalContacts(res.data.totalContacts)
+        setProspoectSize(res.data.prospoectLenght)
+      }
+      setLoading(false);
+    })
+  }, [])
 
   // Gradiant Radial Bar
   const options4 = (data) => {
@@ -159,18 +123,6 @@ const DashboardGraphs = () => {
     };
   };
 
-  const Sorted = (initialDate, finalDate) => {
-    var startDate = new Date(initialDate);
-    var endDate = new Date(finalDate);
-
-    var resultProductData = leads?.filter(function (a) {
-      var date = new Date(a.dateCreation);
-      return date >= startDate && date <= endDate;
-    });
-
-    return resultProductData;
-  };
-
   const echartBasicLineOption = {
     tooltip: {
       show: true,
@@ -234,22 +186,7 @@ const DashboardGraphs = () => {
       {
         name: "All Leads",
         // data: [40, 14, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        data: reports
-          ? [
-              Sorted("2022/01/01", "2022/01/30")?.length,
-              Sorted("2022/02/01", "2022/02/28")?.length,
-              Sorted("2022/03/01", "2022/03/31")?.length,
-              // Sorted("2021/04/01", "2021/04/30")?.length,
-              // Sorted("2021/05/01", "2021/05/31")?.length,
-              // Sorted("2021/06/01", "2021/06/30")?.length,
-              // Sorted("2021/07/01", "2021/07/31")?.length,
-              // Sorted("2021/08/01", "2021/08/31")?.length,
-              // Sorted("2021/09/01", "2021/09/30")?.length,
-              // Sorted("2021/10/01", "2021/10/31")?.length,
-              // Sorted("2021/11/01", "2021/11/30")?.length,
-              // Sorted("2021/12/01", "2021/12/31")?.length,
-            ]
-          : [],
+        data: lineData,
         type: "line",
         showSymbol: true,
         smooth: true,
@@ -262,22 +199,7 @@ const DashboardGraphs = () => {
       {
         name: "My Leads",
         // data: [40, 14, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        data: reports
-          ? [
-              myLeadSorted("2022/01/01", "2022/01/30")?.length,
-              myLeadSorted("2022/02/01", "2022/02/28")?.length,
-              myLeadSorted("2022/03/01", "2022/03/31")?.length,
-              // myLeadSorted("2021/04/01", "2021/04/30")?.length,
-              // myLeadSorted("2021/05/01", "2021/05/31")?.length,
-              // myLeadSorted("2021/06/01", "2021/06/30")?.length,
-              // myLeadSorted("2021/07/01", "2021/07/31")?.length,
-              // myLeadSorted("2021/08/01", "2021/08/31")?.length,
-              // myLeadSorted("2021/09/01", "2021/09/30")?.length,
-              // myLeadSorted("2021/10/01", "2021/10/31")?.length,
-              // myLeadSorted("2021/11/01", "2021/11/30")?.length,
-              // myLeadSorted("2021/12/01", "2021/12/31")?.length,
-            ]
-          : [],
+        data: myLineData,
         type: "line",
         showSymbol: true,
         smooth: true,
@@ -315,26 +237,37 @@ const DashboardGraphs = () => {
 
   const sortingByDate = () => {
     if (asending === false) {
-      const sorted = leadList
+      const sorted = contacts
         .slice()
         .sort((a, b) => new Date(a.dateCreation) - new Date(b.dateCreation));
 
-      console.log(sorted);
       setLeadList(sorted);
       setAsending(true);
     } else {
-      const sorted = leadList
+      const sorted = contacts
         .slice()
         .sort((a, b) => new Date(b.dateCreation) - new Date(a.dateCreation));
 
-      console.log(sorted);
       setLeadList(sorted);
       setAsending(false);
     }
   };
 
-  if (!reports) {
-    return <>loading...</>;
+  const formatter = (data) => {
+    let sorted = data.map((v) => ({
+      name: v?.location?.value,
+      email: v?.userEmail,
+      status: v?.broker[0]?.projectProgress,
+      dateCreation: v?.dateCreation,
+      phone: v?.phoneNumber,
+      photoUrl: "/assets/images/faces/1.jpg",
+    }));
+
+    return sorted;
+  };
+
+  if (loading) {
+    return <Loading />
   }
 
   return (
@@ -350,22 +283,22 @@ const DashboardGraphs = () => {
                   type={options4().chart.type}
                 />
               </div>
-              <div>
+              <a href="#">
                 <p>
                   {" "}
                   <span className="font-weight-bold">
                     {t("DGraphs.2")}
                   </span>{" "}
-                  {reports?.length}{" "}
+                  {visibility.evaluationTotal}{" "}
                 </p>
                 <p>
                   {" "}
                   <span className="font-weight-bold">
                     {t("DGraphs.3")}
                   </span>{" "}
-                  {reports?.length}{" "}
+                  {visibility.impressionTotal}{" "}
                 </p>
-              </div>
+              </a>
             </div>
           </SimpleCard>
         </Col>
@@ -379,18 +312,18 @@ const DashboardGraphs = () => {
                     options4(
                       (
                         (profile?.bookmarks?.length * 100) /
-                          prospects?.length || 0
+                        prospoectSize || 1
                       ).toFixed(2)
                     ).series
                   }
                   type={options4().chart.type}
                 />
               </div>
-              <div>
+              <a href="#">
                 <p>
                   {" "}
                   <span className="font-weight-bold">
-                    {t("DGraphs.5")} {prospects?.length}
+                    {t("DGraphs.5")} {prospoectSize}
                   </span>{" "}
                 </p>
                 <p>
@@ -399,7 +332,7 @@ const DashboardGraphs = () => {
                     {t("DGraphs.6")} {profile?.bookmarks?.length}
                   </span>{" "}
                 </p>
-              </div>
+              </a>
             </div>
           </SimpleCard>
         </Col>
@@ -411,26 +344,26 @@ const DashboardGraphs = () => {
                   options={options4()}
                   series={
                     options4(
-                      ((myLeads?.length * 100) / leads?.length).toFixed(2)
+                      ((contacts.length * 100) / totalContacts).toFixed(2)
                     ).series
                   }
                   type={options4().chart.type}
                 />
               </div>
-              <div>
+              <a href="#">
                 <p>
                   {" "}
                   <span className="font-weight-bold">
-                    {t("DGraphs.8")} {leads?.length}
+                    {t("DGraphs.8")} {totalContacts}
                   </span>{" "}
                 </p>
                 <p>
                   {" "}
                   <span className="font-weight-bold">
-                    {t("DGraphs.9")} {myLeads?.length}
+                    {t("DGraphs.9")} {contacts.length}
                   </span>{" "}
                 </p>
-              </div>
+              </a>
             </div>
           </SimpleCard>
         </Col>
@@ -491,20 +424,16 @@ const DashboardGraphs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {leadList?.map((user, index) => (
+                    {contacts.map((user, index) => (
                       <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td className="text-justify">{user.name}</td>
                         <td>
                           {user?.dateCreation}
-                          {/* <img
-                                        className="rounded-circle m-0 avatar-sm-table "
-                                        src={user.photoUrl}
-                                        alt=""
-                                      /> */}
                         </td>
 
                         <td className="text-justify">{user.email}</td>
+                        <td className="text-justify">{user.phone}</td>
                         <td>
                           <span
                             className={`badge ${getUserStatusClass(
