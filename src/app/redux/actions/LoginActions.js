@@ -3,9 +3,7 @@ import FirebaseAuthService from "../../services/firebase/firebaseAuthService";
 import {cloudFunctions} from "../../services/firebase/firebase"
 import { setUserData, setSecretKey } from "./UserActions";
 import history from "@history.js";
-import { useSelector } from "react-redux";
-import { useFirebase, isLoaded } from "react-redux-firebase";
-import { firestore } from "firebase";
+import firebase, { firestore } from "firebase";
 import { ObtenirEvaluation } from "./RapportEvaluationActions";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -59,226 +57,127 @@ export function resetPassword({ email }) {
   };
 }
 
-export function facebookLogin(t) {
-  return (dispatch, getState, getFirebase) => {
-    const firebase = getFirebase();
+export function facebookLogin(t, resp, nextStep, isRegister = false) {
+  return (dispatch) => {
     // const firestore = getFirestore();
-    var provider = new firebase.auth.FacebookAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((user) => {
-        if (user && user.user.uid) {
-          const state = getState();
-
-          const userid = user.user.uid;
-          const firebase = getFirebase();
-          const firestore = firebase.firestore();
-          firestore
+    dispatch({
+      type: actions.SET_STATE,
+      payload: { loading: true }
+    })
+    const createOrLoginWithFacebook = cloudFunctions.httpsCallable("createOrLoginWithFacebook");
+    createOrLoginWithFacebook(resp).then(res => {
+      if (res.data.token && !isRegister) {
+        firebase.auth().signInWithCustomToken(res.data.token).then(result => {
+          firebase.firestore()
             .collection("users")
-            .doc(userid)
+            .doc(result.user.uid)
             .get({})
             .then((res) => {
-              console.log("response", res.data());
-              if (res.data() !== undefined) {
-                const role = res.data().role;
-                dispatch(
-                  setUserData({
-                    userId: user.uid,
-                    role: role,
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: "/assets/images/face-7.jpg",
-                    age: 25,
-                    token:
-                      "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-                    ...user,
-                  })
-                );
+              const role = res.data().role;
+              dispatch(
+                setUserData({
+                  userId: result.uid,
+                  role: role,
+                  displayName: result.user.displayName,
+                  email: result.user.email,
+                  ...result.user,
+                })
+              );
+              history.push({
+                pathname: "/dashboard/v0",
+              });
+            })
+        })
+        dispatch({
+          type: actions.SET_STATE,
+          payload: { loading: false }
+        })
+      } else if (res.data.error) {
+        dispatch({
+          type: actions.SET_STATE,
+          payload: { loading: false }
+        })
+        swal.fire(t("swal.1"), res.data.error.message, "error");
+      } else if (nextStep) {
+        dispatch({
+          type: actions.SET_STATE,
+          payload: { loading: false }
+        })
+        // redirect to next step
+        dispatch(setSubscriptionData({ current: res.data.user }))
+        nextStep()
+      }
 
-                history.push({
-                  pathname: "/dashboard/v0",
-                });
-
-                return dispatch({
-                  type: LOGIN_SUCCESS,
-                });
-              } else {
-                dispatch(
-                  setUserData({
-                    userId: user.user.uid,
-                    //role: "guest",
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: "/assets/images/face-7.jpg",
-                    age: 25,
-                    token:
-                      "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-                    ...user,
-                  })
-                );
-                const state = getState();
-
-                const userid = user.user.uid;
-                // const firebase = getFirebase();
-                const firestore = firebase.firestore();
-                firestore
-                  .collection("users")
-                  .doc(userid)
-                  .set({
-                    userId: userid,
-                    role: "membre",
-                    displayName: user.user.displayName,
-                    email: user.user.email,
-                    phoneNumber: user.user.phoneNumber,
-                  })
-                  .then((res) => {
-                    // if (user.user.emailVerified === false) {
-                    //   user.user.sendEmailVerification({
-                    //     url: "https://ziaway.ca/dashboard/v0",
-                    //   });
-
-                    // }
-                    emailMessage(t);
-                    history.push({
-                      pathname: "/dashboard/v0",
-                    });
-                    return dispatch({
-                      type: LOGIN_SUCCESS,
-                    });
-                  });
-              }
-            });
-        } else {
-          swal.fire(t("swal.1"), t("swal.2"), "error");
-          return dispatch({
-            type: LOGIN_ERROR,
-            payload: "Login Failed",
-          });
-        }
+    }).catch(e => {
+      console.log(e)
+      dispatch({
+        type: actions.SET_STATE,
+        payload: { loading: false }
       })
-      .catch((error) => {
-        console.log("erreur dans le catch de logingactions");
-
-        swal.fire(t("swal.3"), t("swal.4") + error.message, "error");
-
-        return dispatch({
-          type: LOGIN_ERROR,
-          payload: error,
-        });
-      });
+      swal.fire(t("swal.1"), t("swal.10"), "error");
+    })
   };
 }
 
-export function googleLogin(t) {
-  return (dispatch, getState, getFirebase) => {
-    const firebase = getFirebase();
+export function googleLogin(t, resp, nextStep, isRegister = false) {
+  return (dispatch, getState) => {
     // const firestore = getFirestore();
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase
-      .auth()
-      .signInWithPopup(provider)
-      .then((user) => {
-        console.log("google user", user);
-        if (user && user.user.uid) {
-          const state = getState();
-
-          const userid = user.user.uid;
-          const firebase = getFirebase();
-          const firestore = firebase.firestore();
-          firestore
+    dispatch({
+      type: actions.SET_STATE,
+      payload: { loading: true }
+    })
+    const createOrLoginWithGoogle = cloudFunctions.httpsCallable("createOrLoginWithGoogle");
+    createOrLoginWithGoogle({
+      profileObj: resp.profileObj,
+      tokenId: resp.tokenId,
+      googleId: resp.googleId
+    }).then(res => {
+      if (res.data.token && !isRegister) {
+        firebase.auth().signInWithCustomToken(res.data.token).then(result => {
+          firebase.firestore()
             .collection("users")
-            .doc(userid)
-            .get({})
+            .doc(result.user.uid)
+            .get()
             .then((res) => {
-              console.log("response", res.data());
-              if (res.data() !== undefined) {
-                const role = res.data().role;
-                dispatch(
-                  setUserData({
-                    userId: user.uid,
-                    role: role,
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: "/assets/images/face-7.jpg",
-                    age: 25,
-                    token:
-                      "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-                    ...user,
-                  })
-                );
+              const role = res.data().role;
+              dispatch(
+                setUserData({
+                  userId: result.uid,
+                  role: role,
+                  displayName: result.user.displayName,
+                  email: result.user.email,
+                  ...result.user,
+                })
+              );
+              history.push({
+                pathname: "/dashboard/v0",
+              });
+            })
+        })
+      } else if (res.data.error) {
+        dispatch({
+          type: actions.SET_STATE,
+          payload: { loading: false }
+        })
+        swal.fire(t("swal.1"), t("swal.10"), "error");
+      } else if (nextStep) {
+        dispatch({
+          type: actions.SET_STATE,
+          payload: { loading: false }
+        })
+        // redirect to next step
+        dispatch(setSubscriptionData({ current: res.data.user }))
+        nextStep()
+      }
 
-                history.push({
-                  pathname: "/dashboard/v0",
-                });
-
-                return dispatch({
-                  type: LOGIN_SUCCESS,
-                });
-              } else {
-                dispatch(
-                  setUserData({
-                    userId: user.user.uid,
-                    //role: "guest",
-                    displayName: user.displayName,
-                    email: user.email,
-                    photoURL: "/assets/images/face-7.jpg",
-                    age: 25,
-                    token:
-                      "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-                    ...user,
-                  })
-                );
-                const state = getState();
-
-                const userid = user.user.uid;
-                // const firebase = getFirebase();
-                const firestore = firebase.firestore();
-                firestore
-                  .collection("users")
-                  .doc(userid)
-                  .set({
-                    userId: userid,
-                    role: "membre",
-                    displayName: user.user.displayName,
-                    email: user.user.email,
-                    phoneNumber: user.user.phoneNumber,
-                  })
-                  .then((res) => {
-                    // if (user.user.emailVerified === false) {
-                    //   user.user.sendEmailVerification({
-                    //     url: "https://ziaway.ca/dashboard/v0",
-                    //   });
-
-                    // }
-                    emailMessage(t);
-                    history.push({
-                      pathname: "/dashboard/v0",
-                    });
-                    return dispatch({
-                      type: LOGIN_SUCCESS,
-                    });
-                  });
-              }
-            });
-        } else {
-          swal.fire(t("swal.5"), t("swal.6"), "error");
-          return dispatch({
-            type: LOGIN_ERROR,
-            payload: "Login Failed",
-          });
-        }
+    }).catch(e => {
+      console.log(e)
+      dispatch({
+        type: actions.SET_STATE,
+        payload: { loading: false }
       })
-      .catch((error) => {
-        console.log("erreur dans le catch de logingactions");
-
-        swal.fire(t("swal.7"), t("swal.8") + error.message, "error");
-
-        return dispatch({
-          type: LOGIN_ERROR,
-          payload: error,
-        });
-      });
+      swal.fire(t("swal.1"), t("swal.10"), "error");
+    })
   };
 }
 

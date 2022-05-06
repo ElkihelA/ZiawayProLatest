@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Col, Dropdown, Nav, Row, Tab } from "react-bootstrap";
+import { Col, Dropdown, Row, Tab } from "react-bootstrap";
 import { SimpleCard } from "@gull";
 import Chart from "react-apexcharts";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
-import axios from "axios";
 import ReactEcharts from "echarts-for-react";
-import firebase from "../../../services/firebase/firebase";
 import { useTranslation } from "react-i18next";
 
 const DashboardGraphs = () => {
@@ -14,7 +12,6 @@ const DashboardGraphs = () => {
   const [prospects, setProspects] = useState();
   const [leads, setLeads] = useState();
   const [myLeads, setMyLeads] = useState();
-  const [myLeadLine, setMyLeadLine] = useState([]);
   const [asending, setAsending] = useState(false);
   const [leadList, setLeadList] = useState([]);
   const profile = useSelector((state) => state.firebase.profile);
@@ -25,18 +22,10 @@ const DashboardGraphs = () => {
       orderBy: [["dateCreation", "desc"]],
     },
   ]);
+
   const reports = useSelector(
     (state) => state.firestore.ordered.RapportsEvaluations
   );
-
-  useEffect(() => {
-    var GetSubscriptionPlans = firebase
-      .functions()
-      .httpsCallable("GetSubscriptionPlans");
-    GetSubscriptionPlans()
-      .then((res) => console.log("GetSubscriptionPlans", res))
-      .catch((err) => console.log(err));
-  }, []);
 
   const formatter = (data) => {
     let sorted = data.map((v) => ({
@@ -82,32 +71,10 @@ const DashboardGraphs = () => {
       const test2 = leads?.filter(
         (v) => v?.broker[0]?.brokerId === profile.userId
       );
-
       setMyLeads(test2);
       setLeadList(formatter(test2));
     }
   }, [leads]);
-
-  const options1 = (data) => {
-    return {
-      chart: {
-        height: 350,
-        type: "radialBar",
-      },
-      plotOptions: {
-        radialBar: {
-          hollow: {
-            size: "70%",
-          },
-          dataLabels: {
-            showOn: "always",
-          },
-        },
-      },
-      series: [data],
-      labels: [`Statistics`],
-    };
-  };
 
   // Gradiant Radial Bar
   const options4 = (data) => {
@@ -151,21 +118,22 @@ const DashboardGraphs = () => {
               opacity: 0.35,
             },
           },
-
           dataLabels: {
             showOn: "always",
             name: {
-              offsetY: -10,
-              show: true,
+              offsetY: 0,
+              show: false,
               color: "#888",
-              fontSize: "17px",
+              fontSize: "14px",
             },
             value: {
               formatter: function (val) {
-                return parseInt(val);
+                return `${parseFloat(val).toFixed(0)}%`
               },
+              offsetY: 7,
+              offsetX: 2,
               color: "#111",
-              fontSize: "20px",
+              fontSize: "12px",
               show: true,
             },
           },
@@ -188,7 +156,6 @@ const DashboardGraphs = () => {
       stroke: {
         lineCap: "round",
       },
-      labels: ["Percent"],
     };
   };
 
@@ -418,8 +385,6 @@ const DashboardGraphs = () => {
     }
   };
 
-  console.log("leadList", leadList);
-
   const sortingByDate = () => {
     if (asending === false) {
       const sorted = leadList
@@ -446,136 +411,110 @@ const DashboardGraphs = () => {
 
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-      <Row>
-        <Col xs={12}>
-          <Nav
-            variant="..."
-            className="remove-arrow-nav text-center justify-content-center"
-          >
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.1")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={options1(100)?.series}
-                        // type="radialBar"
-                        options={options4()}
-                        series={options4(20).series}
-                        type={options4().chart.type}
-                      />
-                    </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.2")}
-                        </span>{" "}
-                        {reports?.length}{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.3")}
-                        </span>{" "}
-                        {reports?.length}{" "}
-                      </p>
-                    </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.4")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={
-                        //   options1(
-                        // (
-                        //   (profile?.bookmarks?.length * 100) /
-                        //   prospects?.length
-                        // ).toFixed(2)
-                        //   )?.series
-                        // }
-                        // type="radialBar"
-                        options={options4()}
-                        series={
-                          options4(
-                            (
-                              (profile?.bookmarks?.length * 100) /
-                              prospects?.length
-                            ).toFixed(2)
-                          ).series
-                        }
-                        type={options4().chart.type}
-                      />
-                    </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.5")} {prospects?.length}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.6")} {profile?.bookmarks?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.7")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={
-                        //   options1(
-                        //     ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                        //   )?.series
-                        // }
-                        // type="radialBar"
-                        options={options4()}
-                        series={
-                          options4(
-                            ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                          ).series
-                        }
-                        type={options4().chart.type}
-                      />
-                    </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.8")} {leads?.length}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.9")} {myLeads?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-        </Col>
-        <Col className="mt-4 px-0 px-md-3" xs={12}>
-          <div className="container position-sticky" style={{ top: 100 }}>
+        <Row>
+          <Col xs={12} sm={12} md={4} className="mb-2">
+            <SimpleCard className="h-100" title={t("DGraphs.1")}>
+              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+                <div className="chart-small">
+                  <Chart
+                    options={options4()}
+                    series={options4(20).series}
+                    type={options4().chart.type}
+                  />
+                </div>
+                <div>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.2")}
+                    </span>{" "}
+                    {reports?.length}{" "}
+                  </p>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.3")}
+                    </span>{" "}
+                    {reports?.length}{" "}
+                  </p>
+                </div>
+              </div>
+            </SimpleCard>
+          </Col>
+          <Col xs={12} sm={12} md={4} className="mb-2">
+            <SimpleCard className="h-100" title={t("DGraphs.4")}>
+              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+                <div className="chart-small">
+                  <Chart
+                    options={options4()}
+                    series={
+                      options4(
+                        (
+                          (profile?.bookmarks?.length * 100) /
+                            prospects?.length || 0
+                        ).toFixed(2)
+                      ).series
+                    }
+                    type={options4().chart.type}
+                  />
+                </div>
+                <div>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.5")} {prospects?.length}
+                    </span>{" "}
+                  </p>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.6")} {profile?.bookmarks?.length}
+                    </span>{" "}
+                  </p>
+                </div>
+              </div>
+            </SimpleCard>
+          </Col>
+          <Col xs={12} sm={12} md={4} className="mb-2">
+            <SimpleCard className="h-100" title={t("DGraphs.7")}>
+              <div className="d-flex flex-column flex-xl-row align-items-center justify-content-center">
+                <div className="chart-small">
+                  <Chart
+                    // options={options1()}
+                    // series={
+                    //   options1(
+                    //     ((myLeads?.length * 100) / leads?.length).toFixed(2)
+                    //   )?.series
+                    // }
+                    // type="radialBar"
+                    options={options4()}
+                    series={
+                      options4(
+                        ((myLeads?.length * 100) / leads?.length).toFixed(2)
+                      ).series
+                    }
+                    type={options4().chart.type}
+                  />
+                </div>
+                <div>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.8")} {leads?.length}
+                    </span>{" "}
+                  </p>
+                  <p>
+                    {" "}
+                    <span className="font-weight-bold">
+                      {t("DGraphs.9")} {myLeads?.length}
+                    </span>{" "}
+                  </p>
+                </div>
+              </div>
+            </SimpleCard>
+          </Col>
+        </Row>
+        <div style={{ top: 100 }}>
             <Tab.Content className="p-2">
               <Tab.Pane eventKey="first">
                 <div>
@@ -717,8 +656,6 @@ const DashboardGraphs = () => {
               </Tab.Pane>
             </Tab.Content>
           </div>
-        </Col>
-      </Row>
     </Tab.Container>
   );
 };
