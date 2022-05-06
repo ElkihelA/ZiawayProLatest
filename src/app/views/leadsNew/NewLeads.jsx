@@ -734,7 +734,7 @@ const NewLeads = () => {
         </div>
         <div>
           <ul className="nav row gy-3">
-            <li className="col-12 col-lg-6 col-xl-7">
+            <li className="col-12 col-lg-12 col-xl-6">
               <div className="h-100" style={{ minHeight: "20rem" }}>
                 {/* <iframe
                 title="map"
@@ -759,7 +759,7 @@ const NewLeads = () => {
                 />
               </div>
             </li>
-            <li className="col px-0">
+            <li className="col col-xl-6 px-0">
               <div>
                 <ul className="nav flex-column gy-3">
                   <li>

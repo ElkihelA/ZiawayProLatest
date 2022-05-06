@@ -207,7 +207,7 @@ class Dashboard extends Component {
     let courtiers = this.props.courtiers ? this.props.courtiers : [];
     return (
       <div>
-        <div className="row">
+        <div>
           <h2 className="m-3">{t("Dashboard.1")}</h2>
         </div>
         <hr className="mt-0 ml-1" />

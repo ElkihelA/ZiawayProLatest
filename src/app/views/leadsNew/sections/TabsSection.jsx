@@ -127,8 +127,11 @@ const TabsSection = ({ data, onClick, prospects }) => {
                 onChange={(e) => onSorting(e.value)}
               />
             </li>
-            <li className="ml-auto">
-              <Nav variant="pills" className="text-uppercase">
+            <li className="ml-md-4 flex-fill">
+              <Nav
+                variant="pills"
+                className="text-uppercase w-100 overflow-auto text-nowrap flex-nowrap justify-content-end"
+              >
                 <Nav.Item>
                   <Nav.Link eventKey="Date"> {t("Leads.15")}</Nav.Link>
                 </Nav.Item>

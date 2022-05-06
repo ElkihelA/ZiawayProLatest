@@ -445,281 +445,285 @@ const DashboardGraphs = () => {
   }
 
   return (
-    <Tab.Container id="left-tabs-example" defaultActiveKey="first">
-      <Row>
-        <Col xs={12}>
-          <Nav
-            variant="..."
-            className="remove-arrow-nav text-center justify-content-center"
-          >
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.1")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={options1(100)?.series}
-                        // type="radialBar"
-                        options={options4()}
-                        series={options4(20).series}
-                        type={options4().chart.type}
-                      />
+    <div className="container">
+      <Tab.Container id="left-tabs-example" defaultActiveKey="first">
+        <Row className="mx-0">
+          <Col className="px-0" xs={12}>
+            <Nav
+              variant="..."
+              className="remove-arrow-nav text-center justify-content-xl-center w-100 overflow-auto flex-nowrap"
+            >
+              <Nav.Item>
+                <Nav.Link className="p-2 h-100" eventKey="first">
+                  <SimpleCard className="h-100" title={t("DGraphs.1")}>
+                    <div className="d-flex flex-wrap align-items-center justify-content-center">
+                      <div className="chart-small">
+                        <Chart
+                          // options={options1()}
+                          // series={options1(100)?.series}
+                          // type="radialBar"
+                          options={options4()}
+                          series={options4(20).series}
+                          type={options4().chart.type}
+                        />
+                      </div>
+                      <div>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.2")}
+                          </span>{" "}
+                          {reports?.length}{" "}
+                        </p>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.3")}
+                          </span>{" "}
+                          {reports?.length}{" "}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.2")}
-                        </span>{" "}
-                        {reports?.length}{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.3")}
-                        </span>{" "}
-                        {reports?.length}{" "}
-                      </p>
+                  </SimpleCard>
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="p-2 h-100" eventKey="first">
+                  <SimpleCard className="h-100" title={t("DGraphs.4")}>
+                    <div className="d-flex flex-wrap align-items-center justify-content-center">
+                      <div className="chart-small">
+                        <Chart
+                          // options={options1()}
+                          // series={
+                          //   options1(
+                          // (
+                          //   (profile?.bookmarks?.length * 100) /
+                          //   prospects?.length
+                          // ).toFixed(2)
+                          //   )?.series
+                          // }
+                          // type="radialBar"
+                          options={options4()}
+                          series={
+                            options4(
+                              (
+                                (profile?.bookmarks?.length * 100) /
+                                prospects?.length
+                              ).toFixed(2)
+                            ).series
+                          }
+                          type={options4().chart.type}
+                        />
+                      </div>
+                      <div>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.5")} {prospects?.length}
+                          </span>{" "}
+                        </p>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.6")} {profile?.bookmarks?.length}
+                          </span>{" "}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.4")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={
-                        //   options1(
-                        // (
-                        //   (profile?.bookmarks?.length * 100) /
-                        //   prospects?.length
-                        // ).toFixed(2)
-                        //   )?.series
-                        // }
-                        // type="radialBar"
-                        options={options4()}
-                        series={
-                          options4(
-                            (
-                              (profile?.bookmarks?.length * 100) /
-                              prospects?.length
-                            ).toFixed(2)
-                          ).series
-                        }
-                        type={options4().chart.type}
-                      />
+                  </SimpleCard>
+                </Nav.Link>
+              </Nav.Item>
+              <Nav.Item>
+                <Nav.Link className="p-2 h-100" eventKey="first">
+                  <SimpleCard className="h-100" title={t("DGraphs.7")}>
+                    <div className="d-flex flex-wrap align-items-center justify-content-center">
+                      <div className="chart-small">
+                        <Chart
+                          // options={options1()}
+                          // series={
+                          //   options1(
+                          //     ((myLeads?.length * 100) / leads?.length).toFixed(2)
+                          //   )?.series
+                          // }
+                          // type="radialBar"
+                          options={options4()}
+                          series={
+                            options4(
+                              ((myLeads?.length * 100) / leads?.length).toFixed(
+                                2
+                              )
+                            ).series
+                          }
+                          type={options4().chart.type}
+                        />
+                      </div>
+                      <div>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.8")} {leads?.length}
+                          </span>{" "}
+                        </p>
+                        <p>
+                          {" "}
+                          <span className="font-weight-bold">
+                            {t("DGraphs.9")} {myLeads?.length}
+                          </span>{" "}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.5")} {prospects?.length}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.6")} {profile?.bookmarks?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-            <Nav.Item>
-              <Nav.Link eventKey="first">
-                <SimpleCard className="h-100" title={t("DGraphs.7")}>
-                  <div className="d-flex align-items-center">
-                    <div className="chart-small">
-                      <Chart
-                        // options={options1()}
-                        // series={
-                        //   options1(
-                        //     ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                        //   )?.series
-                        // }
-                        // type="radialBar"
-                        options={options4()}
-                        series={
-                          options4(
-                            ((myLeads?.length * 100) / leads?.length).toFixed(2)
-                          ).series
-                        }
-                        type={options4().chart.type}
-                      />
-                    </div>
-                    <div>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.8")} {leads?.length}
-                        </span>{" "}
-                      </p>
-                      <p>
-                        {" "}
-                        <span className="font-weight-bold">
-                          {t("DGraphs.9")} {myLeads?.length}
-                        </span>{" "}
-                      </p>
-                    </div>
-                  </div>
-                </SimpleCard>
-              </Nav.Link>
-            </Nav.Item>
-          </Nav>
-        </Col>
-        <Col className="mt-4 px-0 px-md-3" xs={12}>
-          <div className="container position-sticky" style={{ top: 100 }}>
-            <Tab.Content className="p-2">
-              <Tab.Pane eventKey="first">
-                <div>
+                  </SimpleCard>
+                </Nav.Link>
+              </Nav.Item>
+            </Nav>
+          </Col>
+          <Col className="mt-4 px-0" xs={12}>
+            <div className="position-sticky" style={{ top: 100 }}>
+              <Tab.Content className="p-2">
+                <Tab.Pane eventKey="first">
                   <div>
                     <div>
-                      <div className="card">
-                        <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
-                          <h3 className="w-50 float-left card-title m-0">
-                            {t("DGraphs.10")}
-                          </h3>
+                      <div>
+                        <div className="card">
+                          <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
+                            <h3 className="w-50 float-left card-title m-0">
+                              {t("DGraphs.10")}
+                            </h3>
+                          </div>
+                          <div className="pl-4">
+                            <ReactEcharts
+                              className="h-100 w-100"
+                              option={echartBasicLineOption}
+                            />
+                          </div>
                         </div>
-                        <div className="pl-4">
-                          <ReactEcharts
-                            className="h-100 w-100"
-                            option={echartBasicLineOption}
-                          />
-                        </div>
-                      </div>
-                      <div className="card mt-4">
-                        <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
-                          <h3 className="w-50 float-left card-title m-0">
-                            {t("DGraphs.11")}
-                          </h3>
-                          <Dropdown alignRight>
-                            <Dropdown.Toggle
-                              as="span"
-                              className="toggle-hidden cursor-pointer"
-                            >
-                              <i className="nav-icon i-Gear-2"></i>
-                            </Dropdown.Toggle>
-                            <Dropdown.Menu>
-                              <Dropdown.Item>{t("DGraphs.12")}</Dropdown.Item>
-                              <Dropdown.Item>{t("DGraphs.13")}</Dropdown.Item>
-                              <Dropdown.Item>{t("DGraphs.14")}</Dropdown.Item>
-                            </Dropdown.Menu>
-                          </Dropdown>
-                        </div>
+                        <div className="card mt-4">
+                          <div className="card-header card-title mb-0 d-flex align-items-center justify-content-between border-0">
+                            <h3 className="w-50 float-left card-title m-0">
+                              {t("DGraphs.11")}
+                            </h3>
+                            <Dropdown alignRight>
+                              <Dropdown.Toggle
+                                as="span"
+                                className="toggle-hidden cursor-pointer"
+                              >
+                                <i className="nav-icon i-Gear-2"></i>
+                              </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                <Dropdown.Item>{t("DGraphs.12")}</Dropdown.Item>
+                                <Dropdown.Item>{t("DGraphs.13")}</Dropdown.Item>
+                                <Dropdown.Item>{t("DGraphs.14")}</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </div>
 
-                        <div className="">
-                          <div className="table-responsive">
-                            <table
-                              id="user_table"
-                              className="table  text-center"
-                            >
-                              <thead>
-                                <tr>
-                                  <th scope="col">#</th>
-                                  <th scope="col">{t("DGraphs.15")}</th>
-                                  <th
-                                    onClick={() => sortingByDate()}
-                                    scope="col"
-                                  >
-                                    {t("DGraphs.16")}
-                                    {asending === true ? (
-                                      <i className="i-Arrow-Down-3 pl-2"></i>
-                                    ) : (
-                                      <i className="i-Arrow-Up-3 pl-2"></i>
-                                    )}
-                                  </th>
-                                  <th scope="col">{t("DGraphs.17")}</th>
-                                  <th scope="col">{t("DGraphs.18")}</th>
-                                  {/* <th scope="col">Action</th> */}
-                                </tr>
-                              </thead>
-                              <tbody>
-                                {leadList?.map((user, index) => (
-                                  <tr key={index}>
-                                    <th scope="row">{index + 1}</th>
-                                    <td className="text-justify">
-                                      {user.name}
-                                    </td>
-                                    <td>
-                                      {user?.dateCreation}
-                                      {/* <img
+                          <div className="">
+                            <div className="table-responsive">
+                              <table
+                                id="user_table"
+                                className="table  text-center"
+                              >
+                                <thead>
+                                  <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">{t("DGraphs.15")}</th>
+                                    <th
+                                      onClick={() => sortingByDate()}
+                                      scope="col"
+                                    >
+                                      {t("DGraphs.16")}
+                                      {asending === true ? (
+                                        <i className="i-Arrow-Down-3 pl-2"></i>
+                                      ) : (
+                                        <i className="i-Arrow-Up-3 pl-2"></i>
+                                      )}
+                                    </th>
+                                    <th scope="col">{t("DGraphs.17")}</th>
+                                    <th scope="col">{t("DGraphs.18")}</th>
+                                    {/* <th scope="col">Action</th> */}
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {leadList?.map((user, index) => (
+                                    <tr key={index}>
+                                      <th scope="row">{index + 1}</th>
+                                      <td className="text-justify">
+                                        {user.name}
+                                      </td>
+                                      <td>
+                                        {user?.dateCreation}
+                                        {/* <img
                                         className="rounded-circle m-0 avatar-sm-table "
                                         src={user.photoUrl}
                                         alt=""
                                       /> */}
-                                    </td>
+                                      </td>
 
-                                    <td className="text-justify">
-                                      {user.email}
-                                    </td>
-                                    <td>
-                                      <span
-                                        className={`badge ${getUserStatusClass(
-                                          user.status
-                                        )}`}
-                                      >
-                                        {user.status}
-                                      </span>
-                                    </td>
-                                  </tr>
-                                ))}
-                              </tbody>
-                            </table>
+                                      <td className="text-justify">
+                                        {user.email}
+                                      </td>
+                                      <td>
+                                        <span
+                                          className={`badge ${getUserStatusClass(
+                                            user.status
+                                          )}`}
+                                        >
+                                          {user.status}
+                                        </span>
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Tab.Pane>
-              <Tab.Pane eventKey="second">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-              <Tab.Pane eventKey="three">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-              <Tab.Pane eventKey="four">
-                <SimpleCard
-                  className="h-100"
-                  title="Stacked Bars(Fiction Books Sales)"
-                >
-                  <Chart
-                    options={options3}
-                    series={options3.series}
-                    type={options3.chart.type}
-                  />
-                </SimpleCard>
-              </Tab.Pane>
-            </Tab.Content>
-          </div>
-        </Col>
-      </Row>
-    </Tab.Container>
+                </Tab.Pane>
+                <Tab.Pane eventKey="second">
+                  <SimpleCard
+                    className="h-100"
+                    title="Stacked Bars(Fiction Books Sales)"
+                  >
+                    <Chart
+                      options={options3}
+                      series={options3.series}
+                      type={options3.chart.type}
+                    />
+                  </SimpleCard>
+                </Tab.Pane>
+                <Tab.Pane eventKey="three">
+                  <SimpleCard
+                    className="h-100"
+                    title="Stacked Bars(Fiction Books Sales)"
+                  >
+                    <Chart
+                      options={options3}
+                      series={options3.series}
+                      type={options3.chart.type}
+                    />
+                  </SimpleCard>
+                </Tab.Pane>
+                <Tab.Pane eventKey="four">
+                  <SimpleCard
+                    className="h-100"
+                    title="Stacked Bars(Fiction Books Sales)"
+                  >
+                    <Chart
+                      options={options3}
+                      series={options3.series}
+                      type={options3.chart.type}
+                    />
+                  </SimpleCard>
+                </Tab.Pane>
+              </Tab.Content>
+            </div>
+          </Col>
+        </Row>
+      </Tab.Container>
+    </div>
   );
 };
 
