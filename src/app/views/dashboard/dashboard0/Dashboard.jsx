@@ -76,7 +76,7 @@ class Dashboard extends Component {
     const { t } = this.props;
     return (
       <div>
-        <div className="row">
+        <div>
           <h2 className="m-3">{t("Dashboard.1")}</h2>
         </div>
         <hr className="mt-0 ml-1" />

@@ -139,8 +139,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
       info: {
         data: [
           {
-            Name: profile?.licenseId,
-            Email_Lead: leadEmail,
+            Name: leadEmail,
+            Broker_License_Number: profile?.licenseId,
             Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
             Statut_Event: "New Prospect",
           },
@@ -231,8 +231,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
             className="bg-gray-200 border border-primary rounded-lg p-3 overflow-auto"
             style={{ height: 600 }}
           >
-            <div className="row gy-3">
-              <div className="col-12 col-sm-2 mr-3">
+            <div className="row justify-content-between gy-3">
+              <div className="col-12 col-sm-2">
                 <div>
                   <ul className="nav flex-column gy-3">
                     <li>
@@ -487,7 +487,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                   </ul>
                 </div>
               </div>
-              <div className="col  order-first order-md-last">
+              <div className="col-12 col-sm-10  order-first order-md-last">
                 <div>
                   <ul className="nav flex-column gy-3">
                     <li>

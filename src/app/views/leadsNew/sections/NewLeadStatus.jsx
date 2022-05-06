@@ -43,8 +43,8 @@ const NewLeadStatus = ({ progress, id, date, email }) => {
       info: {
         data: [
           {
-            Name: profile?.licenseId,
-            Email_Lead: email,
+            Name: email,
+            Broker_License_Number: profile?.licenseId,
             Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
             Statut_Event: data,
           },
