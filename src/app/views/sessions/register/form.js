@@ -3,21 +3,18 @@ import * as yup from "yup";
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import {useDispatch, connect} from "react-redux";
-import {
-    firebaseSignUpEmailPassword,
-    signUpUsingGoogle,
-    signUpUsingFacebook,
-} from "app/redux/actions/LoginActions";
 import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { createNewAccount, setSubscriptionData } from "../../../redux/actions/SubscriptionActions";
+import { createNewAccount } from "../../../redux/actions/SubscriptionActions";
 import { googleLogin, facebookLogin } from "app/redux/actions/LoginActions";
-import { Loading, SimpleCard } from "@gull";
+import { Loading } from "@gull";
 
 import DangerAlert from "../DangerAlert";
 import { useTranslation } from "react-i18next";
-import firebaseAuthService from "../../../services/firebase/firebaseAuthService";
 import { useFormik } from 'formik';
 import GoogleLogin from "react-google-login";
+import axios from "axios";
+import Select from "react-select";
+
 const phoneRegExp = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 const SignupSchema = (t) =>
     yup.object().shape({
@@ -57,6 +54,7 @@ function Signup(props) {
     const { t } = useTranslation();
     const {subscription = {}} = props
     const [error, setError] = useState(false)
+    const [brokers, setBrokers] = useState([])
     const dispatch = useDispatch();
     const formik = useFormik({
         initialValues: initialValues,
@@ -65,6 +63,23 @@ function Signup(props) {
             dispatch(createNewAccount(values))
         },
     });
+
+    useEffect(() => {
+        axios
+        .get("https://us-central1-ziaapp-ac0eb.cloudfunctions.net/GetAllBrokers")
+        .then((res) => {
+            setBrokers(formatter(res.data))
+        })
+      .catch((err) => console.log(err));
+    }, [])
+
+    const formatter = (data) => {
+        const test = data.map((v) => ({
+          label: v.numeroPermis,
+          value: v.numeroPermis,
+        }));
+        return test;
+    }
 
     useEffect(() => {
         console.log("props", props);
@@ -161,6 +176,22 @@ function Signup(props) {
                                     <div className="text-danger mt-1 ml-2">
                                         {formik.errors.username}
                                     </div>
+                                )}
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="licenseId">License No*</label>
+                                <Select
+                                name="licenseId"
+                                onChange={(option) => {
+                                    formik.setFieldValue("licenseId", option.value);
+                                }}
+                                onBlur={formik.handleBlur}
+                                options={brokers}
+                                ></Select>
+                                {formik.errors.licenseId && formik.touched.licenseId && (
+                                <div className="text-danger mt-1 ml-2">
+                                    {formik.errors.licenseId}
+                                </div>
                                 )}
                             </div>
                             <div className="form-group">

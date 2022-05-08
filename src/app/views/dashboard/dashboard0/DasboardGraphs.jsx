@@ -7,14 +7,12 @@ import { useFirestoreConnect } from "react-redux-firebase";
 import ReactEcharts from "echarts-for-react";
 import { useTranslation } from "react-i18next";
 import { cloudFunctions } from "app/services/firebase/firebase";
+import ReactPaginate from "react-paginate";
 
 const DashboardGraphs = () => {
   const { t } = useTranslation();
-  const [prospects, setProspects] = useState();
-  const [leads, setLeads] = useState();
-  const [myLeads, setMyLeads] = useState();
+  const [pageNumber, setPageNumber] = useState(0);
   const [asending, setAsending] = useState(false);
-  const [leadList, setLeadList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [contacts, setContacts] = useState([])
   const [visibility, setVisiblity] = useState({})
@@ -241,14 +239,14 @@ const DashboardGraphs = () => {
         .slice()
         .sort((a, b) => new Date(a.dateCreation) - new Date(b.dateCreation));
 
-      setLeadList(sorted);
+      setContacts(sorted);
       setAsending(true);
     } else {
       const sorted = contacts
         .slice()
         .sort((a, b) => new Date(b.dateCreation) - new Date(a.dateCreation));
 
-      setLeadList(sorted);
+      setContacts(sorted);
       setAsending(false);
     }
   };
@@ -264,6 +262,10 @@ const DashboardGraphs = () => {
     }));
 
     return sorted;
+  };
+
+  const handlePageClick = data => {
+    setPageNumber(data.selected)
   };
 
   if (loading) {
@@ -403,7 +405,7 @@ const DashboardGraphs = () => {
               </Dropdown>
             </div>
 
-            <div className="">
+            <div className="pb-2">
               <div className="table-responsive">
                 <table id="user_table" className="table  text-center">
                   <thead>
@@ -419,12 +421,13 @@ const DashboardGraphs = () => {
                         )}
                       </th>
                       <th scope="col">{t("DGraphs.17")}</th>
+                      <th scope="col">{t("DGraphs.19")}</th>
                       <th scope="col">{t("DGraphs.18")}</th>
                       {/* <th scope="col">Action</th> */}
                     </tr>
                   </thead>
                   <tbody>
-                    {contacts.map((user, index) => (
+                    {contacts.slice(10*pageNumber, 10*(pageNumber+1)).map((user, index) => (
                       <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <td className="text-justify">{user.name}</td>
@@ -448,6 +451,19 @@ const DashboardGraphs = () => {
                   </tbody>
                 </table>
               </div>
+              <ReactPaginate
+                previousLabel={<i className="i-Previous"></i>}
+                nextLabel={<i className="i-Next1"></i>}
+                breakLabel={"..."}
+                breakClassName={"break-me"}
+                pageCount={Math.ceil(contacts.length / 10)}
+                marginPagesDisplayed={2}
+                pageRangeDisplayed={5}
+                onPageChange={handlePageClick}
+                containerClassName={"pagination"}
+                subContainerClassName={"pages pagination"}
+                activeClassName={"active"}
+              />
             </div>
           </div>
         </div>

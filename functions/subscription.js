@@ -42,7 +42,8 @@ exports.createNewAccount = functions.https.onCall(async (data, context) => {
       .set({
         ...data,
         userId: user.uid,
-        userEmail: data.email
+        userEmail: data.email,
+        licenseId: data.licenseId,
     });
     return { id: user.uid, ...data };
   } catch (e) {
