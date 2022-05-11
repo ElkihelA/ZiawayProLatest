@@ -18,7 +18,6 @@ import UserMessages from "./UserMessages";
 import { storage } from "../../services/firebase/firebase";
 import placeholder from "./placeholder.png";
 import PreviewModal from "./PreviewModal";
-
 import ManageSubscription from "./ManageSubscription";
 
 class UserProfile extends Component {

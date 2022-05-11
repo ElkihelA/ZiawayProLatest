@@ -47,10 +47,11 @@ const subscriptions = require("./subscription");
  * Webhook stuff
  */
 const webhooks = require("./webhooks");
-
+const dashboard = require('./dashboard');
 module.exports = {
   ...subscriptions,
-  ...webhooks
+  ...webhooks,
+  ...dashboard
 };
 
 function EvaluerCoproprietes(evalData) {
