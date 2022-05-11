@@ -37,7 +37,7 @@ const Information = () => {
 
             Linkedin: data?.linkedIn,
 
-            Twitter: data?.twitter,
+            Twitter_Address: data?.twitter,
 
             Website: data?.website,
 

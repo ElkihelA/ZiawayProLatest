@@ -36,7 +36,7 @@ const UserMessages = () => {
 
             Linkedin: profile?.officialInformation?.linkedIn,
 
-            Twitter: profile?.officialInformation?.twitter,
+            Twitter_Address: profile?.officialInformation?.twitter,
 
             Website: profile?.officialInformation?.website,
 

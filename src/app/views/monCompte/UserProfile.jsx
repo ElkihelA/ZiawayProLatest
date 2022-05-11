@@ -69,7 +69,7 @@ class UserProfile extends Component {
 
             Linkedin: this.props.profile?.officialInformation?.linkedIn,
 
-            Twitter: this.props.profile?.officialInformation?.twitter,
+            Twitter_Address: this.props.profile?.officialInformation?.twitter,
 
             Website: this.props.profile?.officialInformation?.website,
 
