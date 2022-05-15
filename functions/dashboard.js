@@ -139,7 +139,7 @@ exports.createFilters = functions.https.onRequest(async(req, res) => {
     }
 })
 
-exports.defaulsFilters = functions.https.onCall(async (data, context) => {
+exports.defaultFilters = functions.https.onCall(async (data, context) => {
     try {
         /**
          * 1. Get User Id:

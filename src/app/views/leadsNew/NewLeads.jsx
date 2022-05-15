@@ -43,7 +43,7 @@ const NewLeads = () => {
   const [dateInfo, setDate] = useState(false);
 
   const getUserFilters = () => {
-    const httpCallable = cloudFunctions.httpsCallable('defaulsFilters');
+    const httpCallable = cloudFunctions.httpsCallable('defaultFilters');
     httpCallable().then(res => {
       debugger;
       const cities = [];
