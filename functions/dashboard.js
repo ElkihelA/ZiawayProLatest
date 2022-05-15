@@ -1,5 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+const _ = require('lodash');
+const moment = require('moment');
+const cors = require("cors")({ origin: '*' });
 exports.dashboard = functions.https.onCall(async (data, context) => {
     try {
         const userId = context.auth.uid;
@@ -58,4 +61,141 @@ const myLeadSorted = (myLeads = [], initialDate, finalDate) => {
     });
 
     return resultProductData;
-  };
+};
+
+exports.newleads = functions.https.onRequest(async (req, res) => {
+    cors(req, res, async () => {
+        try {
+            /**
+             * 1. Get User Id
+             */
+            const userId = 'H9ADsM26FIOtajKFDa5fJB9imcj2';
+            /**
+             * 2. Get Request Body
+             */
+            const {
+                city = 'Montréal',
+                municipalite = 'Pointe-de-Sainte-Foy',
+                startDate = moment().subtract(2031, 'days').format('YYYY-MM-DD'),
+                endDate = moment().format('YYYY-MM-DD'),
+            } = req.body;
+            /**
+             * 3: Get All Data in last 30.
+             */
+            const data = [], evals = [], all = [], buyers = [], sellers = [], prospects = [];
+            const snap = await admin.firestore().collection('RapportsEvaluations')
+                //.where('dateCreation', '>=', startDate)
+                //.where('dateCreation', '<=', endDate)
+                .where('municipalite', '==', municipalite)
+                .where('location.city', '==', city)
+                .orderBy('dateCreation', 'desc').get();
+            snap.forEach(item => {
+                const d = item.data();
+                data.push({id: item.id, ...d})
+                if (d.location && d.location.city === city) {
+                    if (d.ouiContacterParProfessionnel === "oui") {
+                        evals.push({id: item.id, ...d});
+                        all.push({id: item.id, ...d});
+                    }
+                    if (d.ouiContacterParProfessionnel === "non") {
+                        prospects.push({id: item.id, ...d});
+                    }
+                    if (d.estProprietaireReponse === "oui") {
+                        sellers.push({id: item.id, ...d});
+                    }
+                    if (d.estProprietaireReponse === "non") {
+                        buyers.push({id: item.id, ...d});
+                    }
+                }
+            });
+            res.status(200).json({
+                data,
+                evals,
+                all,
+                sellers,
+                prospects,
+                buyers,
+                filter: {
+                    city, municipalite
+                }
+            })
+        } catch (e) {
+            res.status(500).json({error: true, message: e.message})
+        }
+    })
+});
+
+exports.createFilters = functions.https.onRequest(async(req, res) => {
+    try {
+        const cities = [
+            "Québec",
+            "Montréal",
+            "Westmount",
+            "Longueuil",
+            "Saguenay",
+            "Laval",
+            "Côte Saint-Luc",
+            "Saint-Philippe",
+            "Prévost",
+            "Terrebonne"
+        ];
+        const filters = []
+        for(let i = 0; i < cities.length; i++) {
+            const municipalities = [];
+            const snap = await admin.firestore()
+                .collection('RapportsEvaluations')
+                .where('location.city','==', cities[i])
+                .get();
+            snap.forEach(item => {
+                const d = item.data();
+                if(d.municipalite && !municipalities.includes(d.municipalite)) {
+                    municipalities.push(d.municipalite);
+                }
+            })
+            await admin.firestore().collection('newleads-filters')
+                .doc(cities[i]).set({city: cities[i], municipalities})
+            filters.push({city: cities[i], municipalities});
+        }
+        res.status(200).json(filters);
+    }catch(e) {
+        res.status(500).json({messagge: e.message})
+    }
+})
+
+exports.defaulsFilters = functions.https.onRequest(async (req, res) => {
+    cors(req, res, async () => {
+        try {
+            /**
+             * 1. Get User Id:
+             */
+            const userId = 'H9ADsM26FIOtajKFDa5fJB9imcj2';
+            /**
+             * 2. Get List Filters
+             */
+            const filtersSnap = await admin.firestore().collection('newleads-filters').get();
+            const filters = {};
+            filtersSnap.forEach(doc => filters[doc.id] = doc.data());
+            /**
+             * 3. Get User Filters
+             */
+            const defaultFiltersSnap = await admin.firestore().collection('newleads-default-filters')
+                .doc(userId).get();
+            let defaultFilters = {};
+            if(defaultFiltersSnap.exists) {
+                defaultFilters = {id: defaultFiltersSnap.id, ...defaultFiltersSnap.data()};
+            } else {
+                defaultFilters = {
+                    id: userId,
+                    city: 'Québec',
+                    municipalite: 'Pointe-de-Sainte-Foy',
+                    startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                    endDate: moment().format('YYYY-MM-DD')
+                };
+                await admin.firestore().collection('newleads-default-filters').doc(userId).set(defaultFilters);
+            }
+            res.status(200).json({filters, defaultFilters});
+        }catch (e) {
+            res.status(500).json({error: true, message: e.message})
+        }
+    })
+})

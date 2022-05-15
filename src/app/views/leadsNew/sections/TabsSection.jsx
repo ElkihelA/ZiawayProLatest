@@ -13,6 +13,7 @@ const TabsSection = ({ data, onClick, prospects }) => {
   const [leads, setLeads] = useState(null);
   const [myLeads, setMyLeads] = useState(null);
   const [prospect, setProspect] = useState(null);
+  const [currentTab, setCurrentTab] = useState('Date');
 
   useEffect(() => {
     if (profile && data) {
@@ -113,7 +114,7 @@ const TabsSection = ({ data, onClick, prospects }) => {
   };
 
   return (
-    <Tab.Container id="left-tabs-example" defaultActiveKey="Date">
+    <Tab.Container id="left-tabs-example" defaultActiveKey="Date" onSelect={key => setCurrentTab(key)}>
       <div className="border rounded-lg position-relative">
         <div className="border-bottom">
           <ul
@@ -151,48 +152,58 @@ const TabsSection = ({ data, onClick, prospects }) => {
         <div className="overflow-auto" style={{ height: 620 }}>
           <Tab.Content className="h-100">
             <Tab.Pane eventKey="Price">
-              <ul className="nav flex-column gy-2">
-                {leads?.map((item) => (
-                  <li key={item.id}>
-                    <NewLeadCard data={item} onClick={onClick} />
-                  </li>
-                ))}
-              </ul>
-            </Tab.Pane>
+              {currentTab === 'Price' &&
+                  <ul className="nav flex-column gy-2">
+                    {leads?.map((item) => (
+                        <li key={item.id}>
+                          <NewLeadCard data={item} onClick={onClick} />
+                        </li>
+                    ))}
+                  </ul>
+              }
+              </Tab.Pane>
             <Tab.Pane eventKey="Date">
-              <ul className="nav flex-column gy-2">
-                {prospect?.map((item) => (
-                  <li>
-                    <NewLeadCard
-                      data={item}
-                      onClick={onClick}
-                      prospect={true}
-                    />
-                  </li>
-                ))}
-              </ul>
+              {
+                currentTab === 'Date' &&
+                  <ul className="nav flex-column gy-2">
+                    {prospect?.map((item) => (
+                        <li>
+                          <NewLeadCard
+                              data={item}
+                              onClick={onClick}
+                              prospect={true}
+                          />
+                        </li>
+                    ))}
+                  </ul>
+              }
             </Tab.Pane>
             <Tab.Pane className="h-100" eventKey="MyLeads">
-              <ul className="nav flex-column gy-2">
-                {myLeads?.map((item) => (
-                  <li>
-                    <NewLeadCard data={item} onClick={onClick} />
-                  </li>
-                ))}
-              </ul>
+              {
+                currentTab === 'MyLeads' &&
+                  <ul className="nav flex-column gy-2">
+                    {myLeads?.map((item) => (
+                        <li>
+                          <NewLeadCard data={item} onClick={onClick} />
+                        </li>
+                    ))}
+                  </ul>
+              }
             </Tab.Pane>
             <Tab.Pane className="h-100" eventKey="Bookmarks">
-              <ul className="nav flex-column gy-2">
-                {profile?.bookmarks?.map((item) => (
-                  <li>
-                    <NewLeadCard
-                      data={item}
-                      onClick={onClick}
-                      prospect={true}
-                    />
-                  </li>
-                ))}
-              </ul>
+              {currentTab === 'Bookmarks' &&
+                  <ul className="nav flex-column gy-2">
+                    {profile?.bookmarks?.map((item) => (
+                        <li>
+                          <NewLeadCard
+                              data={item}
+                              onClick={onClick}
+                              prospect={true}
+                          />
+                        </li>
+                    ))}
+                  </ul>
+              }
             </Tab.Pane>
           </Tab.Content>
         </div>
