@@ -9,7 +9,6 @@ import { Loading } from "@gull";
 
 const NewLeads = () => {
   const { t } = useTranslation();
-  const Meetings = useSelector((state) => state.firestore.ordered.Meetings);
   const [menu, setMenu] = useState(false);
   const [All, setAll] = useState(null);
   const [allProspects, setAllProspects] = useState(null);
