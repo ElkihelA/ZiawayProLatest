@@ -90,31 +90,10 @@ exports.newleads = functions.https.onRequest(async (req, res) => {
                 .where('location.city', '==', city)
                 .orderBy('dateCreation', 'desc').get();
             snap.forEach(item => {
-                const d = item.data();
-                data.push({id: item.id, ...d})
-                if (d.location && d.location.city === city) {
-                    if (d.ouiContacterParProfessionnel === "oui") {
-                        evals.push({id: item.id, ...d});
-                        all.push({id: item.id, ...d});
-                    }
-                    if (d.ouiContacterParProfessionnel === "non") {
-                        prospects.push({id: item.id, ...d});
-                    }
-                    if (d.estProprietaireReponse === "oui") {
-                        sellers.push({id: item.id, ...d});
-                    }
-                    if (d.estProprietaireReponse === "non") {
-                        buyers.push({id: item.id, ...d});
-                    }
-                }
+                data.push({id: item.id, ...item.data()})
             });
             res.status(200).json({
                 data,
-                evals,
-                all,
-                sellers,
-                prospects,
-                buyers,
                 filter: {
                     city, municipalite
                 }

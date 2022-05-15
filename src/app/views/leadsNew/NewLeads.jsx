@@ -5,6 +5,7 @@ import Map from "../carteProspection/Map";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 import TabsSection from "./sections/TabsSection";
+import { Loading } from "@gull";
 
 const NewLeads = () => {
   const { t } = useTranslation();
@@ -33,6 +34,7 @@ const NewLeads = () => {
   const [projectStatus, setStatus] = useState(null);
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
+  const [loading, setLoading] = useState(true)
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -82,23 +84,20 @@ const NewLeads = () => {
       setMunciValue({label: municipalite, value: municipalite});
       setUserFilters(res.data.defaultFilters);
       setDefaultFilters(res.data.defaultFilters);
+      setLoading(false)
     }).catch(err => {
       console.log(err)
     })
   }
 
   const getUserData = (filters = {}) => {
+    setLoading(true);
     axios({
       method: 'post',
       url: 'http://localhost:5000/ziaapp-ac0eb/us-central1/newleads',
       data: filters
     }).then(res => {
-      /*setAllProspects(res.data.prospects);
-      setProspects(res.data.prospects);
-      setBuyers(res.data.buyers);
-      setSellers(res.data.sellers);
-      setEvals(res.data.evals);
-      setAll(res.data.all);*/
+      setLoading(false);
       setReports(res.data.data);
     }).catch(err => {
       console.log('err', err)
@@ -125,26 +124,6 @@ const NewLeads = () => {
       value: v,
       label: v,
     }));
-  };
-
-  const c = (data) => {
-    let test = [];
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]?.location?.city) === false) {
-        test.push(data[i]?.location?.city);
-      }
-    }
-    return test;
-  };
-
-  const muncipalFormatter = (data) => {
-    let test = [];
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]?.municipalite) === false) {
-        test.push(data[i]?.municipalite);
-      }
-    }
-    return test;
   };
 
   const statusFormatter = (data) => {
@@ -268,17 +247,6 @@ const NewLeads = () => {
         setUserFilters({...userFilters, city: e.value, municipalite: val.municipalities[0]});
       }
     }
-    /*
-    const test = All.filter((v) => v.location.city === value);
-    const test2 = allProspects.filter((v) => v.location.city === value);
-    let filteredmunci = All.filter((v) => v.location.city === value).map(
-      (v) => v
-    );
-
-    setEvals(test);
-    setProspects(test2);
-    setMuncipal(muncipalFormatter(filteredmunci));
-    */
   };
 
   const onMuncipleChange = (e) => {
@@ -474,12 +442,13 @@ const NewLeads = () => {
   const refreshFilter = () => {
     setEvals(All);
     setProspects(allProspects);
-    setCityValue(null);
-    setMunciValue(null);
+    setCityValue({label: defaultFilters.city, value: defaultFilters.city});
+    setMunciValue({label: defaultFilters.municipalite, value: defaultFilters.municipalite});
     setProjectValue(null);
     setBuyerCheck(null);
     setOwnerValue(null);
     setDate(false);
+    setUserFilters({...userFilters, city: defaultFilters.city, municipalite: defaultFilters.municipalite})
   };
 
   console.log("Leads:", evaluations);
@@ -487,6 +456,7 @@ const NewLeads = () => {
 
   return (
     <>
+      {loading && <Loading />}
       <section className="pb-4">
         <div className="mb-4">
           <ul className="nav row gy-3">
@@ -575,7 +545,6 @@ const NewLeads = () => {
                                 type="radio"
                                 name="days"
                                 id="31days"
-                                checked={dateOption === '31days'}
                                 onClick={(e) => onDaysSubtract(31)}
                               />
                               <label class="form-check-label" for="31days">
