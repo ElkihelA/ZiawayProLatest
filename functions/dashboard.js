@@ -63,45 +63,43 @@ const myLeadSorted = (myLeads = [], initialDate, finalDate) => {
     return resultProductData;
 };
 
-exports.newleads = functions.https.onRequest(async (req, res) => {
-    cors(req, res, async () => {
-        try {
-            /**
-             * 1. Get User Id
-             */
-            const userId = 'H9ADsM26FIOtajKFDa5fJB9imcj2';
-            /**
-             * 2. Get Request Body
-             */
-            const {
-                city = 'Montréal',
-                municipalite = 'Pointe-de-Sainte-Foy',
-                startDate = moment().subtract(2031, 'days').format('YYYY-MM-DD'),
-                endDate = moment().format('YYYY-MM-DD'),
-            } = req.body;
-            /**
-             * 3: Get All Data in last 30.
-             */
-            const data = [], evals = [], all = [], buyers = [], sellers = [], prospects = [];
-            const snap = await admin.firestore().collection('RapportsEvaluations')
-                //.where('dateCreation', '>=', startDate)
-                //.where('dateCreation', '<=', endDate)
-                .where('municipalite', '==', municipalite)
-                .where('location.city', '==', city)
-                .orderBy('dateCreation', 'desc').get();
-            snap.forEach(item => {
-                data.push({id: item.id, ...item.data()})
-            });
-            res.status(200).json({
-                data,
-                filter: {
-                    city, municipalite
-                }
-            })
-        } catch (e) {
-            res.status(500).json({error: true, message: e.message})
+exports.newleads = functions.https.onCall(async (data, context) => {
+    try {
+        /**
+         * 1. Get User Id
+         */
+        const userId = context.auth.uid;
+        /**
+         * 2. Get Request Body
+         */
+        const {
+            city = 'Montréal',
+            municipalite = 'Pointe-de-Sainte-Foy',
+            startDate = moment().subtract(31, 'days').format('YYYY-MM-DD'),
+            endDate = moment().format('YYYY-MM-DD'),
+        } = data;
+        /**
+         * 3: Get All Data in last 30.
+         */
+        const list = [], evals = [], all = [], buyers = [], sellers = [], prospects = [];
+        const snap = await admin.firestore().collection('RapportsEvaluations')
+            //.where('dateCreation', '>=', startDate)
+            //.where('dateCreation', '<=', endDate)
+            .where('municipalite', '==', municipalite)
+            .where('location.city', '==', city)
+            .orderBy('dateCreation', 'desc').get();
+        snap.forEach(item => {
+            list.push({id: item.id, ...item.data()})
+        });
+        return {
+            data: list,
+            filter: {
+                city, municipalite
+            }
         }
-    })
+    } catch (e) {
+        return {error: true, message: e.message}
+    }
 });
 
 exports.createFilters = functions.https.onRequest(async(req, res) => {
@@ -141,40 +139,41 @@ exports.createFilters = functions.https.onRequest(async(req, res) => {
     }
 })
 
-exports.defaulsFilters = functions.https.onRequest(async (req, res) => {
-    cors(req, res, async () => {
-        try {
-            /**
-             * 1. Get User Id:
-             */
-            const userId = 'H9ADsM26FIOtajKFDa5fJB9imcj2';
-            /**
-             * 2. Get List Filters
-             */
-            const filtersSnap = await admin.firestore().collection('newleads-filters').get();
-            const filters = {};
-            filtersSnap.forEach(doc => filters[doc.id] = doc.data());
-            /**
-             * 3. Get User Filters
-             */
-            const defaultFiltersSnap = await admin.firestore().collection('newleads-default-filters')
-                .doc(userId).get();
-            let defaultFilters = {};
-            if(defaultFiltersSnap.exists) {
-                defaultFilters = {id: defaultFiltersSnap.id, ...defaultFiltersSnap.data()};
-            } else {
-                defaultFilters = {
-                    id: userId,
-                    city: 'Québec',
-                    municipalite: 'Pointe-de-Sainte-Foy',
-                    startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                    endDate: moment().format('YYYY-MM-DD')
-                };
-                await admin.firestore().collection('newleads-default-filters').doc(userId).set(defaultFilters);
-            }
-            res.status(200).json({filters, defaultFilters});
-        }catch (e) {
-            res.status(500).json({error: true, message: e.message})
+exports.defaulsFilters = functions.https.onCall(async (data, context) => {
+    try {
+        /**
+         * 1. Get User Id:
+         */
+        if(!context.auth || !context.auth.uid) {
+            return {error: true, message: 'User not connected'};
         }
-    })
+        const userId = context.auth.uid;
+        /**
+         * 2. Get List Filters
+         */
+        const filtersSnap = await admin.firestore().collection('newleads-filters').get();
+        const filters = {};
+        filtersSnap.forEach(doc => filters[doc.id] = doc.data());
+        /**
+         * 3. Get User Filters
+         */
+        const defaultFiltersSnap = await admin.firestore().collection('newleads-default-filters')
+            .doc(userId).get();
+        let defaultFilters = {};
+        if(defaultFiltersSnap.exists) {
+            defaultFilters = {id: defaultFiltersSnap.id, ...defaultFiltersSnap.data()};
+        } else {
+            defaultFilters = {
+                id: userId,
+                city: 'Québec',
+                municipalite: 'Pointe-de-Sainte-Foy',
+                startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
+                endDate: moment().format('YYYY-MM-DD')
+            };
+            await admin.firestore().collection('newleads-default-filters').doc(userId).set(defaultFilters);
+        }
+        return {filters, defaultFilters};
+    }catch (e) {
+        return {error: true, message: e.message};
+    }
 })

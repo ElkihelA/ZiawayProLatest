@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import axios from "axios";
 import TabsSection from "./sections/TabsSection";
 import { Loading } from "@gull";
+import Filters from "./filters";
+import {cloudFunctions} from "../../services/firebase/firebase";
 
 const NewLeads = () => {
   const { t } = useTranslation();
@@ -24,7 +26,6 @@ const NewLeads = () => {
   const [datedSellers, setDatedSellers] = useState([]);
   const [defaultFilters, setDefaultFilters] = useState({});
   const [filters, setFilters] = useState({});
-  const [dateOption, setDateOption] = useState('31days');
   const [userFilters, setUserFilters] = useState({});
   const [reports, setReports] = useState([])
   const [selectedMarker, setSelectedMarkers] = useState(false);
@@ -41,33 +42,10 @@ const NewLeads = () => {
   const [ownerValue, setOwnerValue] = useState(null);
   const [dateInfo, setDate] = useState(false);
 
-  /*
-  const reports = useSelector(
-    (state) => state.firestore.ordered.RapportsEvaluations
-  );
-  */
-
-  const options = [
-    { value: "oui", label: t("Leads.77") },
-    { value: "non", label: t("Leads.78") },
-    { value: "all", label: t("Leads.79") },
-  ];
-
-  /*
-  useFirestoreConnect([
-    {
-      collection: "RapportsEvaluations",
-      // where: ["ouiContacterParProfessionnel", "==", "oui"],
-      orderBy: [["dateCreation", "desc"]],
-    },
-  ]);
-  */
-
   const getUserFilters = () => {
-    axios({
-      method: 'get',
-      url: 'http://localhost:5000/ziaapp-ac0eb/us-central1/defaulsFilters',
-    }).then(res => {
+    const httpCallable = cloudFunctions.httpsCallable('defaulsFilters');
+    httpCallable().then(res => {
+      debugger;
       const cities = [];
       for(const [key, val] of Object.entries(res.data.filters)) {
         cities.push(key);
@@ -91,16 +69,15 @@ const NewLeads = () => {
 
   const getUserData = (filters = {}) => {
     setLoading(true);
-    axios({
-      method: 'post',
-      url: 'http://localhost:5000/ziaapp-ac0eb/us-central1/newleads',
-      data: filters
-    }).then(res => {
-      setLoading(false);
-      setReports(res.data.data);
-    }).catch(err => {
-      console.log('err', err)
-    })
+    const httpCallable = cloudFunctions.httpsCallable('newleads');
+    httpCallable(filters)
+        .then(res => {
+          debugger;
+        setLoading(false);
+        setReports(res.data.data);
+      }).catch(err => {
+        console.log('err', err)
+      })
   }
 
   useEffect(() => {
@@ -254,9 +231,11 @@ const NewLeads = () => {
     setUserFilters({...userFilters, municipalite: e.value});
   };
 
-  const onOwnerChange = (value) => {
+  const onOwnerChange = (e) => {
+    const value = e.value;
     setDate(false);
     setProjectValue(null);
+    setOwnerValue(e);
     const test = All.filter(
         (v) =>
             v.estProprietaireReponse === value &&
@@ -282,7 +261,9 @@ const NewLeads = () => {
     }
   };
 
-  const onStatusChange = (value) => {
+  const onStatusChange = (e) => {
+    setProjectValue(e);
+    const value = e.value;
     setDate(false);
     if (buyerCheck === true) {
       if (cityValue === null && munciValue === null) {
@@ -458,195 +439,28 @@ const NewLeads = () => {
       {loading && <Loading />}
       <section className="pb-4">
         <div className="mb-4">
-          <ul className="nav row gy-3">
-            <li className="col">
-              <div>
-                <ul className="nav row gy-3">
-                  <li className="col-12 col-md-8">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.1")}
-                        options={cities}
-                        value={cityValue}
-                        onChange={(e) => onCityChange(e)}
-                      />
-                    </div>
-                  </li>
-                  <li className="col-12 col-md-4">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.2")}
-                        options={muncipalities}
-                        value={munciValue}
-                        onChange={(e) => onMuncipleChange(e)}
-                      />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li className="col-12 col-xl-5">
-              <div>
-                <ul className="nav row gy-3">
-                  <li className="col-12 col-md-5">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.3")}
-                        options={options}
-                        value={ownerValue}
-                        onChange={(e) => {
-                          onOwnerChange(e.value);
-                          setOwnerValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-
-                  <li className="col-12 col-md-5">
-                    <div>
-                      <Select
-                        isDisabled={
-                          buyerCheck === null || ownerValue.value === "all"
-                        }
-                        placeholder={t("Leads.4")}
-                        value={projectValue}
-                        options={formatter(projectStatus)}
-                        onChange={(e) => {
-                          onStatusChange(e.value);
-                          setProjectValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-
-                  <li className="col-2 col-md-1 px-md-0">
-                    <div>
-                      <div>
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary"
-                          onMouseEnter={() => setMenu(!menu)}
-                        >
-                          <i className="i-Filter-2"></i>
-                        </button>
-
-                        <div
-                          className={`dropdown-menu dropdown-menu-right ${
-                            menu && "show"
-                          }`}
-                          onMouseLeave={() => setMenu(!menu)}
-                        >
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="31days"
-                                onClick={(e) => onDaysSubtract(31)}
-                              />
-                              <label class="form-check-label" for="31days">
-                                {t("Leads.5")}
-                              </label>
-                            </div>
-                          </div>
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="7days"
-                                onClick={(e) => onDaysSubtract(7)}
-                              />
-                              <label class="form-check-label" for="7days">
-                                {t("Leads.6")}
-                              </label>
-                            </div>
-                          </div>
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="31days"
-                                // onClick={(e) => onDaysSubtract(31)}
-                              />
-                              <ul className="nav gy-2">
-                                <li>
-                                  <b>{t("Leads.7")}</b>
-                                </li>
-                                <li>
-                                  <div>
-                                    <input
-                                      className="form-control "
-                                      type="date"
-                                      onChange={(e) =>
-                                        setInitialDate(e.target.value)
-                                      }
-                                    />
-                                  </div>
-                                </li>
-                                <li className="w-100">
-                                  <div className="text-center">
-                                    {t("Leads.8")}
-                                  </div>
-                                </li>
-                                <li>
-                                  <div>
-                                    <input
-                                      disabled={initialDate === null}
-                                      className="form-control "
-                                      type="date"
-                                      onChange={(e) =>
-                                        setFinalDate(e.target.value)
-                                      }
-                                    />
-                                  </div>
-                                </li>
-                                <li>
-                                  <div>
-                                    <button
-                                      disabled={initialDate === null}
-                                      className="btn btn-primary btn-block mb-2 "
-                                      type="date"
-                                      onClick={onDateChange}
-                                    >
-                                      {t("Leads.9")}
-                                    </button>
-                                    <button
-                                      className="btn btn-primary btn-block  "
-                                      type="date"
-                                      onClick={() => setDate(false)}
-                                    >
-                                      {t("Leads.10")}
-                                    </button>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="col-2 col-md-1 px-md-0">
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={refreshFilter}
-                      >
-                        <i className="i-Reload"></i>
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
+          <Filters
+              cities={cities}
+              cityValue={cityValue}
+              onCityChange={onCityChange}
+              muncipalities={muncipalities}
+              munciValue={munciValue}
+              onMuncipleChange={onMuncipleChange}
+              ownerValue={ownerValue}
+              onOwnerChange={onOwnerChange}
+              buyerCheck={buyerCheck}
+              onStatusChange={onStatusChange}
+              onDaysSubtract={onDaysSubtract}
+              refreshFilter={refreshFilter}
+              onDateChange={onDateChange}
+              setDate={setDate}
+              finalDate={finalDate}
+              setFinalDate={setFinalDate}
+              initialDate={initialDate}
+              setInitialDate={setInitialDate}
+              projectValue={projectValue}
+              projectStatus={projectStatus}
+          />
         </div>
         <div>
           <ul className="nav row gy-3">
