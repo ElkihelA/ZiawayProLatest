@@ -32,12 +32,13 @@ class Layout1Sidenav extends Component {
       this.openSecSidenav();
     } else {
       this.setSelected(item);
-      this.closeSecSidenav();
     }
   };
 
-  onMainItemMouseLeave = () => {
-    // this.closeSecSidenav();
+  onMainItemMouseLeave = (item) => {
+    if (item.type === "dropDown") {
+      this.closeSecSidenav();
+    }
   };
 
   setSelected = (selectedItem) => {
@@ -85,8 +86,6 @@ class Layout1Sidenav extends Component {
   };
 
   closeSidenav = () => {
-    console.log("closing sidenav");
-
     let { setLayoutSettings, settings } = this.props;
     setLayoutSettings(
       merge({}, settings, {
@@ -166,7 +165,7 @@ class Layout1Sidenav extends Component {
                 onMouseEnter={() => {
                   this.onMainItemMouseEnter(item);
                 }}
-                onMouseLeave={this.onMainItemMouseLeave}
+                onMouseLeave={() => this.onMainItemMouseLeave(item)}
                 key={i}
               >
                 {item.path && item.type !== "extLink" && (

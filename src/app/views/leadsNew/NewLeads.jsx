@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Select from "react-select";
-import TabsSection from "./sections/TabsSection";
 import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
 import Map from "../carteProspection/Map";
-import { formatters } from "algolia-places-react";
-import { Dropdown } from "react-bootstrap";
-import AcceptCallModal from "../videoCall/AcceptCallModal";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
+import TabsSection from "./sections/TabsSection";
+import { Loading } from "@gull";
+import Filters from "./filters";
+import {cloudFunctions} from "../../services/firebase/firebase";
 
 const NewLeads = () => {
   const { t } = useTranslation();
-  const Meetings = useSelector((state) => state.firestore.ordered.Meetings);
   const [menu, setMenu] = useState(false);
   const [All, setAll] = useState(null);
   const [allProspects, setAllProspects] = useState(null);
@@ -25,16 +24,17 @@ const NewLeads = () => {
   const [datedBuyers, setDatedBuyers] = useState([]);
   const [sellers, setSellers] = useState(null);
   const [datedSellers, setDatedSellers] = useState([]);
-  const reports = useSelector(
-    (state) => state.firestore.ordered.RapportsEvaluations
-  );
-
+  const [defaultFilters, setDefaultFilters] = useState({});
+  const [filters, setFilters] = useState({});
+  const [userFilters, setUserFilters] = useState({});
+  const [reports, setReports] = useState([])
   const [selectedMarker, setSelectedMarkers] = useState(false);
   const [cities, setCities] = useState(null);
   const [muncipalities, setMuncipal] = useState(null);
   const [projectStatus, setStatus] = useState(null);
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
+  const [loading, setLoading] = useState(true)
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -42,55 +42,64 @@ const NewLeads = () => {
   const [ownerValue, setOwnerValue] = useState(null);
   const [dateInfo, setDate] = useState(false);
 
-  const options = [
-    { value: "oui", label: t("Leads.77") },
-    { value: "non", label: t("Leads.78") },
-    { value: "all", label: t("Leads.79") },
-  ];
+  const getUserFilters = () => {
+    const httpCallable = cloudFunctions.httpsCallable('defaultFilters');
+    httpCallable().then(res => {
+      debugger;
+      const cities = [];
+      for(const [key, val] of Object.entries(res.data.filters)) {
+        cities.push(key);
+        if(key === res.data.defaultFilters.city) {
+          setMuncipal(formatter(val.municipalities));
+        }
+      }
+      setCities(formatter(cities));
+      setFilters(res.data.filters);
+      const city = res.data.defaultFilters.city;
+      const municipalite = res.data.defaultFilters.municipalite;
+      setCityValue({label: city, value: city});
+      setMunciValue({label: municipalite, value: municipalite});
+      setUserFilters(res.data.defaultFilters);
+      setDefaultFilters(res.data.defaultFilters);
+      setLoading(false)
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
-  const oui = "oui";
-  useFirestoreConnect([
-    {
-      collection: "RapportsEvaluations",
-      // where: ["ouiContacterParProfessionnel", "==", "oui"],
-      orderBy: [["dateCreation", "desc"]],
-    },
-  ]);
+  const getUserData = (filters = {}) => {
+    setLoading(true);
+    const httpCallable = cloudFunctions.httpsCallable('newleads');
+    httpCallable(filters)
+        .then(res => {
+          debugger;
+        setLoading(false);
+        setReports(res.data.data);
+      }).catch(err => {
+        console.log('err', err)
+      })
+  }
+
+  useEffect(() => {
+    getUserFilters();
+  },[]);
+
+  useEffect(() => {
+    if(userFilters.city) {
+      getUserData(userFilters);
+    }
+  }, [userFilters])
+
 
   const handleClick = (marker, event) => {
     setSelectedMarkers(marker);
   };
 
   const formatter = (data) => {
-    const test = data?.map((v) => ({
+    return data?.map((v) => ({
       value: v,
       label: v,
     }));
-    return test;
-  };
-
-  const cityFormatter = (data) => {
-    let test = [];
-
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]?.location?.city) === false) {
-        test.push(data[i]?.location?.city);
-      }
-    }
-
-    return test;
-  };
-
-  const muncipalFormatter = (data) => {
-    let test = [];
-
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]?.municipalite) === false) {
-        test.push(data[i]?.municipalite);
-      }
-    }
-
-    return test;
   };
 
   const statusFormatter = (data) => {
@@ -139,13 +148,6 @@ const NewLeads = () => {
       setDatedSellers(test2);
     }
   }, [datedEval]);
-
-  useEffect(() => {
-    if (All) {
-      setCities(cityFormatter(All));
-      setMuncipal(muncipalFormatter(All));
-    }
-  }, [All]);
 
   useEffect(() => {
     if (evaluations) {
@@ -211,149 +213,57 @@ const NewLeads = () => {
     },
   ];
 
-  const onCityChange = (value) => {
+  const onCityChange = (e) => {
     setDate(false);
-    setMunciValue(null);
-    const test = All.filter((v) => v.location.city === value);
-    const test2 = allProspects.filter((v) => v.location.city === value);
-    let filteredmunci = All.filter((v) => v.location.city === value).map(
-      (v) => v
-    );
-
-    setEvals(test);
-    setProspects(test2);
-    setMuncipal(muncipalFormatter(filteredmunci));
-  };
-
-  const onMuncipleChange = (value) => {
-    setDate(false);
-    const test = All.filter(
-      (v) => v.municipalite === value && v.location.city === cityValue.value
-    );
-
-    const test2 = allProspects.filter(
-      (v) => v.municipalite === value && v.location.city === cityValue.value
-    );
-
-    setEvals(test);
-    setProspects(test2);
-  };
-
-  const onOwnerChange = (value) => {
-    setDate(false);
-    setProjectValue(null);
-    if (value !== "all") {
-      if (cityValue === null && munciValue === null) {
-        const test = All.filter((v) => v.estProprietaireReponse === value);
-        const test2 = allProspects.filter(
-          (v) => v.estProprietaireReponse === value
-        );
-        setEvals(test);
-        setProspects(test2);
-      } else {
-        if (cityValue !== null && munciValue !== null) {
-          const test = All.filter(
-            (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-          );
-          const test2 = allProspects.filter(
-            (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-          );
-          setEvals(test);
-          setProspects(test2);
-        } else {
-          if (cityValue === null) {
-            const test = All.filter(
-              (v) =>
-                v.estProprietaireReponse === value &&
-                v.municipalite === munciValue.value
-            );
-            const test2 = allProspects.filter(
-              (v) =>
-                v.estProprietaireReponse === value &&
-                v.municipalite === munciValue.value
-            );
-            setEvals(test);
-            setProspects(test2);
-          } else {
-            if (munciValue === null) {
-              const test = All.filter(
-                (v) =>
-                  v.estProprietaireReponse === value &&
-                  v.location.city === cityValue.value
-              );
-              const test2 = allProspects.filter(
-                (v) =>
-                  v.estProprietaireReponse === value &&
-                  v.location.city === cityValue.value
-              );
-              setEvals(test);
-              setProspects(test2);
-            }
-          }
-        }
-      }
-
-      if (value === "oui") {
-        const test2 = All.map((v) => v.envisageVendreBienReponse);
-        setBuyerCheck(false);
-        setStatus(statusFormatter(test2));
-      } else {
-        setBuyerCheck(true);
-        const test3 = All.map((v) => v.statutRecherche);
-        setStatus(statusFormatter(test3));
-      }
-    } else {
-      setProjectValue(null);
-      //put a check for other fields
-      if (cityValue === null && munciValue === null) {
-        setEvals(All);
-        setProspects(allProspects);
-      } else {
-        if (cityValue !== null && munciValue !== null) {
-          const test = All.filter(
-            (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-          );
-          const test2 = allProspects.filter(
-            (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-          );
-          setEvals(test);
-          setProspects(test2);
-        } else {
-          if (cityValue === null) {
-            const test = All.filter((v) => v.municipalite === munciValue.value);
-            const test2 = allProspects.filter(
-              (v) => v.municipalite === munciValue.value
-            );
-            setEvals(test);
-            setProspects(test2);
-          } else {
-            if (munciValue === null) {
-              const test = All.filter(
-                (v) => v.location.city === cityValue.value
-              );
-              const test2 = allProspects.filter(
-                (v) => v.location.city === cityValue.value
-              );
-              setEvals(test);
-              setProspects(test2);
-            }
-          }
-        }
+    setCityValue(e)
+    for(const [key, val] of Object.entries(filters)) {
+      if(key === e.value) {
+        setMuncipal(formatter(val.municipalities));
+        setMunciValue({value: val.municipalities[0], label: val.municipalities[0]});
+        setUserFilters({...userFilters, city: e.value, municipalite: val.municipalities[0]});
       }
     }
   };
 
-  const onStatusChange = (value) => {
+  const onMuncipleChange = (e) => {
+    setDate(false);
+    setMunciValue(e);
+    setUserFilters({...userFilters, municipalite: e.value});
+  };
+
+  const onOwnerChange = (e) => {
+    const value = e.value;
+    setDate(false);
+    setProjectValue(null);
+    setOwnerValue(e);
+    const test = All.filter(
+        (v) =>
+            v.estProprietaireReponse === value &&
+            v.location.city === cityValue.value &&
+            v.municipalite === munciValue.value
+    );
+    const test2 = allProspects.filter(
+        (v) =>
+            v.estProprietaireReponse === value &&
+            v.location.city === cityValue.value &&
+            v.municipalite === munciValue.value
+    );
+    setEvals(test);
+    setProspects(test2);
+    if (value === "oui") {
+      const test2 = All.map((v) => v.envisageVendreBienReponse);
+      setBuyerCheck(false);
+      setStatus(statusFormatter(test2));
+    } else if(value == 'non') {
+      setBuyerCheck(true);
+      const test3 = All.map((v) => v.statutRecherche);
+      setStatus(statusFormatter(test3));
+    }
+  };
+
+  const onStatusChange = (e) => {
+    setProjectValue(e);
+    const value = e.value;
     setDate(false);
     if (buyerCheck === true) {
       if (cityValue === null && munciValue === null) {
@@ -491,8 +401,8 @@ const NewLeads = () => {
 
   const onDaysSubtract = (value) => {
     setDate(true);
-    var endDate = new Date();
-    var d = new Date();
+    const endDate = new Date();
+    const d = new Date();
     d.setDate(d.getDate() - value);
 
     var resultProductData = evaluations.filter(function (a) {
@@ -512,225 +422,45 @@ const NewLeads = () => {
   const refreshFilter = () => {
     setEvals(All);
     setProspects(allProspects);
-    setCityValue(null);
-    setMunciValue(null);
+    setCityValue({label: defaultFilters.city, value: defaultFilters.city});
+    setMunciValue({label: defaultFilters.municipalite, value: defaultFilters.municipalite});
     setProjectValue(null);
     setBuyerCheck(null);
     setOwnerValue(null);
     setDate(false);
+    setUserFilters({...userFilters, city: defaultFilters.city, municipalite: defaultFilters.municipalite})
   };
 
   console.log("Leads:", evaluations);
+  console.log('munciValue', munciValue)
 
   return (
     <>
+      {loading && <Loading />}
       <section className="pb-4">
         <div className="mb-4">
-          <ul className="nav row gy-3">
-            {/* <li className="col-6 col-lg-4 col-xl-8">
-            <div>
-              <Select
-                placeholder="Select City"
-                options={options}
-                onChange={(e) => onCityChange(e.value)}
-              />
-            </div>
-          </li> */}
-            <li className="col">
-              <div>
-                <ul className="nav row gy-3">
-                  <li className="col-12 col-md-8">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.1")}
-                        options={formatter(cities)}
-                        value={cityValue}
-                        onChange={(e) => {
-                          onCityChange(e.value);
-                          setCityValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-                  <li className="col-12 col-md-4">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.2")}
-                        options={formatter(muncipalities)}
-                        value={munciValue}
-                        onChange={(e) => {
-                          onMuncipleChange(e.value);
-                          setMunciValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-
-            <li className="col-12 col-xl-5">
-              <div>
-                <ul className="nav row gy-3">
-                  <li className="col-12 col-md-5">
-                    <div>
-                      <Select
-                        placeholder={t("Leads.3")}
-                        options={options}
-                        value={ownerValue}
-                        onChange={(e) => {
-                          onOwnerChange(e.value);
-                          setOwnerValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-
-                  <li className="col-12 col-md-5">
-                    <div>
-                      <Select
-                        isDisabled={
-                          buyerCheck === null || ownerValue.value === "all"
-                        }
-                        placeholder={t("Leads.4")}
-                        value={projectValue}
-                        options={formatter(projectStatus)}
-                        onChange={(e) => {
-                          onStatusChange(e.value);
-                          setProjectValue(e);
-                        }}
-                      />
-                    </div>
-                  </li>
-
-                  <li className="col-2 col-md-1 px-md-0">
-                    <div>
-                      <div>
-                        <button
-                          type="button"
-                          className="btn btn-outline-primary"
-                          // onClick={() => setMenu(!menu)}
-                          onMouseEnter={() => setMenu(!menu)}
-                        >
-                          <i className="i-Filter-2"></i>
-                        </button>
-
-                        <div
-                          className={`dropdown-menu dropdown-menu-right ${
-                            menu && "show"
-                          }`}
-                          onMouseLeave={() => setMenu(!menu)}
-                        >
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="31days"
-                                onClick={(e) => onDaysSubtract(31)}
-                              />
-                              <label class="form-check-label" for="31days">
-                                {t("Leads.5")}
-                              </label>
-                            </div>
-                          </div>
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="7days"
-                                onClick={(e) => onDaysSubtract(7)}
-                              />
-                              <label class="form-check-label" for="7days">
-                                {t("Leads.6")}
-                              </label>
-                            </div>
-                          </div>
-                          <div className="px-3 border-bottom pb-2 mb-2">
-                            <div class="form-check">
-                              <input
-                                class="form-check-input"
-                                type="radio"
-                                name="days"
-                                id="31days"
-                                // onClick={(e) => onDaysSubtract(31)}
-                              />
-                              <ul className="nav gy-2">
-                                <li>
-                                  <b>{t("Leads.7")}</b>
-                                </li>
-                                <li>
-                                  <div>
-                                    <input
-                                      className="form-control "
-                                      type="date"
-                                      onChange={(e) =>
-                                        setInitialDate(e.target.value)
-                                      }
-                                    />
-                                  </div>
-                                </li>
-                                <li className="w-100">
-                                  <div className="text-center">
-                                    {t("Leads.8")}
-                                  </div>
-                                </li>
-                                <li>
-                                  <div>
-                                    <input
-                                      disabled={initialDate === null}
-                                      className="form-control "
-                                      type="date"
-                                      onChange={(e) =>
-                                        setFinalDate(e.target.value)
-                                      }
-                                    />
-                                  </div>
-                                </li>
-                                <li>
-                                  <div>
-                                    <button
-                                      disabled={initialDate === null}
-                                      className="btn btn-primary btn-block mb-2 "
-                                      type="date"
-                                      onClick={onDateChange}
-                                    >
-                                      {t("Leads.9")}
-                                    </button>
-                                    <button
-                                      className="btn btn-primary btn-block  "
-                                      type="date"
-                                      onClick={() => setDate(false)}
-                                    >
-                                      {t("Leads.10")}
-                                    </button>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="col-2 col-md-1 px-md-0">
-                    <div>
-                      <button
-                        type="button"
-                        className="btn btn-outline-primary"
-                        onClick={refreshFilter}
-                      >
-                        <i className="i-Reload"></i>
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-            </li>
-          </ul>
+          <Filters
+              cities={cities}
+              cityValue={cityValue}
+              onCityChange={onCityChange}
+              muncipalities={muncipalities}
+              munciValue={munciValue}
+              onMuncipleChange={onMuncipleChange}
+              ownerValue={ownerValue}
+              onOwnerChange={onOwnerChange}
+              buyerCheck={buyerCheck}
+              onStatusChange={onStatusChange}
+              onDaysSubtract={onDaysSubtract}
+              refreshFilter={refreshFilter}
+              onDateChange={onDateChange}
+              setDate={setDate}
+              finalDate={finalDate}
+              setFinalDate={setFinalDate}
+              initialDate={initialDate}
+              setInitialDate={setInitialDate}
+              projectValue={projectValue}
+              projectStatus={projectStatus}
+          />
         </div>
         <div>
           <ul className="nav row gy-3">

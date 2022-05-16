@@ -153,7 +153,9 @@
 
     "77": "Vendeur",
     "78": "Acheteur",
-    "79": "Tous"
+    "79": "Tous",
+    "80": "AJOUTER DES NOTES",
+    "81": "HISTORIQUE DE RECHERCHES"
   },
   "Estimate": {
     "1": "Déterminer la",

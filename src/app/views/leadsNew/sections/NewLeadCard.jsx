@@ -232,7 +232,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
             style={{ height: 600 }}
           >
             <div className="row justify-content-between gy-3">
-              <div className="col-12 col-sm-2">
+              <div className="col-12 col-sm-4 col-xl-3">
                 <div>
                   <ul className="nav flex-column gy-3">
                     <li>
@@ -443,7 +443,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                               } `}
                               onClick={() => HandleTabs(2)}
                             >
-                              {t("Leads.32")} <br /> {t("Leads.33")}
+                              {t("Leads.81")}
                             </button>
                           </div>
                           <div className="my-2" />
@@ -470,7 +470,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
                           onClick={() => setShow(true)}
                         >
-                          {t("Leads.35")} <br /> {t("Leads.75")}
+                          {t("Leads.80")}
                         </button>
                       </div>
                       <div className="my-2" />
@@ -487,7 +487,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                   </ul>
                 </div>
               </div>
-              <div className="col-12 col-sm-10  order-first order-md-last">
+              <div className="col-12 col-sm-8 col-xl-9  order-first order-md-last">
                 <div>
                   <ul className="nav flex-column gy-3">
                     <li>
@@ -689,7 +689,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
               </span>
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
-            <div className="mt-1">
+            <div className="mt-1">jouter
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button
