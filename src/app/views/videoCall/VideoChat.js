@@ -58,6 +58,7 @@ const VideoChat = () => {
       console.log("datatoken", data);
       Video.connect(data.token, {
         name: roomName,
+        audio: true,
       })
         .then((room) => {
           setConnecting(false);

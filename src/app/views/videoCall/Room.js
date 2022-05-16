@@ -29,22 +29,38 @@ const Room = ({ roomName, room, handleLogout }) => {
     <Participant key={participant.sid} participant={participant} />
   ));
 
+  console.log("participants", participants);
+
   return (
     <div className="room">
-      <h2>Room: {roomName}</h2>
-      <button onClick={handleLogout}>Log out</button>
-      <div className="local-participant">
-        {room ? (
-          <Participant
-            key={room.localParticipant.sid}
-            participant={room.localParticipant}
-          />
-        ) : (
-          ""
-        )}
+      <div className="mb-3">
+        {/* <h2>Room: {roomName}</h2> */}
+        <button className="btn btn-primary" onClick={handleLogout}>
+          <span className="mr-1">
+            <i className="icon i-Arrow-Back-3 small" />
+          </span>
+          <span>Log out</span>
+        </button>
       </div>
-      <h3>Remote Participants</h3>
-      <div className="remote-participants">{remoteParticipants}</div>
+      <div className="row">
+        <div className="col-12 col-sm-6">
+          <div className="local-participant">
+            {room ? (
+              <Participant
+                key={room.localParticipant.sid}
+                participant={room.localParticipant}
+              />
+            ) : (
+              ""
+            )}
+          </div>
+        </div>
+        <div className="col-12 col-sm-6 mt-4 mt-sm-0">
+          <div>
+            <div className="remote-participants">{remoteParticipants}</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

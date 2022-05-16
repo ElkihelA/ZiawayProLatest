@@ -463,3 +463,36 @@ code {
 .table td {
   white-space: nowrap;
 }
+
+// == live call room
+
+.room {
+  .participant {
+    position: relative;
+
+    video {
+      height: 100%;
+      width: 100%;
+      border-radius: 0.5rem;
+      box-shadow: 0 0 5px 1px #663399b8;
+    }
+
+    .user-name {
+      position: absolute;
+      text-transform: capitalize;
+      bottom: 1.4rem;
+      left: 1rem;
+      border-radius: 50%;
+      background-color: #663399;
+      color: #fff;
+      height: 4.2rem;
+      width: 4.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+  }
+}
