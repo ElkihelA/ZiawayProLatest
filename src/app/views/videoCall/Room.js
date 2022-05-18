@@ -29,6 +29,15 @@ const Room = ({ roomName, room, handleLogout }) => {
     <Participant key={participant.sid} participant={participant} />
   ));
 
+  const handleMute = () => {
+    // room.localParticipant.videoTracks.forEach((track) => {
+    //   track.disable();
+    // });
+    room.localParticipant.audioTracks.forEach((publication) =>
+      publication.track.enable()
+    );
+  };
+
   console.log("participants", participants);
 
   return (
@@ -40,6 +49,12 @@ const Room = ({ roomName, room, handleLogout }) => {
             <i className="icon i-Arrow-Back-3 small" />
           </span>
           <span>Log out</span>
+        </button>
+        <button className="btn btn-primary" onClick={handleMute}>
+          <span className="mr-1">
+            <i className="icon i-Arrow-Back-3 small" />
+          </span>
+          <span>Mute</span>
         </button>
       </div>
       <div className="row">
