@@ -5,16 +5,14 @@ import TabsSection from "./sections/TabsSection";
 import { Loading } from "@gull";
 import moment from 'moment';
 import Filters from "./filters";
-import {cloudFunctions} from "../../services/firebase/firebase";
+import firebase, {cloudFunctions} from "../../services/firebase/firebase";
 
 const NewLeads = () => {
   const { t } = useTranslation();
-  const [menu, setMenu] = useState(false);
   const [All, setAll] = useState(null);
   const [allProspects, setAllProspects] = useState(null);
   const [evaluations, setEvals] = useState([]);
   const [prospects, setProspects] = useState([]);
-  const [datedProsp, setDatedProsp] = useState([]);
   const [initialDate, setInitialDate] = useState(null);
   const [finalDate, setFinalDate] = useState(null);
   const [buyers, setBuyers] = useState(null);
@@ -29,7 +27,7 @@ const NewLeads = () => {
   const [projectStatus, setStatus] = useState(null);
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -81,6 +79,7 @@ const NewLeads = () => {
     if(userFilters.city) {
       getUserData(userFilters);
     }
+    console.log('userFilters', userFilters)
   }, [userFilters])
 
 
@@ -286,13 +285,13 @@ const NewLeads = () => {
 
   const onDateChange = () => {
     setDate(true);
-    setUserFilters({...userFilters, endDate: finalDate, startDate: initialDate});
+    setUserFilters({...userFilters, endDate: finalDate, startDate: initialDate, dateFilterType: 'custom'});
   };
 
   const onDaysSubtract = (value) => {
     const endDate = moment().format('YYYY-MM-DD');
     const startDate = moment().subtract(value, 'days').format('YYYY-MM-DD')
-    setUserFilters({...userFilters, endDate, startDate});
+    setUserFilters({...userFilters, endDate, startDate, dateFilterType: value == 7 ? '7days': '31days'});
   };
 
   const refreshFilter = () => {
@@ -306,6 +305,18 @@ const NewLeads = () => {
     setDate(false);
     setUserFilters({...userFilters, city: defaultFilters.city, municipalite: defaultFilters.municipalite})
   };
+
+  useEffect(() => {
+    return () => {
+      debugger;
+      firebase.firestore()
+          .collection('newleads-default-filters')
+          .doc(userFilters.id).set(userFilters)
+          .then((res) => {
+            console.log('Testing Updates')
+          });
+    }
+  }, [])
 
   return (
     <>
@@ -333,6 +344,7 @@ const NewLeads = () => {
               setInitialDate={setInitialDate}
               projectValue={projectValue}
               projectStatus={projectStatus}
+              dateFilterType={userFilters.dateFilterType}
           />
         </div>
         <div>

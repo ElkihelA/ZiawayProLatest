@@ -23,7 +23,8 @@ export default function Filters(props) {
         initialDate,
         setInitialDate,
         projectValue,
-        projectStatus
+        projectStatus,
+        dateFilterType = '31days'
     } = props;
     const { t } = useTranslation();
     const [menu, setMenu] = useState(false);
@@ -119,6 +120,7 @@ export default function Filters(props) {
                                                     type="radio"
                                                     name="days"
                                                     id="31days"
+                                                    checked={dateFilterType === '31days'}
                                                     onClick={(e) => onDaysSubtract(31)}
                                                 />
                                                 <label className="form-check-label" htmlFor="31days">
@@ -133,6 +135,7 @@ export default function Filters(props) {
                                                     type="radio"
                                                     name="days"
                                                     id="7days"
+                                                    checked={dateFilterType === '7days'}
                                                     onClick={(e) => onDaysSubtract(7)}
                                                 />
                                                 <label className="form-check-label" htmlFor="7days">
@@ -146,7 +149,8 @@ export default function Filters(props) {
                                                     className="form-check-input"
                                                     type="radio"
                                                     name="days"
-                                                    id="31days"
+                                                    id="custom"
+                                                    checked={dateFilterType === 'custom'}
                                                     // onClick={(e) => onDaysSubtract(31)}
                                                 />
                                                 <ul className="nav gy-2">

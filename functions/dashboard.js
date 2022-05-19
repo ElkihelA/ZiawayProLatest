@@ -68,6 +68,9 @@ exports.newleads = functions.https.onCall(async (data, context) => {
         /**
          * 1. Get User Id
          */
+        if(!context.auth || !context.auth.uid) {
+            return {error: true, message: 'User not connected'};
+        }
         const userId = context.auth.uid;
         /**
          * 2. Get Request Body
@@ -77,6 +80,7 @@ exports.newleads = functions.https.onCall(async (data, context) => {
             municipalite = 'Pointe-de-Sainte-Foy',
             startDate = moment().subtract(31, 'days').format('YYYY-MM-DD'),
             endDate = moment().format('YYYY-MM-DD'),
+            dateFilterType = '31days',
         } = data;
         /**
          * 3: Get All Data in last 30.
@@ -91,6 +95,12 @@ exports.newleads = functions.https.onCall(async (data, context) => {
         snap.forEach(item => {
             list.push({id: item.id, ...item.data()})
         });
+        /**
+         * 4. Save Default filters
+         */
+        await admin.firestore()
+            .collection('newleads-default-filters')
+            .doc(userId).set({city, municipalite, startDate, endDate, dateFilterType})
         return {
             data: list,
             filter: {
@@ -161,14 +171,25 @@ exports.defaultFilters = functions.https.onCall(async (data, context) => {
             .doc(userId).get();
         let defaultFilters = {};
         if(defaultFiltersSnap.exists) {
-            defaultFilters = {id: defaultFiltersSnap.id, ...defaultFiltersSnap.data()};
+            const data = defaultFiltersSnap.data();
+            let startDate = data.startDate;
+            let endDate = data.endDate;
+            if(data.dateFilterType ===  '7days') {
+                endDate =  moment().format('YYYY-MM-DD');
+                startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+            } else if(data.dateFilterType === '31days') {
+                endDate =  moment().format('YYYY-MM-DD');
+                startDate = moment().subtract(31, 'days').format('YYYY-MM-DD');
+            }
+            defaultFilters = {id: defaultFiltersSnap.id, ...data, startDate, endDate};
         } else {
             defaultFilters = {
                 id: userId,
                 city: 'Québec',
                 municipalite: 'Pointe-de-Sainte-Foy',
                 startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                endDate: moment().format('YYYY-MM-DD')
+                endDate: moment().format('YYYY-MM-DD'),
+                dateFilterType: '31days',
             };
             await admin.firestore().collection('newleads-default-filters').doc(userId).set(defaultFilters);
         }
