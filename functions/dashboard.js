@@ -73,7 +73,7 @@ exports.newleads = functions.https.onCall(async (data, context) => {
          * 2. Get Request Body
          */
         const {
-            city = 'Montréal',
+            city = 'Québec',
             municipalite = 'Pointe-de-Sainte-Foy',
             startDate = moment().subtract(31, 'days').format('YYYY-MM-DD'),
             endDate = moment().format('YYYY-MM-DD'),
@@ -83,8 +83,8 @@ exports.newleads = functions.https.onCall(async (data, context) => {
          */
         const list = [], evals = [], all = [], buyers = [], sellers = [], prospects = [];
         const snap = await admin.firestore().collection('RapportsEvaluations')
-            //.where('dateCreation', '>=', startDate)
-            //.where('dateCreation', '<=', endDate)
+            .where('dateCreation', '>=', startDate)
+            .where('dateCreation', '<=', endDate)
             .where('municipalite', '==', municipalite)
             .where('location.city', '==', city)
             .orderBy('dateCreation', 'desc').get();

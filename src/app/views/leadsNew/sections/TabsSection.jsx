@@ -113,6 +113,8 @@ const TabsSection = ({ data, onClick, prospects }) => {
     }
   };
 
+  console.log(prospect)
+
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="Date" onSelect={key => setCurrentTab(key)}>
       <div className="border rounded-lg position-relative">
