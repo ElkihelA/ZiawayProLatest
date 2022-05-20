@@ -198,3 +198,44 @@ exports.defaultFilters = functions.https.onCall(async (data, context) => {
         return {error: true, message: e.message};
     }
 })
+
+
+exports.createRapportsEvaluations = functions.firestore
+.document('RapportsEvaluations/{userId}')
+.onCreate(async (snap, context) => {
+    // Get an object representing the document
+    // e.g. {'name': 'Marie', 'age': 66}
+    console.log("trigger")
+    /**
+         * 1. Get Snap from data
+         */
+     console.log('trigger');
+     const data = snap.data() || {};
+
+     /**
+      * 2. get cities & municipalities
+      */
+     const citiesSnap = await admin.firestore().collection('newleads-filters').get();
+     const cities = [];
+     citiesSnap.forEach(city =>  cities.push(city.data()));
+
+     /**
+      * 3. Add new city and municipality if not exists
+      */
+     if(data.location && data.location.city) {
+         console.log('city', data.location.city);
+         const findCity = cities.find(item => item.city === data.location.city);
+         console.log('findCity', findCity);
+         if(findCity) {
+             const findMunicipality = findCity.municipalities.find(item => item === data.municipalite);
+             console.log('findMunicipality', findMunicipality);
+             if(!findMunicipality) {
+                 findCity.municipalities.push(data.municipalite);
+                 await admin.firestore().collection('newleads-filters').doc(findCity.city).set(findCity);
+             }
+         } else {
+             const city = {city: data.location.city, municipalities: [data.municipalite || '']};
+             await admin.firestore().collection('newleads-filters').doc(city.city).set(city);
+         }
+     }
+});
