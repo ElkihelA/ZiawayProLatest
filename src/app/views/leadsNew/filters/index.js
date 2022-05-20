@@ -111,6 +111,7 @@ export default function Filters(props) {
                                         className={`dropdown-menu dropdown-menu-right ${
                                             menu && "show"
                                         }`}
+                                        style={{width: 400}}
                                         onMouseLeave={() => setMenu(!menu)}
                                     >
                                         <div className="px-3 border-bottom pb-2 mb-2">
@@ -153,58 +154,52 @@ export default function Filters(props) {
                                                     checked={dateFilterType === 'custom'}
                                                     // onClick={(e) => onDaysSubtract(31)}
                                                 />
-                                                <ul className="nav gy-2">
-                                                    <li>
-                                                        <b>{t("Leads.7")}</b>
-                                                    </li>
-                                                    <li>
-                                                        <div>
-                                                            <input
-                                                                className="form-control "
-                                                                type="date"
-                                                                onChange={(e) =>
-                                                                    setInitialDate(e.target.value)
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </li>
-                                                    <li className="w-100">
-                                                        <div className="text-center">
-                                                            {t("Leads.8")}
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div>
-                                                            <input
-                                                                disabled={initialDate === null}
-                                                                className="form-control "
-                                                                type="date"
-                                                                onChange={(e) =>
-                                                                    setFinalDate(e.target.value)
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </li>
-                                                    <li>
-                                                        <div>
-                                                            <button
-                                                                disabled={initialDate === null}
-                                                                className="btn btn-primary btn-block mb-2 "
-                                                                type="date"
-                                                                onClick={onDateChange}
-                                                            >
-                                                                {t("Leads.9")}
-                                                            </button>
-                                                            <button
-                                                                className="btn btn-primary btn-block  "
-                                                                type="date"
-                                                                onClick={() => setDate(false)}
-                                                            >
-                                                                {t("Leads.10")}
-                                                            </button>
-                                                        </div>
-                                                    </li>
-                                                </ul>
+                                                <div className="gy-2">
+                                                    <b>{t("Leads.7")}</b>
+                                                    <div className={"w-100 mb-2"}>
+                                                        <input
+                                                            className="form-control "
+                                                            type="date"
+                                                            onChange={(e) =>
+                                                                setInitialDate(e.target.value)
+                                                            }
+                                                            value={initialDate}
+                                                        />
+                                                    </div>
+                                                    <div className="w-100 mb-2 text-center">
+                                                        {t("Leads.8")}
+                                                    </div>
+                                                    <div className={"w-100 mb-2"}>
+                                                        <input
+                                                            disabled={initialDate === null}
+                                                            className="form-control "
+                                                            type="date"
+                                                            onChange={(e) =>
+                                                                setFinalDate(e.target.value)
+                                                            }
+                                                            value={finalDate}
+                                                        />
+                                                    </div>
+                                                    <div className={"px-2 d-flex justify-content-center"}>
+                                                        <button
+                                                            disabled={initialDate === null}
+                                                            className="btn btn-primary mx-2"
+                                                            type="date"
+                                                            onClick={onDateChange}
+                                                            style={{width: 150}}
+                                                        >
+                                                            {t("Leads.9")}
+                                                        </button>
+                                                        <button
+                                                            className="btn btn-primary mx-2"
+                                                            type="date"
+                                                            onClick={() => setDate(false)}
+                                                            style={{width: 150}}
+                                                        >
+                                                            {t("Leads.10")}
+                                                        </button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

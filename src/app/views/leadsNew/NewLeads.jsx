@@ -45,6 +45,10 @@ const NewLeads = () => {
           setMuncipal(formatter(val.municipalities));
         }
       }
+      if(res.data.defaultFilters.dateFilterType === 'custom') {
+        setInitialDate(res.data.defaultFilters.startDate);
+        setFinalDate(res.data.defaultFilters.endDate);
+      }
       setCities(formatter(cities));
       setFilters(res.data.filters);
       const city = res.data.defaultFilters.city;
