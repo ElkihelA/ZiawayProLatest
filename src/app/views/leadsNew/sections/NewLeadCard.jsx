@@ -16,20 +16,17 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-const NewLeadCard = ({ data, onClick, prospect }) => {
+const NewLeadCard = ({ data, onClick, prospect, reports = [] }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
-  const reports = useSelector(
-    (state) => state.firestore.ordered.RapportsEvaluations
-  );
 
   const profile = useSelector((state) => state.firebase.profile);
   const [show, setShow] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [openCard, setOpenCard] = useState(false);
   const [avaliableMenu, setAvaliableMenu] = useState(false);
-  const [evaluationCount, setCount] = useState(null);
+  const [evaluationCount, setCount] = useState(0);
   const [key, setKey] = useState(null);
   const [participant, setParticipant] = useState(null);
   const [token, setToken] = useState(
@@ -102,8 +99,6 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
     call: "tbd",
   };
 
-  console.log("profile", profile);
-
   const handleOnChange = (id, leadEmail) => {
     const today = new Date();
     var date =
@@ -175,6 +170,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
     const test = reports?.filter(
       (v) => v.location?.value === data?.location?.value
     );
+    console.log('count',test?.length)
     setCount(test?.length);
   }, [data, reports]);
 
@@ -234,8 +230,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
             <div className="row justify-content-between gy-3">
               <div className="col-12 col-sm-4 col-xl-3">
                 <div>
-                  <ul className="nav flex-column gy-3">
-                    <li>
+                  <div className="flex-column gy-3">
+                    <div className="mt-2">
                       <div
                         className="p-2 d-flex flex-column align-items q-center justify-content-center text-center mt-3 mx-auto"
                         style={{
@@ -262,10 +258,10 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
 
                         {/* <div className="mt-1">Contact Information</div> */}
                       </div>
-                    </li>
+                    </div>
                     {prospect === true ? null : data?.broker[0]?.brokerId ===
                       profile.userId ? (
-                      <li className="text-11">
+                      <div className="mt-2 text-11">
                         <div>
                           <button
                             type="button"
@@ -275,9 +271,9 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                             {t("Leads.23")}
                           </button>
                         </div>
-                      </li>
+                      </div>
                     ) : (
-                      <li className="text-11">
+                      <div className="mt-2 text-11">
                         <div>
                           <button
                             type="button"
@@ -302,11 +298,10 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                             </div>
                           </div>
                         )}
-                      </li>
+                      </div>
                     )}
 
-                    <li>
-                      <div className="d-flex justify-content-between">
+                    <div className="d-flex justify-content-between mt-2">
                         <div>
                           <Link
                             to={{
@@ -342,25 +337,10 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           </div>
                         ) : null} */}
                       </div>
-                    </li>
-                    <li>
+                    <div>
                       {prospect === true ? (
-                        // JSON.parse(localStorage.getItem("bookmarks").includes(data) === true ?
-                        // <>
-                        // <div>
-                        //   <button
-                        //     type="button"
-                        //     className={`btn btn-sm text-uppercase rounded-lg w-100 btn-primary `}
-
-                        //   >
-                        //     Added
-                        //   </button>
-                        // </div>
-                        // <div className="my-2" />
-                        // </>
-
                         <>
-                          <div>
+                          <div className={"mt-2"}>
                             {checkBookmarks(data?.id) === true ? (
                               <button
                                 type="button"
@@ -391,7 +371,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                       {prospect === true ||
                       data?.broker[0]?.brokerId !== profile.userId ? null : (
                         <>
-                          <div>
+                          <div className={"mt-2"}>
                             <button
                               type="button"
                               className={`btn btn-sm text-uppercase rounded-lg w-100 ${
@@ -407,7 +387,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           <div className="my-2" />
                         </>
                       )}
-                      <div>
+                      <div className={"mt-2"}>
                         <button
                           type="button"
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${
@@ -430,10 +410,9 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           {t("Leads.31")}
                         </button>
                       </div>
-                      <div className="my-2" />
                       {prospect === true ? null : (
                         <>
-                          <div>
+                          <div className={"mt-2"}>
                             <button
                               type="button"
                               className={`btn btn-sm text-uppercase rounded-lg w-100 ${
@@ -442,16 +421,16 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                                   : "btn-outline-primary"
                               } `}
                               onClick={() => HandleTabs(2)}
+                              style={{whiteSpace: "normal"}}
                             >
                               {t("Leads.81")}
                             </button>
                           </div>
-                          <div className="my-2" />
                         </>
                       )}
                       {prospect === true ||
                       data?.broker[0]?.brokerId !== profile.userId ? null : (
-                        <div>
+                          <div className={"mt-2"}>
                           <button
                             type="button"
                             className={`btn btn-sm text-uppercase rounded-lg w-100 ${
@@ -463,18 +442,17 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           </button>
                         </div>
                       )}
-                      <div className="my-2" />
-                      <div>
+                      <div className={"mt-2"}>
                         <button
                           type="button"
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
                           onClick={() => setShow(true)}
+                          style={{whiteSpace: "normal"}}
                         >
                           {t("Leads.80")}
                         </button>
                       </div>
-                      <div className="my-2" />
-                      <div>
+                      <div className={"mt-2"}>
                         <button
                           type="button"
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
@@ -483,15 +461,14 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           {t("Leads.36")}
                         </button>
                       </div>
-                    </li>
-                  </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="col-12 col-sm-8 col-xl-9  order-first order-md-last">
                 <div>
-                  <ul className="nav flex-column gy-3">
-                    <li>
-                      <div className="d-flex">
+                  <div className="flex-column gy-3">
+                      <div className="mt-2 d-flex">
                         <div className="flex-fill mx-auto border-right border-left border-gray-400 text-center d-flex flex-column justify-content-center">
                           <div className="pt-2">
                             <div className="text-14 mb-0 font-weight-bold">
@@ -544,8 +521,6 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           </span> */}
                         </div>
                       </div>
-                    </li>
-                    <li>
                       <div>
                         <div className="my-2" />
                         <div className="bg-white py-1 px-2 rounded">
@@ -618,8 +593,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                           </ul>
                         </div>
                       </div>
-                    </li>
-                    <li>
+                    <div className={"mt-2"}>
                       {tabs === 0 && (
                         <NewLeadLists
                           lists={lists}
@@ -656,8 +630,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                       {tabs === 5 && (
                         <MyNotes email={data?.userEmail} evalId={data.id} />
                       )}
-                    </li>
-                  </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -689,7 +663,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
               </span>
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
-            <div className="mt-1">jouter
+            <div className="mt-1">{t("Leads.82")}
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button

@@ -428,6 +428,7 @@ const NewLeads = () => {
                       <TabsSection
                         data={evaluations}
                         prospects={prospects}
+                        reports={reports}
                         onClick={handleClick}
                       />
                     </div>
