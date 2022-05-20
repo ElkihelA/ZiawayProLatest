@@ -174,6 +174,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                               data={item}
                               onClick={onClick}
                               prospect={true}
+                              showAddButton
                               reports={reports}
                           />
                         </li>

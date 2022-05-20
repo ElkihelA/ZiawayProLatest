@@ -16,7 +16,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-const NewLeadCard = ({ data, onClick, prospect, reports = [] }) => {
+const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
@@ -644,6 +644,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [] }) => {
             setOpenCard(true);
             onClick(data);
           }}
+          style={{maxHeight: 115}}
         >
           <div
             className="p-2 d-flex flex-column align-items-center justify-content-center text-center mr-3"
@@ -653,17 +654,18 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [] }) => {
             }}
           >
             {data?.estProprietaireReponse === "oui" ? (
-              <span className="h3 mb-0">
+              <span className="h3 mb-2 mt-2">
                 <i className="i-Favorite-Window"></i>
                 <i className="i-Favorite-Window"></i>
               </span>
             ) : (
-              <span className="h3 mb-0">
+              <span className="h3 mb-2 mt-2">
                 <i className="i-Favorite-Window"></i>
               </span>
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
-            <div className="mt-1">{t("Leads.82")}
+            <div>
+              {showAddButton && <>{t("Leads.82")}</>}
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button
@@ -682,7 +684,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [] }) => {
               )}
             </div>
           </div>
-          <div className="flex-fill d-flex">
+          <div className="flex-fill d-flex" style={{height: 90}}>
             <div className="flex-fill mx-auto border-right border-left border-gray-400 text-center">
               <div className="pt-2">
                 {data?.estProprietaireReponse === "non" ? (

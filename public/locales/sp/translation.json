@@ -45,8 +45,8 @@
   },
   "DGraphs": {
     "1": "Visibilité",
-    "2": "Évaluations totales :",
-    "3": "Impressions totales: :",
+    "2": "Évaluations totales:",
+    "3": "Impressions totales:",
     "4": "Prospection",
     "5": "Total Prospects:",
     "6": "Mes marque-pages:",
@@ -106,7 +106,7 @@
     "32": "Recherche",
     "33": "Histoire",
     "34": "Statut",
-    "35": "Ajouter",
+    "35": "Ajouter à mes prospects",
     "36": "Mes notes",
     "37": "Posté sur",
     "38": "(Valeur du projet VMZ)",
@@ -156,7 +156,7 @@
     "79": "Tous",
     "80": "AJOUTER DES NOTES",
     "81": "HISTORIQUE DE RECHERCHES",
-    "82": "Ajouter"
+    "82": "Ajouter à mes prospects"
   },
   "Estimate": {
     "1": "Déterminer la",

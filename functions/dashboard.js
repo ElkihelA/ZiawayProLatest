@@ -15,9 +15,13 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
         let totalContacts = 0;
         let myLeads = [];
         let leads = [];
+        let impressionTotal = 0;
         reports.docs.forEach(item => {
             const data = item.data();
             leads.push(data);
+            if(data.courtiers && data.courtiers.length) {
+                impressionTotal+=data.courtiers.length;
+            }
             if(data.ouiContacterParProfessionnel=== "oui") {
                 totalContacts++
             } else if(data.ouiContacterParProfessionnel=== "non") {
@@ -37,6 +41,7 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
             myLeadSorted(leads, "2022/02/01", "2022/02/28").length,
             myLeadSorted(leads, "2022/03/01", "2022/03/31").length,
         ];
+        visibility.impressionTotal = impressionTotal;
         return {
             visibility,
             prospoectLenght,
@@ -44,7 +49,7 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
             myLineData,
             lineData,
             myContactsLength: myLeads.length,
-            contacts: myLeads
+            contacts: myLeads,
         }
     } catch(e) {
         return {error: true, message: e.message};
@@ -93,6 +98,7 @@ exports.newleads = functions.https.onCall(async (data, context) => {
             .where('location.city', '==', city)
             .orderBy('dateCreation', 'desc').get();
         snap.forEach(item => {
+            const d = item.data();
             list.push({id: item.id, ...item.data()})
         });
         /**

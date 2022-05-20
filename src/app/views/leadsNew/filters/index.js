@@ -17,14 +17,14 @@ export default function Filters(props) {
         onDaysSubtract,
         refreshFilter,
         onDateChange,
-        setDate,
         finalDate,
         setFinalDate,
         initialDate,
         setInitialDate,
         projectValue,
         projectStatus,
-        dateFilterType = '31days'
+        dateFilterType = '31days',
+        setDateFilterType
     } = props;
     const { t } = useTranslation();
     const [menu, setMenu] = useState(false);
@@ -152,7 +152,7 @@ export default function Filters(props) {
                                                     name="days"
                                                     id="custom"
                                                     checked={dateFilterType === 'custom'}
-                                                    // onClick={(e) => onDaysSubtract(31)}
+                                                    onClick={(e) => setDateFilterType('custom')}
                                                 />
                                                 <div className="gy-2">
                                                     <b>{t("Leads.7")}</b>
@@ -193,7 +193,7 @@ export default function Filters(props) {
                                                         <button
                                                             className="btn btn-primary mx-2"
                                                             type="date"
-                                                            onClick={() => setDate(false)}
+                                                            onClick={(e) => onDaysSubtract(31)}
                                                             style={{width: 150}}
                                                         >
                                                             {t("Leads.10")}

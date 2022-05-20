@@ -35,6 +35,8 @@ const NewLeads = () => {
   const [ownerValue, setOwnerValue] = useState(null);
   const [dateInfo, setDate] = useState(false);
 
+  const [dateFilterType, setDateFilterType] = useState('31days');
+
   const getUserFilters = () => {
     const httpCallable = cloudFunctions.httpsCallable('defaultFilters');
     httpCallable().then(res => {
@@ -49,6 +51,7 @@ const NewLeads = () => {
         setInitialDate(res.data.defaultFilters.startDate);
         setFinalDate(res.data.defaultFilters.endDate);
       }
+      setDateFilterType(res.data.defaultFilters.dateFilterType);
       setCities(formatter(cities));
       setFilters(res.data.filters);
       const city = res.data.defaultFilters.city;
@@ -288,13 +291,15 @@ const NewLeads = () => {
   };
 
   const onDateChange = () => {
-    setDate(true);
     setUserFilters({...userFilters, endDate: finalDate, startDate: initialDate, dateFilterType: 'custom'});
   };
 
   const onDaysSubtract = (value) => {
     const endDate = moment().format('YYYY-MM-DD');
-    const startDate = moment().subtract(value, 'days').format('YYYY-MM-DD')
+    const startDate = moment().subtract(value, 'days').format('YYYY-MM-DD');
+    setInitialDate(null);
+    setFinalDate(null);
+    setDateFilterType(value == 7 ? '7days': '31days');
     setUserFilters({...userFilters, endDate, startDate, dateFilterType: value == 7 ? '7days': '31days'});
   };
 
@@ -303,6 +308,7 @@ const NewLeads = () => {
     setProspects(allProspects);
     setCityValue({label: defaultFilters.city, value: defaultFilters.city});
     setMunciValue({label: defaultFilters.municipalite, value: defaultFilters.municipalite});
+    setDateFilterType(defaultFilters.dateFilterType);
     setProjectValue(null);
     setBuyerCheck(null);
     setOwnerValue(null);
@@ -348,7 +354,8 @@ const NewLeads = () => {
               setInitialDate={setInitialDate}
               projectValue={projectValue}
               projectStatus={projectStatus}
-              dateFilterType={userFilters.dateFilterType}
+              dateFilterType={dateFilterType}
+              setDateFilterType={setDateFilterType}
           />
         </div>
         <div>
