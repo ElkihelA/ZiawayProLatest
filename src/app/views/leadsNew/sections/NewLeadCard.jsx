@@ -306,7 +306,7 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                     )}
 
                     <li>
-                      <div className="d-flex justify-content-between">
+                      {/* <div className="d-flex justify-content-between">
                         <div>
                           <Link
                             to={{
@@ -330,18 +330,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
                             <i className="i-Speach-Bubble-3 text-17 text-primary" />
                           </button>
                         </div>
-                        {/* {prospect === true ? (
-                          <div>
-                            <button
-                              type="button"
-                              className="btn p-0"
-                              onClick={() => addBookmark(data)}
-                            >
-                              <i className="i-Bookmark text-17 text-primary" />
-                            </button>
-                          </div>
-                        ) : null} */}
-                      </div>
+                       
+                      </div> */}
                     </li>
                     <li>
                       {prospect === true ? (
@@ -689,7 +679,8 @@ const NewLeadCard = ({ data, onClick, prospect }) => {
               </span>
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
-            <div className="mt-1">jouter
+            <div className="mt-1">
+              jouter
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button
