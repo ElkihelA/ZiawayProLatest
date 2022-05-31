@@ -8,7 +8,7 @@ import {
 import { Loading } from "@gull";
 
 const ManageSubscription = (props) => {
-  const { loading = false, account = {}, profile = {} } = props;
+  const { loading = false, account = {}, profile = {}, t } = props;
   useEffect(() => {
     if (profile.id) {
       props.getUserSubscriptionDetails();
@@ -17,17 +17,16 @@ const ManageSubscription = (props) => {
   return (
     <div>
       {loading && <Loading />}
-      <h4 className="pt-2 text-capitalize mb-0">Manage your subscription</h4>
+      <h4 className="pt-2 text-capitalize mb-0">{t('profile.subscription.subtitle')}</h4>
       {account.id && (
         <div>
-          <p>Infos about your subscription</p>
           <ul>
             <li>
-              Plan: <b>{account.planName}</b>
+                {t('profile.subscription.plan')}: <b>{account.planName}</b>
             </li>
             {account.amount && (
               <li>
-                Amount:{" "}
+                  {t('profile.subscription.amount')}:{" "}
                 <b>
                   {new Intl.NumberFormat("us-US", {
                     maximumFractionDigits: 2,
@@ -38,7 +37,7 @@ const ManageSubscription = (props) => {
             )}
             {account.subscriptionCurrentPeriodEnd && (
               <li>
-                Next Invoice:{" "}
+                  {t('profile.subscription.next_invoice')}:{" "}
                 <b>
                   {new Date(
                     account.subscriptionCurrentPeriodEnd * 1000
@@ -50,18 +49,7 @@ const ManageSubscription = (props) => {
         </div>
       )}
       <p>
-        If you want to upgrade, downgrade, cancel or pause your subscription,
-        please click on Manage Subscription Button below
-        <br />
-        Lorem Ipsum is simply dummy text of the printing and typesetting
-        industry. Lorem Ipsum has been the industry's standard dummy text ever
-        since the 1500s, when an unknown printer took a galley of type and
-        scrambled it to make a type specimen book. It has survived not only five
-        centuries, but also the leap into electronic typesetting, remaining
-        essentially unchanged. It was popularised in the 1960s with the release
-        of Letraset sheets containing Lorem Ipsum passages, and more recently
-        with desktop publishing software like Aldus PageMaker including versions
-        of Lorem Ipsum.
+        {t('profile.subscription.description')}
       </p>
       <div className="">
         <button

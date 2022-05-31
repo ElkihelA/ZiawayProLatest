@@ -522,7 +522,7 @@ class UserProfile extends Component {
                 <Tab eventKey="reset" title={t("profile.16")}>
                   <ResetPassword t={t} />
                 </Tab>
-                <Tab eventKey="manage-subscription" title="Manage Subscription">
+                <Tab eventKey="manage-subscription" title={t("profile.subscription.title")}>
                   <ManageSubscription />
                 </Tab>
               </Tabs>

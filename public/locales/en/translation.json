@@ -85,7 +85,7 @@
     "13": "Buyers",
     "14": "Sellers",
 
-    "15": "To lead",
+    "15": "To Prospect",
     "16": "To Contact",
     "17": "My Prospects",
     "18": "My Contact",
@@ -153,7 +153,10 @@
 
     "77": "Seller",
     "78": "Buyer",
-    "79": "All"
+    "79": "All",
+    "80": "Add Notes",
+    "81": "Search history",
+    "82": "Add to my prospects"
   },
   "Estimate": {
     "1": "Determine the",
@@ -600,7 +603,15 @@
     "16": "Password",
     "17": "My account",
     "18": "Home",
-    "19": "Minimum 8 letters"
+    "19": "Minimum 8 letters",
+    "subscription": {
+      "title": "Subscription",
+      "subtitle": "About your subsription",
+      "description": "Your subscription will be renewed automatically according to the periodicity you have chosen.\nFrom the portal dedicated to you, you can upgrade your subscription whenever you want. You can also cancel at any time. \n\nFor your complete information, please note that we do not store your credit card details.",
+      "amount": "Price",
+      "plan": "Plan",
+      "next_invoice": "Next Invoice"
+    }
   },
 
   "NProfile": {

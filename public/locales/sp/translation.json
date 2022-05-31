@@ -603,7 +603,15 @@
     "16": "Mot de passe",
     "17": "Mon compte",
     "18": "Accueil",
-    "19": "Au moins 8 lettres"
+    "19": "Au moins 8 lettres",
+    "subscription": {
+      "title": "Abonnement",
+      "subtitle": "A propos de votre abonnement",
+      "description": "Votre abonnement sera renouvelé automatiquement selon la périodicité que vous avez choisie. \nA partir du portail qui vous est dédié, vous pouvez effectuer quand vous le souhaitez une mise à niveau de votre abonnement. Vous pouvez également annuler à n'importe quel moment.\n\nPour votre complète information, sachez que nous ne stockons pas les détails de votre carte bancaire.",
+      "amount": "Prix",
+      "plan": "Forfait",
+      "next_invoice": "Prochaine Facture"
+    }
   },
 
   "NProfile": {
