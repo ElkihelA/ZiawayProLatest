@@ -88,7 +88,7 @@ const NewLeadStatus = ({ progress, id, date, email }) => {
                 type="radio"
                 name="flexRadioDefault"
                 id={i}
-                checked={item.name === progress}
+                defaultChecked={item.name === progress}
                 onClick={() => onProgressChange(item.name)}
               />
               <label class="form-check-label" for={i}>

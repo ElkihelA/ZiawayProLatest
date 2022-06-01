@@ -318,7 +318,6 @@ const NewLeads = () => {
 
   useEffect(() => {
     return () => {
-      debugger;
       firebase.firestore()
           .collection('newleads-default-filters')
           .doc(userFilters.id).set(userFilters)

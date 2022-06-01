@@ -160,10 +160,12 @@ export default function Filters(props) {
                                                         <input
                                                             className="form-control "
                                                             type="date"
-                                                            onChange={(e) =>
-                                                                setInitialDate(e.target.value)
+                                                            onChange={(e) =>{
+                                                                    setInitialDate(e.target.value);
+                                                                    setDateFilterType('custom');
+                                                                }
                                                             }
-                                                            value={initialDate}
+                                                            value={initialDate || ''}
                                                         />
                                                     </div>
                                                     <div className="w-100 mb-2 text-center">

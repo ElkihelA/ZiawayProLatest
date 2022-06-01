@@ -214,7 +214,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton }) =
         setShow={setJoinMeeting}
         token={token}
         setToken={setToken}
-        key={key}
         participant={participant}
       />
       <NotesModal show={show} setShow={setShow} evalId={data.id} />
