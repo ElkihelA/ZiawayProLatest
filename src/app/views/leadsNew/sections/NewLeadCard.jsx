@@ -454,7 +454,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                       <div className={"mt-2"}>
                         <button
                           type="button"
-                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
+                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} ${tabs === 5 ? "btn-primary" : "btn-outline-primary"}`}
                           onClick={() => HandleTabs(5)}
                         >
                           {t("Leads.36")}

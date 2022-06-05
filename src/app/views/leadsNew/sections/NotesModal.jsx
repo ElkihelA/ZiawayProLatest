@@ -88,9 +88,6 @@ const NotesModal = ({ show, setShow, evalId }) => {
         /> */}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={handleClose}>
-          {t("Leads.67")}
-        </Button>
         <Button variant="primary" onClick={addNote}>
           Add Note
         </Button>
