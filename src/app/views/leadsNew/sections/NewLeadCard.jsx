@@ -16,7 +16,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton }) => {
+const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, setUpdatedData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
@@ -622,6 +622,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton }) =
                               date={data?.broker[0]?.dateofAcceptance}
                               id={data?.id}
                               email={data?.userEmail}
+                              setUpdatedData={setUpdatedData}
                             />
                           )}
 

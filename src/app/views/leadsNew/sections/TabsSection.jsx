@@ -30,6 +30,12 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
     }
   }, [data, profile]);
 
+  const setUpdatedData = (id, broker=[]) => {
+    const idx = myLeads.findIndex(item => item.id === id);
+    myLeads[idx].broker = broker;
+    setMyLeads(myLeads);
+  }
+
   useEffect(() => {
     if (prospects) {
       setProspect(prospects);
@@ -158,7 +164,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                   <ul className="nav flex-column gy-2">
                     {leads?.map((item) => (
                         <li key={item.id}>
-                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
                     ))}
                   </ul>
@@ -176,6 +182,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                               prospect={true}
                               showAddButton
                               reports={reports}
+                              setUpdatedData={setUpdatedData}
                           />
                         </li>
                     ))}
@@ -188,7 +195,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                   <ul className="nav flex-column gy-2">
                     {myLeads?.map((item) => (
                         <li>
-                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
                     ))}
                   </ul>
@@ -204,6 +211,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                               onClick={onClick}
                               prospect={true}
                               reports={reports}
+                              setUpdatedData={setUpdatedData}
                           />
                         </li>
                     ))}
