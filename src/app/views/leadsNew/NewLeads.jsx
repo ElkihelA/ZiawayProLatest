@@ -116,7 +116,7 @@ const NewLeads = () => {
 
   const setUserData = (reports = []) => {
     const seller = reports?.filter((v) => v.estProprietaireReponse === "oui");
-    const buyer = reports?.filter((v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non");
+    const buyer = reports?.filter((v) => v.estProprietaireReponse === "non");
     const tobecontacted = reports?.filter((v) => v.ouiContacterParProfessionnel === "oui");
     const toBeProspected = reports?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
 
@@ -125,7 +125,7 @@ const NewLeads = () => {
     setAllProspects(toBeProspected);
     setProspects(toBeProspected);
     setAll(reports);
-    // setEvals(test);
+    setEvals(reports);
     setToBeContacted(tobecontacted);
     setReports(reports);
   }
@@ -159,7 +159,7 @@ const NewLeads = () => {
       subTitle: `${buyers?.length}`,
       subValue: buyers?.length === 0
           ? "0%"
-          : `${((buyers?.length * 100) / evaluations?.length).toFixed()}%`,
+          : `${((buyers?.length * 100) / reports?.length).toFixed()}%`,
       subValueColor:
         ((buyers?.length * 100) / evaluations?.length).toFixed() >= 50
           ? "text-success"
@@ -171,9 +171,9 @@ const NewLeads = () => {
       subTitle: `${sellers?.length}`,
       subValue: sellers?.length === 0
           ? "0%"
-          : `${((sellers?.length * 100) / evaluations?.length).toFixed()}%`,
+          : `${((sellers?.length * 100) / reports?.length).toFixed()}%`,
       subValueColor:
-        ((sellers?.length * 100) / evaluations?.length).toFixed() >= 50
+        ((sellers?.length * 100) / reports?.length).toFixed() >= 50
           ? "text-success"
           : "text-danger",
     },

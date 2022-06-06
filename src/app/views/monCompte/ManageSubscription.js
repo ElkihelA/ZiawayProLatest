@@ -48,17 +48,17 @@ const ManageSubscription = (props) => {
           </ul>
         </div>
       )}
-      <p>
+      <p style={{whiteSpace: 'pre-line'}}>
         {t('profile.subscription.description')}
       </p>
       <div className="">
-        <button
+        {account.id && <button
           onClick={() => props.manageSubscription()}
           disabled={loading}
           className="btn btn-primary btn-block text-capitalize"
         >
-          Manage Subscription {loading && "..."}
-        </button>
+          {t('profile.subscription.manage')} {loading && "..."}
+        </button>}
       </div>
     </div>
   );

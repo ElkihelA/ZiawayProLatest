@@ -46,13 +46,13 @@
   "DGraphs": {
     "1": "Visibility",
     "2": "Total Evaluations:",
-    "3": "Total Impressions:",
-    "4": "Leads",
-    "5": "Total Leads:",
-    "6": "My Bookmarks:",
+    "3": "Number of times recommended on reviews:",
+    "4": "Prospection",
+    "5": "Total prospects:",
+    "6": "My prospects:",
     "7": "Contacts",
     "8": "Total Contacts:",
-    "9": "My Contacts:",
+    "9": "My contacts:",
     "10": " Monthly Progress",
     "11": "Follow Up",
     "12": "Add new user",
@@ -610,7 +610,8 @@
       "description": "Your subscription will be renewed automatically according to the periodicity you have chosen.\nFrom the portal dedicated to you, you can upgrade your subscription whenever you want. You can also cancel at any time. \n\nFor your complete information, please note that we do not store your credit card details.",
       "amount": "Price",
       "plan": "Plan",
-      "next_invoice": "Next Invoice"
+      "next_invoice": "Next Invoice",
+      "manage": "Manage your subscription"
     }
   },
 

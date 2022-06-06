@@ -46,12 +46,12 @@
   "DGraphs": {
     "1": "Visibilité",
     "2": "Évaluations totales:",
-    "3": "Impressions totales:",
+    "3": "Nombre de fois recommandés sur les évaluations :",
     "4": "Prospection",
-    "5": "Total Prospects:",
-    "6": "Mes marque-pages:",
+    "5": "Total prospects:",
+    "6": "Mes prospects:",
     "7": "Contacts",
-    "8": "Nombre total de contacts :",
+    "8": "Total contacts:",
     "9": "Mes contacts:",
     "10": "Progression mensuelle",
     "11": "Suivi",
@@ -127,11 +127,11 @@
     "52": "Vous envisagez de vendre un bien immobilier pour financer votre achat",
     "54": "Avez-vous une préqualification hypothécaire",
     "55": "Année de construction",
-    "56": "Taper",
+    "56": "Type",
     "57": "Pièces",
-    "58": "Des chambres",
-    "59": "Toilettes",
-    "60": "Région",
+    "58": "Chambres",
+    "59": "Salle de bain",
+    "60": "Surface",
     "61": "Taxes municipales",
     "62": "Évaluation municipale",
     "63": "Adresse",
@@ -610,7 +610,8 @@
       "description": "Votre abonnement sera renouvelé automatiquement selon la périodicité que vous avez choisie. \nA partir du portail qui vous est dédié, vous pouvez effectuer quand vous le souhaitez une mise à niveau de votre abonnement. Vous pouvez également annuler à n'importe quel moment.\n\nPour votre complète information, sachez que nous ne stockons pas les détails de votre carte bancaire.",
       "amount": "Prix",
       "plan": "Forfait",
-      "next_invoice": "Prochaine Facture"
+      "next_invoice": "Prochaine Facture",
+      "manage": "Gérez Votre Abonnement"
     }
   },
 
