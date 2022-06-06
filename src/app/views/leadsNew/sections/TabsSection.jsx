@@ -6,7 +6,7 @@ import Select from "react-select";
 import NewLeadCard from "./NewLeadCard";
 import { useTranslation } from "react-i18next";
 
-const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
+const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] }) => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
 
@@ -19,7 +19,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
     if (profile && data) {
       const test = data?.filter(
         (v) =>
-          v?.broker?.length === 0 || v?.broker[0]?.brokerId === profile.userId
+          !v?.broker || v?.broker[0]?.brokerId === profile.userId
       );
 
       const test2 = data?.filter(
@@ -162,7 +162,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
             <Tab.Pane eventKey="Price">
               {currentTab === 'Price' &&
                   <ul className="nav flex-column gy-2">
-                    {leads?.map((item) => (
+                    {tobecontacted?.map((item) => (
                         <li key={item.id}>
                           <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
@@ -174,7 +174,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
               {
                 currentTab === 'Date' &&
                   <ul className="nav flex-column gy-2">
-                    {prospect?.map((item) => (
+                    {prospects?.map((item) => (
                         <li>
                           <NewLeadCard
                               data={item}

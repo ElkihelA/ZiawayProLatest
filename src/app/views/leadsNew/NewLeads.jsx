@@ -15,7 +15,7 @@ const NewLeads = () => {
   const [prospects, setProspects] = useState([]);
   const [initialDate, setInitialDate] = useState(null);
   const [finalDate, setFinalDate] = useState(null);
-  const [buyers, setBuyers] = useState(null);
+  const [buyers, setBuyers] = useState([]);
   const [sellers, setSellers] = useState(null);
   const [defaultFilters, setDefaultFilters] = useState({});
   const [filters, setFilters] = useState({});
@@ -28,6 +28,7 @@ const NewLeads = () => {
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tobecontacted, setToBeContacted] = useState([])
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -114,24 +115,18 @@ const NewLeads = () => {
   };
 
   const setUserData = (reports = []) => {
-    const test = reports?.filter(
-        (v) => v.ouiContacterParProfessionnel === "oui"
-        // && v.courtiers.length === 0
-    );
-    const test2 = reports?.filter(
-        (v) => v.ouiContacterParProfessionnel === "non"
-    );
-
     const seller = reports?.filter((v) => v.estProprietaireReponse === "oui");
-
-    const buyer = reports?.filter((v) => v.estProprietaireReponse === "non");
+    const buyer = reports?.filter((v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non");
+    const tobecontacted = reports?.filter((v) => v.ouiContacterParProfessionnel === "oui");
+    const toBeProspected = reports?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
 
     setBuyers(buyer);
     setSellers(seller);
-    setAllProspects(test2);
-    setProspects(test2);
-    setAll(test);
-    setEvals(test);
+    setAllProspects(toBeProspected);
+    setProspects(toBeProspected);
+    setAll(reports);
+    // setEvals(test);
+    setToBeContacted(tobecontacted);
     setReports(reports);
   }
 
@@ -142,7 +137,7 @@ const NewLeads = () => {
       );
 
       const buyer = evaluations?.filter(
-        (v) => v.estProprietaireReponse === "non"
+        (v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non"
       );
 
       setBuyers(buyer);
@@ -154,7 +149,7 @@ const NewLeads = () => {
     {
       title: t("Leads.12"),
       value: "165",
-      subTitle: `${evaluations?.length}`,
+      subTitle: `${sellers?.length + buyers?.length}`,
       subValue: "100%",
       subValueColor: "text-body",
     },
@@ -436,10 +431,11 @@ const NewLeads = () => {
                   <li>
                     <div>
                       <TabsSection
-                        data={evaluations}
+                        data={reports}
                         prospects={prospects}
                         reports={reports}
                         onClick={handleClick}
+                        tobecontacted={tobecontacted}
                       />
                     </div>
                   </li>

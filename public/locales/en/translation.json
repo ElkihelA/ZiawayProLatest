@@ -673,5 +673,8 @@
   },
   "videos": {
     "1": "Videos"
+  },
+  "subscription": {
+    "welcome": "Thank you for choosing Ziaway Technology"
   }
 }
