@@ -407,7 +407,7 @@ const DashboardGraphs = () => {
 
             <div className="pb-2">
               <div className="table-responsive">
-                <table id="user_table" className="table  text-center">
+                <table id="user_table" className="table">
                   <thead>
                     <tr>
                       <th scope="col">#</th>
