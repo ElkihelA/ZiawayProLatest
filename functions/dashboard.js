@@ -15,9 +15,13 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
         let totalContacts = 0;
         let myLeads = [];
         let leads = [];
+        let impressionTotal = 0;
         reports.docs.forEach(item => {
             const data = item.data();
             leads.push(data);
+            if(data.courtiers && data.courtiers.length) {
+                impressionTotal+=data.courtiers.length;
+            }
             if(data.ouiContacterParProfessionnel=== "oui") {
                 totalContacts++
             } else if(data.ouiContacterParProfessionnel=== "non") {
@@ -37,6 +41,7 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
             myLeadSorted(leads, "2022/02/01", "2022/02/28").length,
             myLeadSorted(leads, "2022/03/01", "2022/03/31").length,
         ];
+        visibility.impressionTotal = impressionTotal;
         return {
             visibility,
             prospoectLenght,
@@ -44,7 +49,7 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
             myLineData,
             lineData,
             myContactsLength: myLeads.length,
-            contacts: myLeads
+            contacts: myLeads,
         }
     } catch(e) {
         return {error: true, message: e.message};
@@ -68,29 +73,40 @@ exports.newleads = functions.https.onCall(async (data, context) => {
         /**
          * 1. Get User Id
          */
+        if(!context.auth || !context.auth.uid) {
+            return {error: true, message: 'User not connected'};
+        }
         const userId = context.auth.uid;
         /**
          * 2. Get Request Body
          */
         const {
-            city = 'Montréal',
+            city = 'Québec',
             municipalite = 'Pointe-de-Sainte-Foy',
             startDate = moment().subtract(31, 'days').format('YYYY-MM-DD'),
             endDate = moment().format('YYYY-MM-DD'),
+            dateFilterType = '31days',
         } = data;
         /**
          * 3: Get All Data in last 30.
          */
         const list = [], evals = [], all = [], buyers = [], sellers = [], prospects = [];
         const snap = await admin.firestore().collection('RapportsEvaluations')
-            //.where('dateCreation', '>=', startDate)
-            //.where('dateCreation', '<=', endDate)
+            .where('dateCreation', '>=', startDate)
+            .where('dateCreation', '<=', endDate)
             .where('municipalite', '==', municipalite)
             .where('location.city', '==', city)
             .orderBy('dateCreation', 'desc').get();
         snap.forEach(item => {
+            const d = item.data();
             list.push({id: item.id, ...item.data()})
         });
+        /**
+         * 4. Save Default filters
+         */
+        await admin.firestore()
+            .collection('newleads-default-filters')
+            .doc(userId).set({city, municipalite, startDate, endDate, dateFilterType})
         return {
             data: list,
             filter: {
@@ -161,14 +177,25 @@ exports.defaultFilters = functions.https.onCall(async (data, context) => {
             .doc(userId).get();
         let defaultFilters = {};
         if(defaultFiltersSnap.exists) {
-            defaultFilters = {id: defaultFiltersSnap.id, ...defaultFiltersSnap.data()};
+            const data = defaultFiltersSnap.data();
+            let startDate = data.startDate;
+            let endDate = data.endDate;
+            if(data.dateFilterType ===  '7days') {
+                endDate =  moment().format('YYYY-MM-DD');
+                startDate = moment().subtract(7, 'days').format('YYYY-MM-DD');
+            } else if(data.dateFilterType === '31days') {
+                endDate =  moment().format('YYYY-MM-DD');
+                startDate = moment().subtract(31, 'days').format('YYYY-MM-DD');
+            }
+            defaultFilters = {id: defaultFiltersSnap.id, ...data, startDate, endDate};
         } else {
             defaultFilters = {
                 id: userId,
                 city: 'Québec',
                 municipalite: 'Pointe-de-Sainte-Foy',
                 startDate: moment().subtract(30, 'days').format('YYYY-MM-DD'),
-                endDate: moment().format('YYYY-MM-DD')
+                endDate: moment().format('YYYY-MM-DD'),
+                dateFilterType: '31days',
             };
             await admin.firestore().collection('newleads-default-filters').doc(userId).set(defaultFilters);
         }
@@ -177,3 +204,44 @@ exports.defaultFilters = functions.https.onCall(async (data, context) => {
         return {error: true, message: e.message};
     }
 })
+
+
+exports.createRapportsEvaluations = functions.firestore
+.document('RapportsEvaluations/{userId}')
+.onCreate(async (snap, context) => {
+    // Get an object representing the document
+    // e.g. {'name': 'Marie', 'age': 66}
+    console.log("trigger")
+    /**
+         * 1. Get Snap from data
+         */
+     console.log('trigger');
+     const data = snap.data() || {};
+
+     /**
+      * 2. get cities & municipalities
+      */
+     const citiesSnap = await admin.firestore().collection('newleads-filters').get();
+     const cities = [];
+     citiesSnap.forEach(city =>  cities.push(city.data()));
+
+     /**
+      * 3. Add new city and municipality if not exists
+      */
+     if(data.location && data.location.city) {
+         console.log('city', data.location.city);
+         const findCity = cities.find(item => item.city === data.location.city);
+         console.log('findCity', findCity);
+         if(findCity) {
+             const findMunicipality = findCity.municipalities.find(item => item === data.municipalite);
+             console.log('findMunicipality', findMunicipality);
+             if(!findMunicipality) {
+                 findCity.municipalities.push(data.municipalite);
+                 await admin.firestore().collection('newleads-filters').doc(findCity.city).set(findCity);
+             }
+         } else {
+             const city = {city: data.location.city, municipalities: [data.municipalite || '']};
+             await admin.firestore().collection('newleads-filters').doc(city.city).set(city);
+         }
+     }
+});

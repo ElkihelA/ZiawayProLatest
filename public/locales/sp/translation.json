@@ -45,8 +45,8 @@
   },
   "DGraphs": {
     "1": "Visibilité",
-    "2": "Évaluations totales :",
-    "3": "Impressions totales: :",
+    "2": "Évaluations totales:",
+    "3": "Impressions totales:",
     "4": "Prospection",
     "5": "Total Prospects:",
     "6": "Mes marque-pages:",
@@ -89,10 +89,10 @@
     "16": "A contacter",
     "17": "Mes prospects",
     "18": "Mes contacts",
-    "19": "Prix ​​(élevé à bas)",
-    "20": "Prix (De bas en haut)",
-    "21": "Date(Ancien à nouveau)",
-    "22": "Date(Du nouveau à l'ancien)",
+    "19": "Prix décroissant",
+    "20": "Prix croissant",
+    "21": "Date du moins récent",
+    "22": "Date du plus récent",
 
     "23": "accepté",
     "24": "Disponible",
@@ -106,7 +106,7 @@
     "32": "Recherche",
     "33": "Histoire",
     "34": "Statut",
-    "35": "Ajouter",
+    "35": "Ajouter à mes prospects",
     "36": "Mes notes",
     "37": "Posté sur",
     "38": "(Valeur du projet VMZ)",
@@ -155,7 +155,8 @@
     "78": "Acheteur",
     "79": "Tous",
     "80": "AJOUTER DES NOTES",
-    "81": "HISTORIQUE DE RECHERCHES"
+    "81": "HISTORIQUE DE RECHERCHES",
+    "82": "Ajouter à mes prospects"
   },
   "Estimate": {
     "1": "Déterminer la",
@@ -639,7 +640,8 @@
     "81": "Champ de pratique autorisé",
     "82": "Statut",
     "83": " Adresse professionnelle",
-    "84": "Mise à jour"
+    "84": "Mise à jour",
+    "85": "Agency"
   },
 
   "swal": {

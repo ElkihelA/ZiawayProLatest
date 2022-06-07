@@ -190,6 +190,7 @@ const Regulatory = () => {
                   BusinessAddress: profile?.regulatory?.BusinessAddress,
                   status: profile?.regulatory?.status,
                   practice: profile?.regulatory?.practice,
+                  agency: profile?.regulatory?.agency,
                 }}
                 enableReinitialize={true}
                 validate={(values) => {
@@ -206,6 +207,10 @@ const Regulatory = () => {
                   }
                   if (!values.practice) {
                     errors.practice = `Field Required`;
+                  }
+
+                  if (!values.agency) {
+                    errors.agency = `Field Required`;
                   }
 
                   console.log(errors);
@@ -313,6 +318,34 @@ const Regulatory = () => {
                               <div
                                 className={classList({
                                   "valid-field":
+                                    !errors.agency && touched.agency,
+                                  "invalid-field":
+                                    errors.agency && touched.agency,
+                                })}
+                              >
+                                <label htmlFor="validationCustom202">
+                                  {" "}
+                                  {t("NProfile.85")}
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="agency"
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                  value={values.agency}
+                                />
+                                {errors.agency && touched.agency && (
+                                  <div className="text-danger mt-1 ml-2">
+                                    {errors.agency}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="mb-3 px-3 ">
+                              <div
+                                className={classList({
+                                  "valid-field":
                                     !errors.practice && touched.practice,
                                   "invalid-field":
                                     errors.practice && touched.practice,
@@ -322,14 +355,7 @@ const Regulatory = () => {
                                   {" "}
                                   {t("NProfile.81")}
                                 </label>
-                                {/* <input
-                              type="text"
-                              className="form-control"
-                              name="practice"
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              value={values.practice}
-                            /> */}
+
                                 <Select
                                   placeholder="Select Field"
                                   options={practiceOptions}
@@ -351,15 +377,6 @@ const Regulatory = () => {
                               <label htmlFor="validationCustom202">
                                 {t("NProfile.82")}
                               </label>
-                              {/* <input
-                            type="text"
-                            className="form-control"
-                            name="status"
-                            disabled=""
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.status}
-                          /> */}
 
                               <Select
                                 placeholder="Select Status"
@@ -378,14 +395,7 @@ const Regulatory = () => {
                             </div>
                             <div className="mb-3 px-3">
                               <label> {t("NProfile.83")}</label>
-                              {/* <input
-                            type="text"
-                            className="form-control"
-                            name="BusinessAddress"
-                            onChange={handleChange}
-                            onBlur={handleBlur}
-                            value={values.BusinessAddress}
-                          /> */}
+
                               <Autocomplete
                                 defaultValue={values?.BusinessAddress?.value}
                                 style={{

@@ -637,7 +637,8 @@
     "81": "Authorized Field of Practice",
     "82": "Status",
     "83": "Business Address",
-    "84": "Update"
+    "84": "Update",
+    "85": "Agency"
   },
 
   "swal": {

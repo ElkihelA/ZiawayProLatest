@@ -6,7 +6,7 @@ import Select from "react-select";
 import NewLeadCard from "./NewLeadCard";
 import { useTranslation } from "react-i18next";
 
-const TabsSection = ({ data, onClick, prospects }) => {
+const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
 
@@ -113,6 +113,8 @@ const TabsSection = ({ data, onClick, prospects }) => {
     }
   };
 
+  console.log(prospect)
+
   return (
     <Tab.Container id="left-tabs-example" defaultActiveKey="Date" onSelect={key => setCurrentTab(key)}>
       <div className="border rounded-lg position-relative">
@@ -156,7 +158,7 @@ const TabsSection = ({ data, onClick, prospects }) => {
                   <ul className="nav flex-column gy-2">
                     {leads?.map((item) => (
                         <li key={item.id}>
-                          <NewLeadCard data={item} onClick={onClick} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
                         </li>
                     ))}
                   </ul>
@@ -172,6 +174,8 @@ const TabsSection = ({ data, onClick, prospects }) => {
                               data={item}
                               onClick={onClick}
                               prospect={true}
+                              showAddButton
+                              reports={reports}
                           />
                         </li>
                     ))}
@@ -184,7 +188,7 @@ const TabsSection = ({ data, onClick, prospects }) => {
                   <ul className="nav flex-column gy-2">
                     {myLeads?.map((item) => (
                         <li>
-                          <NewLeadCard data={item} onClick={onClick} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
                         </li>
                     ))}
                   </ul>
@@ -199,6 +203,7 @@ const TabsSection = ({ data, onClick, prospects }) => {
                               data={item}
                               onClick={onClick}
                               prospect={true}
+                              reports={reports}
                           />
                         </li>
                     ))}
