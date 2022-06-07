@@ -103,16 +103,14 @@ const NewLeads = () => {
     }));
   };
 
-  const statusFormatter = (data) => {
-    let test = [];
-
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]) === false) {
-        test.push(data[i]);
+  const statusFormatter = (data = []) => {
+    let filters = [];
+    for (let i = 0; i < data.length; i++) {
+      if (filters.includes(data[i]) === false) {
+        filters.push(data[i]);
       }
     }
-
-    return test;
+    return filters;
   };
 
   const setUserData = (reports = []) => {
@@ -220,40 +218,12 @@ const NewLeads = () => {
     setProjectValue(e);
     const value = e.value;
     setDate(false);
-    if (buyerCheck === true) {
-      if (cityValue !== null && munciValue !== null) {
-        const test2 = All.filter(
-            (v) =>
-                v.statutRecherche === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        const test4 = allProspects.filter(
-            (v) =>
-                v.statutRecherche === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        setEvals(test2);
-        setProspects(test4);
-      }
+    if (ownerValue && ownerValue.value === "non") {
+      const evals = All.filter((v) => v.estProprietaireReponse === "non" && v.statutRecherche === value);
+      setEvals(evals);
     } else {
-      if (cityValue !== null && munciValue !== null) {
-        const test3 = All.filter(
-            (v) =>
-                v.envisageVendreBienReponse === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        const test5 = allProspects.filter(
-            (v) =>
-                v.envisageVendreBienReponse === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        setEvals(test3);
-        setProspects(test5);
-      }
+      const evals = All.filter((v) => v.estProprietaireReponse === "oui" && v.envisageVendreBienReponse === value);
+      setEvals(evals);
     }
   };
 
