@@ -73,7 +73,8 @@ const NewLeads = () => {
     httpCallable(filters)
         .then(res => {
         setLoading(false);
-        setUserData(res.data.data);
+        const reports = res.data.data || [];
+        setUserData(reports.filter(item => item.estProprietaireReponse));
       }).catch(err => {
         console.log('err', err)
       })
@@ -139,7 +140,7 @@ const NewLeads = () => {
       setBuyers(buyer);
       setSellers(seller);
       setToBeContacted(tobecontacted);
-      setAllProspects(toBeProspected);
+      setProspects(toBeProspected);
     }
   }, [evaluations]);
 
@@ -201,44 +202,17 @@ const NewLeads = () => {
     setDate(false);
     setProjectValue(null);
     if (value !== "all") {
-      const test = All.filter(
-          (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      const test2 = allProspects.filter(
-          (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      setEvals(test);
-      setProspects(test2);
+      const evals = All.filter((v) => v.estProprietaireReponse === value);
+      setEvals(evals);
       if (value === "oui") {
-        const test2 = All.map((v) => v.envisageVendreBienReponse);
-        setBuyerCheck(false);
+        const test2 = evals.map((v) => v.envisageVendreBienReponse);
         setStatus(statusFormatter(test2));
       } else {
-        setBuyerCheck(true);
-        const test3 = All.map((v) => v.statutRecherche);
+        const test3 = evals.map((v) => v.statutRecherche);
         setStatus(statusFormatter(test3));
       }
     } else {
-      setProjectValue(null);
-      //put a check for other fields
-      const test = All.filter(
-          (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      const test2 = allProspects.filter(
-          (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      setEvals(test);
-      setProspects(test2);
+      setEvals(All);
     }
   };
 
