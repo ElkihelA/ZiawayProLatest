@@ -132,16 +132,14 @@ const NewLeads = () => {
 
   useEffect(() => {
     if (evaluations) {
-      const seller = evaluations?.filter(
-        (v) => v.estProprietaireReponse === "oui"
-      );
-
-      const buyer = evaluations?.filter(
-        (v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non"
-      );
-
+      const seller = evaluations?.filter((v) => v.estProprietaireReponse === "oui");
+      const buyer = evaluations?.filter((v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non");
+      const tobecontacted = evaluations?.filter((v) => v.ouiContacterParProfessionnel === "oui");
+      const toBeProspected = evaluations?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
       setBuyers(buyer);
       setSellers(seller);
+      setToBeContacted(tobecontacted);
+      setAllProspects(toBeProspected);
     }
   }, [evaluations]);
 
