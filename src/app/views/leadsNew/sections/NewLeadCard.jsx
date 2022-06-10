@@ -26,7 +26,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
   const [tabs, setTabs] = useState(0);
   const [openCard, setOpenCard] = useState(false);
   const [avaliableMenu, setAvaliableMenu] = useState(false);
-  const [evaluationCount, setCount] = useState(0);
   const [key, setKey] = useState(null);
   const [participant, setParticipant] = useState(null);
   const [token, setToken] = useState(
@@ -166,12 +165,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
       .catch((err) => console.log(err));
   };
 
-  useEffect(() => {
-    const test = reports?.filter(
-      (v) => v.location?.value === data?.location?.value
-    );
-    setCount(test?.length);
-  }, [data, reports]);
 
   const checkBookmarks = (id) => {
     if (profile.bookmarks?.some((person) => person?.id === id)) {
@@ -641,7 +634,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
         <div
           className="d-flex align-items-center bg-gray-200 p-2 rounded-lg cursor-pointer"
           onClick={() => {
-            console.log(data);
             onClick(data);
             setOpenCard(true);
           }}
