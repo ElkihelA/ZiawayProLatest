@@ -170,7 +170,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
     const test = reports?.filter(
       (v) => v.location?.value === data?.location?.value
     );
-    console.log('count',test?.length)
     setCount(test?.length);
   }, [data, reports]);
 
@@ -392,7 +391,10 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${
                             tabs === 0 ? "btn-primary" : "btn-outline-primary"
                           } `}
-                          onClick={() => HandleTabs(0)}
+                          onClick={() => {
+                            console.log(data);
+                            HandleTabs(0);
+                          } }
                         >
                           {t("Leads.30")}
                         </button>
@@ -513,7 +515,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                           </div>
                           <span className="mt-2 mb-0 text-center btn btn-sm btn-primary rounded-circle text-center">
                             {/* {data?.typeBatiment} */}
-                            {evaluationCount}
+                            {data.evaluationCount || 1}
                           </span>
                           {/* <span className="badge badge-primary p-2 rounded-pill">
                             {data?.typeBatiment}
@@ -598,9 +600,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                           lists={lists}
                           listsTwo={prospect ? null : listsTwo}
                           prospect={prospect}
-                          contactShow={
-                            data?.broker[0]?.brokerId !== profile.userId
-                          }
+                          contactShow={data?.broker.length && data?.broker[0]?.brokerId !== profile.userId}
                         />
                       )}
                       {tabs === 1 && (
@@ -611,7 +611,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                         />
                       )}
                       {tabs === 2 && (
-                        <NewLeadSearchHistory email={data?.userEmail} />
+                        <NewLeadSearchHistory reports={reports} email={data?.userEmail} />
                       )}
                       {prospect === true ||
                       data?.broker[0]?.brokerId !== profile.userId
@@ -641,8 +641,9 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
         <div
           className="d-flex align-items-center bg-gray-200 p-2 rounded-lg cursor-pointer"
           onClick={() => {
-            setOpenCard(true);
+            console.log(data);
             onClick(data);
+            setOpenCard(true);
           }}
           style={{maxHeight: 115}}
         >
@@ -665,7 +666,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
             <div>
-              {showAddButton && <>{t("Leads.82")}</>}
+              {/*showAddButton && <>{t("Leads.82")}</>*/}
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button
@@ -727,7 +728,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
               </div>
               <span className="mt-2 mb-0 btn btn-sm btn-primary rounded-circle">
                 {/* {data?.typeBatiment} */}
-                {evaluationCount}
+                {data.evaluationCount || 1}
               </span>
             </div>
           </div>

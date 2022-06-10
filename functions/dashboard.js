@@ -245,3 +245,46 @@ exports.createRapportsEvaluations = functions.firestore
          }
      }
 });
+
+exports.updateEvaluationCount = functions.pubsub.schedule('0 0 * * *').onRun( async (context) => {
+    /**
+     * 1. getting all data;
+     */
+    const snap = await admin.firestore().collection('RapportsEvaluations').get();
+    const data = []
+    if(snap.empty) {
+        return;
+    }
+    snap.docs.forEach(item => data.push({id: item.id, ...item.data()}));
+    /**
+     * 2. update evaluation count;
+     */
+    for(let i = 0; i < data.length; i++) {
+        const item = data[i];
+        if(item.location && item.location.value) {
+            const count = data.filter(v => v && v.location && item.location.value === v.location.value).length;
+            await admin.firestore().collection('RapportsEvaluations').doc("8JEHeAVWfffbFaHGQBGv").update({evaluationCount: count});
+        }
+    }
+    /**
+     * 3. update users.
+     */
+     const snapUsers = await admin.firestore().collection('users').get();
+     const users = [];
+     snapUsers.forEach(item => users.push({id: item.id, ...item.data()}));
+     for(let i = 0; i < users.length - 1; i++) {
+         const user = users[i];
+         if(user.id && user.bookmarks && user.bookmarks.length > 0) {
+             for(let j = 0; j < user.bookmarks.length; j++) {
+                 const bookmark = user.bookmarks[j];
+                 console.log('old',bookmark.evaluationCount)
+                 if(bookmark.location && bookmark.location.value) {
+                    const count = data.filter(v => v && v.location && bookmark.location.value === v.location.value).length;
+                    bookmark.evaluationCount = count;
+                }
+                user.bookmarks[j] = bookmark;
+             }
+             await admin.firestore().collection('users').doc(user.id).update({bookmarks: user.bookmarks});
+         }
+     }
+})

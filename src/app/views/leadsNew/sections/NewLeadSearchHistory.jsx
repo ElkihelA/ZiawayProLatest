@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 
-const NewLeadSearchHistory = ({ email }) => {
-  const reports = useSelector(
-    (state) => state.firestore.ordered.RapportsEvaluations
-  );
+const NewLeadSearchHistory = ({ email, reports = [] }) => {
   const [lists, setLists] = useState([]);
-
   useEffect(() => {
     if (reports && email) {
       const test = reports.filter((v) => v.userEmail === email);
-
-      setLists(test);
+      setLists(test || []);
     }
   }, [reports, email]);
 
