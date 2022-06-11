@@ -246,7 +246,10 @@ exports.createRapportsEvaluations = functions.firestore
      }
 });
 
-exports.updateEvaluationCount = functions.pubsub.schedule('0 0 * * *').onRun( async (context) => {
+exports.updateEvaluationCount = functions.pubsub
+    .schedule("every 59 minutes")
+    .timeZone("Africa/Casablanca")
+    .onRun( async (context) => {
     /**
      * 1. getting all data;
      */
@@ -261,9 +264,9 @@ exports.updateEvaluationCount = functions.pubsub.schedule('0 0 * * *').onRun( as
      */
     for(let i = 0; i < data.length; i++) {
         const item = data[i];
-        if(item.location && item.location.value) {
+        if(item.id && item.location && item.location.value) {
             const count = data.filter(v => v && v.location && item.location.value === v.location.value).length;
-            await admin.firestore().collection('RapportsEvaluations').doc("8JEHeAVWfffbFaHGQBGv").update({evaluationCount: count});
+            await admin.firestore().collection('RapportsEvaluations').doc(item.id).update({evaluationCount: count});
         }
     }
     /**
@@ -277,7 +280,6 @@ exports.updateEvaluationCount = functions.pubsub.schedule('0 0 * * *').onRun( as
          if(user.id && user.bookmarks && user.bookmarks.length > 0) {
              for(let j = 0; j < user.bookmarks.length; j++) {
                  const bookmark = user.bookmarks[j];
-                 console.log('old',bookmark.evaluationCount)
                  if(bookmark.location && bookmark.location.value) {
                     const count = data.filter(v => v && v.location && bookmark.location.value === v.location.value).length;
                     bookmark.evaluationCount = count;

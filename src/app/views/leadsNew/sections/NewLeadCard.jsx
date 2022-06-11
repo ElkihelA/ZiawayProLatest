@@ -99,6 +99,8 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
   };
 
   const handleOnChange = (id, leadEmail) => {
+    setAvaliableMenu(false);
+    return;
     const today = new Date();
     var date =
       today.getFullYear() +
