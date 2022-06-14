@@ -42,7 +42,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
 
         {
           title: t("Leads.48"),
-          value: `${data?.envisageVendreBienReponse}`,
+          value: `${data?.envisageVendreBienReponse || "RecherchInformations"}`,
         },
       ];
     } else {
@@ -55,7 +55,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
         },
         {
           title: t("Leads.51"),
-          value: `${data?.statutRecherche}`,
+          value: `${data?.statutRecherche || "RecherchInformations"}`,
         },
         {
           title: t("Leads.52"),
@@ -100,7 +100,6 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
 
   const handleOnChange = (id, leadEmail) => {
     setAvaliableMenu(false);
-    return;
     const today = new Date();
     var date =
       today.getFullYear() +
@@ -468,7 +467,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                         <div className="flex-fill mx-auto border-right border-left border-gray-400 text-center d-flex flex-column justify-content-center">
                           <div className="pt-2">
                             <div className="text-14 mb-0 font-weight-bold">
-                              {data?.envisageVendreBienReponse}
+                              {data?.envisageVendreBienReponse || "RecherchInformations"}
                             </div>
                             <div className="font-weight-bold">
                               <span>{data?.location?.Country?.long_name}</span>
@@ -684,11 +683,11 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
               <div className="pt-2">
                 {data?.estProprietaireReponse === "non" ? (
                   <div className="text-14 mb-0 font-weight-bold">
-                    {data?.statutRecherche}
+                    {data?.statutRecherche || "RecherchInformations"}
                   </div>
                 ) : (
                   <div className="text-14 mb-0 font-weight-bold">
-                    {data?.envisageVendreBienReponse}
+                    {data?.envisageVendreBienReponse || "RecherchInformations"}
                   </div>
                 )}
 

@@ -110,6 +110,10 @@ const NewLeads = () => {
         filters.push(data[i]);
       }
     }
+    const idx = filters.findIndex(item => item === "");
+    if(idx >= 0) {
+      filters[idx] = "RecherchInformations"
+    }
     return filters;
   };
 
@@ -216,7 +220,7 @@ const NewLeads = () => {
 
   const onStatusChange = (e) => {
     setProjectValue(e);
-    const value = e.value;
+    const value = e.value === "RecherchInformations" ? "":e.value;
     setDate(false);
     if (ownerValue && ownerValue.value === "non") {
       const evals = All.filter((v) => v.estProprietaireReponse === "non" && v.statutRecherche === value);
