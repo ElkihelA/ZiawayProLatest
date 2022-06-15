@@ -6,12 +6,12 @@ import Select from "react-select";
 import NewLeadCard from "./NewLeadCard";
 import { useTranslation } from "react-i18next";
 
-const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] }) => {
+const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[], usersContact = [], updateToBeContacted }) => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
 
   const [leads, setLeads] = useState(null);
-  const [myLeads, setMyLeads] = useState(null);
+  const [myLeads, setMyLeads] = useState([]);
   const [prospect, setProspect] = useState(null);
   const [currentTab, setCurrentTab] = useState('Date');
 
@@ -22,10 +22,6 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] 
           !v?.broker || v?.broker[0]?.brokerId === profile.userId
       );
 
-      const test2 = data?.filter(
-        (v) => v?.broker[0]?.brokerId === profile.userId
-      );
-      setMyLeads(test2);
       setLeads(test);
     }
   }, [data, profile]);
@@ -34,6 +30,15 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] 
     const idx = myLeads.findIndex(item => item.id === id);
     myLeads[idx].broker = broker;
     setMyLeads(myLeads);
+  }
+
+  useEffect(()=> {
+    setMyLeads(usersContact);
+  }, [usersContact])
+
+  const updateMyLeads = item => {
+    setMyLeads([...myLeads, item]);
+    updateToBeContacted(item)
   }
 
   useEffect(() => {
@@ -164,7 +169,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] 
                   <ul className="nav flex-column gy-2">
                     {tobecontacted?.map((item) => (
                         <li key={item.id}>
-                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} updateMyLeads={updateMyLeads} />
                         </li>
                     ))}
                   </ul>
@@ -193,7 +198,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] 
               {
                 currentTab === 'MyLeads' &&
                   <ul className="nav flex-column gy-2">
-                    {myLeads?.map((item) => (
+                    {myLeads.map((item) => (
                         <li>
                           <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>

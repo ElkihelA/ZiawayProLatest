@@ -289,4 +289,25 @@ exports.updateEvaluationCount = functions.pubsub
              await admin.firestore().collection('users').doc(user.id).update({bookmarks: user.bookmarks});
          }
      }
-})
+});
+
+exports.loadUsersContacts = functions.https.onCall(async (data, context) => {
+    try {
+         if(!context.auth || !context.auth.uid) {
+            return {error: true, message: 'User not connected'};
+        }
+        const userId = context.auth.uid;
+        const snap = await admin.firestore().collection('RapportsEvaluations').get();
+        const contacts = [];
+        snap.forEach(async (item) => {
+            const data = item.data();
+            if(data.broker && data.broker[0] && data.broker[0].brokerId === userId) {
+                contacts.push({id: item.id, ...data});
+                // await admin.firestore().collection("RapportsEvaluations").doc(item.id).update({broker: []});
+            }
+        });
+        return {error: false, contacts};
+    } catch(e) {
+        return {error: true, message: e.message}
+    }
+});

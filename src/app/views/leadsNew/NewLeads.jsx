@@ -28,7 +28,8 @@ const NewLeads = () => {
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [tobecontacted, setToBeContacted] = useState([])
+  const [tobecontacted, setToBeContacted] = useState([]);
+  const [usersContact, setUsersContacts] = useState([]);
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -83,6 +84,23 @@ const NewLeads = () => {
   useEffect(() => {
     getUserFilters();
   },[]);
+
+  useEffect(() => {
+      getToBeContactedData();
+  }, []);
+
+  const getToBeContactedData = async () => {
+    const httpCallable = cloudFunctions.httpsCallable("loadUsersContacts");
+    httpCallable().then(res => {
+      if(!res.error) {
+        setUsersContacts(res.data.contacts);
+      }else {
+        console.log("contacts error", res.data.emessage);
+      }
+    }).catch(err => {
+      console.log('err', err)
+    })
+  }
 
   useEffect(() => {
     if(userFilters.city) {
@@ -268,6 +286,12 @@ const NewLeads = () => {
     }
   }, [])
 
+  const updateToBeContacted = item => {
+    const idx = tobecontacted.findIndex(elem => elem.id === item.id);
+    tobecontacted[idx] = item;
+    setToBeContacted(tobecontacted);
+  }
+
   return (
     <>
       {loading && <Loading />}
@@ -382,6 +406,8 @@ const NewLeads = () => {
                         reports={reports}
                         onClick={handleClick}
                         tobecontacted={tobecontacted}
+                        usersContact={usersContact}
+                        updateToBeContacted={updateToBeContacted}
                       />
                     </div>
                   </li>

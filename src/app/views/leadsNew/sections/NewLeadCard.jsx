@@ -16,7 +16,7 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
-const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, setUpdatedData }) => {
+const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, setUpdatedData, updateMyLeads }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
@@ -98,8 +98,9 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
     call: "tbd",
   };
 
-  const handleOnChange = (id, leadEmail) => {
+  const handleOnChange = (data, leadEmail) => {
     setAvaliableMenu(false);
+    const id = data.id
     const today = new Date();
     var date =
       today.getFullYear() +
@@ -150,7 +151,8 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
       .doc(id)
       .update({ broker: [values] })
       .then((res) => {
-        console.log(res);
+        data.broker = [values];
+        updateMyLeads(data)
         axios
           .post(
             "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
@@ -282,7 +284,7 @@ const NewLeadCard = ({ data, onClick, prospect, reports = [], showAddButton, set
                                 type="button"
                                 className="btn btn-sm btn-primary text-uppercase rounded-lg w-100 font-weight-bold"
                                 onClick={() =>
-                                  handleOnChange(data?.id, data?.userEmail)
+                                  handleOnChange(data, data?.userEmail)
                                 }
                               >
                                 {t("Leads.25")}
