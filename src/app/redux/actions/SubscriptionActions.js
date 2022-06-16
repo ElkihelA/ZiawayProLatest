@@ -61,7 +61,7 @@ export function getAllPlans() {
   }
 }
 
-export function createSubscription(data, goToStep) {
+export function createSubscription(data, goToStep, t) {
   return (dispatch) => {
     dispatch({
       type: actions.SET_STATE,
@@ -76,7 +76,7 @@ export function createSubscription(data, goToStep) {
           payload: {loading: false}
         })
       } else {
-        toast.success("Welcome to the board");
+        toast.success(t('subscription.welcome'));
         firebase.auth().signInWithCustomToken(res.data.token).then(result => {
           firebase.firestore()
             .collection("users")

@@ -6,7 +6,7 @@ import Select from "react-select";
 import NewLeadCard from "./NewLeadCard";
 import { useTranslation } from "react-i18next";
 
-const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
+const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[] }) => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
 
@@ -19,7 +19,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
     if (profile && data) {
       const test = data?.filter(
         (v) =>
-          v?.broker?.length === 0 || v?.broker[0]?.brokerId === profile.userId
+          !v?.broker || v?.broker[0]?.brokerId === profile.userId
       );
 
       const test2 = data?.filter(
@@ -29,6 +29,12 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
       setLeads(test);
     }
   }, [data, profile]);
+
+  const setUpdatedData = (id, broker=[]) => {
+    const idx = myLeads.findIndex(item => item.id === id);
+    myLeads[idx].broker = broker;
+    setMyLeads(myLeads);
+  }
 
   useEffect(() => {
     if (prospects) {
@@ -156,9 +162,9 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
             <Tab.Pane eventKey="Price">
               {currentTab === 'Price' &&
                   <ul className="nav flex-column gy-2">
-                    {leads?.map((item) => (
+                    {tobecontacted?.map((item) => (
                         <li key={item.id}>
-                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
                     ))}
                   </ul>
@@ -168,7 +174,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
               {
                 currentTab === 'Date' &&
                   <ul className="nav flex-column gy-2">
-                    {prospect?.map((item) => (
+                    {prospects?.map((item) => (
                         <li>
                           <NewLeadCard
                               data={item}
@@ -176,6 +182,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                               prospect={true}
                               showAddButton
                               reports={reports}
+                              setUpdatedData={setUpdatedData}
                           />
                         </li>
                     ))}
@@ -188,7 +195,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                   <ul className="nav flex-column gy-2">
                     {myLeads?.map((item) => (
                         <li>
-                          <NewLeadCard data={item} onClick={onClick} reports={reports} />
+                          <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
                     ))}
                   </ul>
@@ -204,6 +211,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [] }) => {
                               onClick={onClick}
                               prospect={true}
                               reports={reports}
+                              setUpdatedData={setUpdatedData}
                           />
                         </li>
                     ))}

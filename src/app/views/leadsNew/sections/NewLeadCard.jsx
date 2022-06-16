@@ -22,6 +22,7 @@ const NewLeadCard = ({
   prospect,
   reports = [],
   showAddButton,
+  setUpdatedData,
 }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -220,7 +221,6 @@ const NewLeadCard = ({
         setShow={setJoinMeeting}
         token={token}
         setToken={setToken}
-        key={key}
         participant={participant}
       />
       <NotesModal show={show} setShow={setShow} evalId={data.id} />
@@ -461,7 +461,9 @@ const NewLeadCard = ({
                       <div className={"mt-2"}>
                         <button
                           type="button"
-                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
+                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} ${
+                            tabs === 5 ? "btn-primary" : "btn-outline-primary"
+                          }`}
                           onClick={() => HandleTabs(5)}
                         >
                           {t("Leads.36")}
@@ -627,6 +629,7 @@ const NewLeadCard = ({
                               date={data?.broker[0]?.dateofAcceptance}
                               id={data?.id}
                               email={data?.userEmail}
+                              setUpdatedData={setUpdatedData}
                             />
                           )}
 

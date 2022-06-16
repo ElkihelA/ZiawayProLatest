@@ -14,29 +14,29 @@ const DashboardGraphs = () => {
   const [pageNumber, setPageNumber] = useState(0);
   const [asending, setAsending] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [contacts, setContacts] = useState([])
-  const [visibility, setVisiblity] = useState({})
+  const [contacts, setContacts] = useState([]);
+  const [visibility, setVisiblity] = useState({});
   const [myLineData, setMyLineData] = useState([]);
-  const [lineData, setLineData] = useState([])
+  const [lineData, setLineData] = useState([]);
   const [totalContacts, setTotalContacts] = useState(0);
-  const [prospoectSize, setProspoectSize] = useState(0)
+  const [prospoectSize, setProspoectSize] = useState(0);
   const profile = useSelector((state) => state.firebase.profile);
 
-
   useEffect(() => {
-    const httpCallable = cloudFunctions.httpsCallable('dashboard');
-    httpCallable().then(res => {
-      if(res.data) {
+    const httpCallable = cloudFunctions.httpsCallable("dashboard");
+    httpCallable().then((res) => {
+      if (res.data) {
+        console.log("data", res.data);
         setContacts(formatter(res.data.contacts));
         setVisiblity(res.data.visibility);
         setMyLineData(res.data.myLineData);
         setLineData(res.data.lineData);
-        setTotalContacts(res.data.totalContacts)
-        setProspoectSize(res.data.prospoectLenght)
+        setTotalContacts(res.data.totalContacts);
+        setProspoectSize(res.data.prospoectLenght);
       }
       setLoading(false);
-    })
-  }, [])
+    });
+  }, []);
 
   // Gradiant Radial Bar
   const options4 = (data) => {
@@ -264,12 +264,12 @@ const DashboardGraphs = () => {
     return sorted;
   };
 
-  const handlePageClick = data => {
-    setPageNumber(data.selected)
+  const handlePageClick = (data) => {
+    setPageNumber(data.selected);
   };
 
   if (loading) {
-    return <Loading />
+    return <Loading />;
   }
 
   return (
@@ -313,8 +313,7 @@ const DashboardGraphs = () => {
                   series={
                     options4(
                       (
-                        (profile?.bookmarks?.length * 100) /
-                        prospoectSize || 1
+                        (profile?.bookmarks?.length * 100) / prospoectSize || 1
                       ).toFixed(2)
                     ).series
                   }
@@ -427,27 +426,27 @@ const DashboardGraphs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {contacts.slice(10*pageNumber, 10*(pageNumber+1)).map((user, index) => (
-                      <tr key={index}>
-                        <th scope="row">{index + 1}</th>
-                        <td className="text-justify">{user.name}</td>
-                        <td>
-                          {user?.dateCreation}
-                        </td>
+                    {contacts
+                      .slice(10 * pageNumber, 10 * (pageNumber + 1))
+                      .map((user, index) => (
+                        <tr key={index}>
+                          <th scope="row">{index + 1}</th>
+                          <td className="text-justify">{user.name}</td>
+                          <td>{user?.dateCreation}</td>
 
-                        <td className="text-justify">{user.email}</td>
-                        <td className="text-justify">{user.phone}</td>
-                        <td>
-                          <span
-                            className={`badge ${getUserStatusClass(
-                              user.status
-                            )}`}
-                          >
-                            {user.status}
-                          </span>
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="text-justify">{user.email}</td>
+                          <td className="text-justify">{user.phone}</td>
+                          <td>
+                            <span
+                              className={`badge ${getUserStatusClass(
+                                user.status
+                              )}`}
+                            >
+                              {user.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>

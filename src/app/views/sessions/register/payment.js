@@ -4,8 +4,10 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import "./style.scss"
 import { createSubscription, setSubscriptionData } from "app/redux/actions/SubscriptionActions";
 import { Loading } from "@gull";
+import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
 import * as yup from "yup";
+
 const ELEMENT_OPTIONS = {
     style: {
         base: {
@@ -31,7 +33,8 @@ const validationSchema = (t) =>
     });
 
 function Payment(props) {
-    const { subscription = {}, dispatch } = props
+    const { subscription = {}, dispatch } = props;
+    const {t} = useTranslation();
     const [error, setError] = useState(false)
     const stripe = useStripe();
     const elements = useElements();
@@ -58,7 +61,7 @@ function Payment(props) {
             dispatch(setSubscriptionData({ loading: true }));
         } else {
             console.log('[PaymentMethod]', token);
-            dispatch(createSubscription({source: token.id, plan: subscription.plan, user: subscription.current, cardName: values.name}, props.goToStep))
+            dispatch(createSubscription({source: token.id, plan: subscription.plan, user: subscription.current, cardName: values.name}, props.goToStep, t))
         }
 
     };

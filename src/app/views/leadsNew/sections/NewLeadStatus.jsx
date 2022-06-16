@@ -3,7 +3,7 @@ import firebase from "../../../services/firebase/firebase";
 import { useSelector } from "react-redux";
 import axios from "axios";
 
-const NewLeadStatus = ({ progress, id, date, email }) => {
+const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
   const profile = useSelector((state) => state.firebase.profile);
   const list = [
     { name: "New Prospect" },
@@ -59,7 +59,6 @@ const NewLeadStatus = ({ progress, id, date, email }) => {
       .doc(id)
       .set({ broker: [values] }, { merge: true })
       .then((res) => {
-        console.log(res);
         axios
           .post(
             "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
@@ -68,7 +67,10 @@ const NewLeadStatus = ({ progress, id, date, email }) => {
               crossdomain: true,
             }
           )
-          .then((res) => console.log(res))
+          .then((res) => {
+            setUpdatedData(id, [values])
+            console.log(res);
+          })
           .catch((err) => console.log(err));
       })
       .catch((err) => console.log(err));
@@ -88,7 +90,7 @@ const NewLeadStatus = ({ progress, id, date, email }) => {
                 type="radio"
                 name="flexRadioDefault"
                 id={i}
-                checked={item.name === progress}
+                defaultChecked={item.name === progress}
                 onClick={() => onProgressChange(item.name)}
               />
               <label class="form-check-label" for={i}>

@@ -46,13 +46,13 @@
   "DGraphs": {
     "1": "Visibility",
     "2": "Total Evaluations:",
-    "3": "Total Impressions:",
-    "4": "Leads",
-    "5": "Total Leads:",
-    "6": "My Bookmarks:",
+    "3": "Number of times recommended on reviews:",
+    "4": "Prospection",
+    "5": "Total prospects:",
+    "6": "My prospects:",
     "7": "Contacts",
     "8": "Total Contacts:",
-    "9": "My Contacts:",
+    "9": "My contacts:",
     "10": " Monthly Progress",
     "11": "Follow Up",
     "12": "Add new user",
@@ -85,7 +85,7 @@
     "13": "Buyers",
     "14": "Sellers",
 
-    "15": "To lead",
+    "15": "To Prospect",
     "16": "To Contact",
     "17": "My Prospects",
     "18": "My Contact",
@@ -153,7 +153,10 @@
 
     "77": "Seller",
     "78": "Buyer",
-    "79": "All"
+    "79": "All",
+    "80": "Add Note",
+    "81": "Search history",
+    "82": "Add to my prospects"
   },
   "Estimate": {
     "1": "Determine the",
@@ -600,7 +603,16 @@
     "16": "Password",
     "17": "My account",
     "18": "Home",
-    "19": "Minimum 8 letters"
+    "19": "Minimum 8 letters",
+    "subscription": {
+      "title": "Subscription",
+      "subtitle": "About your subsription",
+      "description": "Your subscription will be renewed automatically according to the periodicity you have chosen.\nFrom the portal dedicated to you, you can upgrade your subscription whenever you want. You can also cancel at any time. \n\nFor your complete information, please note that we do not store your credit card details.",
+      "amount": "Price",
+      "plan": "Plan",
+      "next_invoice": "Next Invoice",
+      "manage": "Manage your subscription"
+    }
   },
 
   "NProfile": {
@@ -663,5 +675,8 @@
   },
   "videos": {
     "1": "Videos"
+  },
+  "subscription": {
+    "welcome": "Thank you for choosing Ziaway Technology"
   }
 }
