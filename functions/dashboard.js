@@ -3,8 +3,22 @@ const admin = require("firebase-admin");
 const _ = require("lodash");
 const moment = require("moment");
 const cors = require("cors")({ origin: "*" });
+
+// const courtierCheckfunction = (courtier) => {
+
+//   var found = false;
+// for(var i = 0; i < courtier.length; i++) {
+//     if (courtier[i].Name == 'Magenic') {
+//         found = true;
+//         break;
+//     }
+// }
+
+// }
+
 exports.dashboard = functions.https.onCall(async (data, context) => {
   try {
+    console.log("data id", data.id);
     const userId = context.auth.uid;
     const reports = await admin
       .firestore()
@@ -293,3 +307,88 @@ exports.createRapportsEvaluations = functions.firestore
       }
     }
   });
+
+exports.updateEvaluationCount = functions.pubsub
+  .schedule("every 59 minutes")
+  .timeZone("Africa/Casablanca")
+  .onRun(async (context) => {
+    /**
+     * 1. getting all data;
+     */
+    const snap = await admin
+      .firestore()
+      .collection("RapportsEvaluations")
+      .get();
+    const data = [];
+    if (snap.empty) {
+      return;
+    }
+    snap.docs.forEach((item) => data.push({ id: item.id, ...item.data() }));
+    /**
+     * 2. update evaluation count;
+     */
+    for (let i = 0; i < data.length; i++) {
+      const item = data[i];
+      if (item.id && item.location && item.location.value) {
+        const count = data.filter(
+          (v) => v && v.location && item.location.value === v.location.value
+        ).length;
+        await admin
+          .firestore()
+          .collection("RapportsEvaluations")
+          .doc(item.id)
+          .update({ evaluationCount: count });
+      }
+    }
+    /**
+     * 3. update users.
+     */
+    const snapUsers = await admin.firestore().collection("users").get();
+    const users = [];
+    snapUsers.forEach((item) => users.push({ id: item.id, ...item.data() }));
+    for (let i = 0; i < users.length - 1; i++) {
+      const user = users[i];
+      if (user.id && user.bookmarks && user.bookmarks.length > 0) {
+        for (let j = 0; j < user.bookmarks.length; j++) {
+          const bookmark = user.bookmarks[j];
+          if (bookmark.location && bookmark.location.value) {
+            const count = data.filter(
+              (v) =>
+                v && v.location && bookmark.location.value === v.location.value
+            ).length;
+            bookmark.evaluationCount = count;
+          }
+          user.bookmarks[j] = bookmark;
+        }
+        await admin
+          .firestore()
+          .collection("users")
+          .doc(user.id)
+          .update({ bookmarks: user.bookmarks });
+      }
+    }
+  });
+
+exports.loadUsersContacts = functions.https.onCall(async (data, context) => {
+  try {
+    if (!context.auth || !context.auth.uid) {
+      return { error: true, message: "User not connected" };
+    }
+    const userId = context.auth.uid;
+    const snap = await admin
+      .firestore()
+      .collection("RapportsEvaluations")
+      .get();
+    const contacts = [];
+    snap.forEach(async (item) => {
+      const data = item.data();
+      if (data.broker && data.broker[0] && data.broker[0].brokerId === userId) {
+        contacts.push({ id: item.id, ...data });
+        // await admin.firestore().collection("RapportsEvaluations").doc(item.id).update({broker: []});
+      }
+    });
+    return { error: false, contacts };
+  } catch (e) {
+    return { error: true, message: e.message };
+  }
+});

@@ -8,14 +8,16 @@ const NewLeadLists = ({ lists, listsTwo, type, prospect, contactShow }) => {
       <div>
         <ul className="nav flex-column text-12 gy-2">
           <>
-            {lists.map((item) => (
-              <li className="border-bottom border-light pb-1 animated fadeInUp">
-                <div className="d-flex flex-wrap gy-2">
-                  <span className="text-capitalize">{item.title}</span>
-                  <b className="ml-auto text-capitalize">{item.value}</b>
-                </div>
-              </li>
-            ))}
+            {lists
+              .filter((v) => v.value !== "")
+              .map((item) => (
+                <li className="border-bottom border-light pb-1 animated fadeInUp">
+                  <div className="d-flex flex-wrap gy-2">
+                    <span className="text-capitalize">{item.title}</span>
+                    <b className="ml-auto text-capitalize">{item.value}</b>
+                  </div>
+                </li>
+              ))}
           </>
         </ul>
       </div>

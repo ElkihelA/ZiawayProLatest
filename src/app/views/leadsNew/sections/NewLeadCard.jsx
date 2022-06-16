@@ -24,6 +24,7 @@ const NewLeadCard = ({
   showAddButton,
   setUpdatedData,
 }) => {
+  console.log("data", data);
   const { t } = useTranslation();
   const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
@@ -33,7 +34,6 @@ const NewLeadCard = ({
   const [tabs, setTabs] = useState(0);
   const [openCard, setOpenCard] = useState(false);
   const [avaliableMenu, setAvaliableMenu] = useState(false);
-  const [evaluationCount, setCount] = useState(0);
   const [key, setKey] = useState(null);
   const [participant, setParticipant] = useState(null);
   const [token, setToken] = useState(
@@ -50,7 +50,7 @@ const NewLeadCard = ({
 
         {
           title: t("Leads.48"),
-          value: `${data?.envisageVendreBienReponse}`,
+          value: `${data?.envisageVendreBienReponse || "RecherchInformations"}`,
         },
       ];
     } else {
@@ -63,7 +63,7 @@ const NewLeadCard = ({
         },
         {
           title: t("Leads.51"),
-          value: `${data?.statutRecherche}`,
+          value: `${data?.statutRecherche || "RecherchInformations"}`,
         },
         {
           title: t("Leads.52"),
@@ -106,7 +106,9 @@ const NewLeadCard = ({
     call: "tbd",
   };
 
-  const handleOnChange = (id, leadEmail) => {
+  const handleOnChange = (data, leadEmail) => {
+    setAvaliableMenu(false);
+    const id = data.id;
     const today = new Date();
     var date =
       today.getFullYear() +
@@ -157,7 +159,8 @@ const NewLeadCard = ({
       .doc(id)
       .update({ broker: [values] })
       .then((res) => {
-        console.log(res);
+        data.broker = [values];
+        //updateMyLeads(data);
         axios
           .post(
             "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
@@ -178,7 +181,7 @@ const NewLeadCard = ({
       (v) => v.location?.value === data?.location?.value
     );
     console.log("count", test?.length);
-    setCount(test?.length);
+    //setCount(test?.length);
   }, [data, reports]);
 
   const checkBookmarks = (id) => {
@@ -247,18 +250,18 @@ const NewLeadCard = ({
                       >
                         {data?.reseller && data?.reseller === "True" ? (
                           <span className="h3 mb-0">
-                            <i className="i-Favorite-Window"></i>
-                            <i className="i-Favorite-Window"></i>
-                            <i className="i-Favorite-Window"></i>
+                            <i className="i-Dollar-Sign-2"></i>
+                            <i className="i-Dollar-Sign-2"></i>
+                            <i className="i-Dollar-Sign-2"></i>
                           </span>
                         ) : data?.estProprietaireReponse === "oui" ? (
                           <span className="h3 mb-0">
-                            <i className="i-Favorite-Window"></i>
-                            <i className="i-Favorite-Window"></i>
+                            <i className="i-Dollar-Sign-2"></i>
+                            <i className="i-Dollar-Sign-2"></i>
                           </span>
                         ) : (
                           <span className="h3 mb-0">
-                            <i className="i-Favorite-Window"></i>
+                            <i className="i-Dollar-Sign-2"></i>
                           </span>
                         )}
 
@@ -296,7 +299,7 @@ const NewLeadCard = ({
                                 type="button"
                                 className="btn btn-sm btn-primary text-uppercase rounded-lg w-100 font-weight-bold"
                                 onClick={() =>
-                                  handleOnChange(data?.id, data?.userEmail)
+                                  handleOnChange(data, data?.userEmail)
                                 }
                               >
                                 {t("Leads.25")}
@@ -308,7 +311,7 @@ const NewLeadCard = ({
                     )}
 
                     <div className="d-flex justify-content-between mt-2">
-                      <div>
+                      {/* <div>
                         <Link
                           to={{
                             pathname: "/videoChat",
@@ -330,18 +333,7 @@ const NewLeadCard = ({
                         <button type="button" className="btn p-0">
                           <i className="i-Speach-Bubble-3 text-17 text-primary" />
                         </button>
-                      </div>
-                      {/* {prospect === true ? (
-                          <div>
-                            <button
-                              type="button"
-                              className="btn p-0"
-                              onClick={() => addBookmark(data)}
-                            >
-                              <i className="i-Bookmark text-17 text-primary" />
-                            </button>
-                          </div>
-                        ) : null} */}
+                      </div> */}
                     </div>
                     <div>
                       {prospect === true ? (
@@ -399,7 +391,10 @@ const NewLeadCard = ({
                           className={`btn btn-sm text-uppercase rounded-lg w-100 ${
                             tabs === 0 ? "btn-primary" : "btn-outline-primary"
                           } `}
-                          onClick={() => HandleTabs(0)}
+                          onClick={() => {
+                            console.log(data);
+                            HandleTabs(0);
+                          }}
                         >
                           {t("Leads.30")}
                         </button>
@@ -520,7 +515,7 @@ const NewLeadCard = ({
                         </div>
                         <span className="mt-2 mb-0 text-center btn btn-sm btn-primary rounded-circle text-center">
                           {/* {data?.typeBatiment} */}
-                          {evaluationCount}
+                          {data?.evaluationCount}
                         </span>
                         {/* <span className="badge badge-primary p-2 rounded-pill">
                             {data?.typeBatiment}
@@ -606,6 +601,7 @@ const NewLeadCard = ({
                           listsTwo={prospect ? null : listsTwo}
                           prospect={prospect}
                           contactShow={
+                            data?.broker.length &&
                             data?.broker[0]?.brokerId !== profile.userId
                           }
                         />
@@ -618,7 +614,10 @@ const NewLeadCard = ({
                         />
                       )}
                       {tabs === 2 && (
-                        <NewLeadSearchHistory email={data?.userEmail} />
+                        <NewLeadSearchHistory
+                          reports={reports}
+                          email={data?.userEmail}
+                        />
                       )}
                       {prospect === true ||
                       data?.broker[0]?.brokerId !== profile.userId
@@ -648,8 +647,8 @@ const NewLeadCard = ({
         <div
           className="d-flex align-items-center bg-gray-200 p-2 rounded-lg cursor-pointer"
           onClick={() => {
-            setOpenCard(true);
             onClick(data);
+            setOpenCard(true);
           }}
           style={{ maxHeight: 115 }}
         >
@@ -662,17 +661,17 @@ const NewLeadCard = ({
           >
             {data?.estProprietaireReponse === "oui" ? (
               <span className="h3 mb-2 mt-2">
-                <i className="i-Favorite-Window"></i>
-                <i className="i-Favorite-Window"></i>
+                <i className="i-Dollar-Sign-2"></i>
+                <i className="i-Dollar-Sign-2"></i>
               </span>
             ) : (
               <span className="h3 mb-2 mt-2">
-                <i className="i-Favorite-Window"></i>
+                <i className="i-Dollar-Sign-2"></i>
               </span>
             )}
             {/* <div className="mt-1">Posted on {data?.dateCreation} </div> */}
             <div>
-              {showAddButton && <>{t("Leads.82")}</>}
+              {/*showAddButton && <>{t("Leads.82")}</>*/}
               {prospect === true ? null : data?.broker[0]?.brokerId ===
                 profile.userId ? (
                 <button
@@ -696,11 +695,11 @@ const NewLeadCard = ({
               <div className="pt-2">
                 {data?.estProprietaireReponse === "non" ? (
                   <div className="text-14 mb-0 font-weight-bold">
-                    {data?.statutRecherche}
+                    {data?.statutRecherche || "RecherchInformations"}
                   </div>
                 ) : (
                   <div className="text-14 mb-0 font-weight-bold">
-                    {data?.envisageVendreBienReponse}
+                    {data?.envisageVendreBienReponse || "RecherchInformations"}
                   </div>
                 )}
 
@@ -734,7 +733,7 @@ const NewLeadCard = ({
               </div>
               <span className="mt-2 mb-0 btn btn-sm btn-primary rounded-circle">
                 {/* {data?.typeBatiment} */}
-                {evaluationCount}
+                {data.evaluationCount || 1}
               </span>
             </div>
           </div>

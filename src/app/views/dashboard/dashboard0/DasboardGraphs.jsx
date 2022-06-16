@@ -24,7 +24,7 @@ const DashboardGraphs = () => {
 
   useEffect(() => {
     const httpCallable = cloudFunctions.httpsCallable("dashboard");
-    httpCallable().then((res) => {
+    httpCallable({ id: profile.licenseId }).then((res) => {
       if (res.data) {
         console.log("data", res.data);
         setContacts(formatter(res.data.contacts));
@@ -406,7 +406,7 @@ const DashboardGraphs = () => {
 
             <div className="pb-2">
               <div className="table-responsive">
-                <table id="user_table" className="table  text-center">
+                <table id="user_table" className="table">
                   <thead>
                     <tr>
                       <th scope="col">#</th>

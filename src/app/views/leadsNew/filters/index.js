@@ -85,9 +85,7 @@ export default function Filters(props) {
                         <li className="col-12 col-md-5">
                             <div>
                                 <Select
-                                    isDisabled={
-                                        buyerCheck === null || ownerValue.value === "all"
-                                    }
+                                    isDisabled={!ownerValue || ownerValue.value === "all"}
                                     placeholder={t("Leads.4")}
                                     value={projectValue}
                                     options={formatter(projectStatus)}

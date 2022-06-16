@@ -28,7 +28,8 @@ const NewLeads = () => {
   const [buyerCheck, setBuyerCheck] = useState(null);
   const [coordinates, setCordinates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [tobecontacted, setToBeContacted] = useState([])
+  const [tobecontacted, setToBeContacted] = useState([]);
+  const [usersContact, setUsersContacts] = useState([]);
 
   const [cityValue, setCityValue] = useState(null);
   const [munciValue, setMunciValue] = useState(null);
@@ -73,7 +74,8 @@ const NewLeads = () => {
     httpCallable(filters)
         .then(res => {
         setLoading(false);
-        setUserData(res.data.data);
+        const reports = res.data.data || [];
+        setUserData(reports.filter(item => item.estProprietaireReponse));
       }).catch(err => {
         console.log('err', err)
       })
@@ -82,6 +84,23 @@ const NewLeads = () => {
   useEffect(() => {
     getUserFilters();
   },[]);
+
+  useEffect(() => {
+      getToBeContactedData();
+  }, []);
+
+  const getToBeContactedData = async () => {
+    const httpCallable = cloudFunctions.httpsCallable("loadUsersContacts");
+    httpCallable().then(res => {
+      if(!res.error) {
+        setUsersContacts(res.data.contacts);
+      }else {
+        console.log("contacts error", res.data.emessage);
+      }
+    }).catch(err => {
+      console.log('err', err)
+    })
+  }
 
   useEffect(() => {
     if(userFilters.city) {
@@ -102,16 +121,18 @@ const NewLeads = () => {
     }));
   };
 
-  const statusFormatter = (data) => {
-    let test = [];
-
-    for (let i = 0; i <= data?.length; i++) {
-      if (test.includes(data[i]) === false) {
-        test.push(data[i]);
+  const statusFormatter = (data = []) => {
+    let filters = [];
+    for (let i = 0; i < data.length; i++) {
+      if (filters.includes(data[i]) === false) {
+        filters.push(data[i]);
       }
     }
-
-    return test;
+    const idx = filters.findIndex(item => item === "");
+    if(idx >= 0) {
+      filters[idx] = "RecherchInformations"
+    }
+    return filters;
   };
 
   const setUserData = (reports = []) => {
@@ -132,16 +153,14 @@ const NewLeads = () => {
 
   useEffect(() => {
     if (evaluations) {
-      const seller = evaluations?.filter(
-        (v) => v.estProprietaireReponse === "oui"
-      );
-
-      const buyer = evaluations?.filter(
-        (v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non"
-      );
-
+      const seller = evaluations?.filter((v) => v.estProprietaireReponse === "oui");
+      const buyer = evaluations?.filter((v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non");
+      const tobecontacted = evaluations?.filter((v) => v.ouiContacterParProfessionnel === "oui");
+      const toBeProspected = evaluations?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
       setBuyers(buyer);
       setSellers(seller);
+      setToBeContacted(tobecontacted);
+      setProspects(toBeProspected);
     }
   }, [evaluations]);
 
@@ -203,85 +222,30 @@ const NewLeads = () => {
     setDate(false);
     setProjectValue(null);
     if (value !== "all") {
-      const test = All.filter(
-          (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      const test2 = allProspects.filter(
-          (v) =>
-              v.estProprietaireReponse === value &&
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      setEvals(test);
-      setProspects(test2);
+      const evals = All.filter((v) => v.estProprietaireReponse === value);
+      setEvals(evals);
       if (value === "oui") {
-        const test2 = All.map((v) => v.envisageVendreBienReponse);
-        setBuyerCheck(false);
+        const test2 = evals.map((v) => v.envisageVendreBienReponse);
         setStatus(statusFormatter(test2));
       } else {
-        setBuyerCheck(true);
-        const test3 = All.map((v) => v.statutRecherche);
+        const test3 = evals.map((v) => v.statutRecherche);
         setStatus(statusFormatter(test3));
       }
     } else {
-      setProjectValue(null);
-      //put a check for other fields
-      const test = All.filter(
-          (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      const test2 = allProspects.filter(
-          (v) =>
-              v.location.city === cityValue.value &&
-              v.municipalite === munciValue.value
-      );
-      setEvals(test);
-      setProspects(test2);
+      setEvals(All);
     }
   };
 
   const onStatusChange = (e) => {
     setProjectValue(e);
-    const value = e.value;
+    const value = e.value === "RecherchInformations" ? "":e.value;
     setDate(false);
-    if (buyerCheck === true) {
-      if (cityValue !== null && munciValue !== null) {
-        const test2 = All.filter(
-            (v) =>
-                v.statutRecherche === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        const test4 = allProspects.filter(
-            (v) =>
-                v.statutRecherche === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        setEvals(test2);
-        setProspects(test4);
-      }
+    if (ownerValue && ownerValue.value === "non") {
+      const evals = All.filter((v) => v.estProprietaireReponse === "non" && v.statutRecherche === value);
+      setEvals(evals);
     } else {
-      if (cityValue !== null && munciValue !== null) {
-        const test3 = All.filter(
-            (v) =>
-                v.envisageVendreBienReponse === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        const test5 = allProspects.filter(
-            (v) =>
-                v.envisageVendreBienReponse === value &&
-                v.location.city === cityValue.value &&
-                v.municipalite === munciValue.value
-        );
-        setEvals(test3);
-        setProspects(test5);
-      }
+      const evals = All.filter((v) => v.estProprietaireReponse === "oui" && v.envisageVendreBienReponse === value);
+      setEvals(evals);
     }
   };
 
@@ -321,6 +285,12 @@ const NewLeads = () => {
           });
     }
   }, [])
+
+  const updateToBeContacted = item => {
+    const idx = tobecontacted.findIndex(elem => elem.id === item.id);
+    tobecontacted[idx] = item;
+    setToBeContacted(tobecontacted);
+  }
 
   return (
     <>
@@ -436,6 +406,8 @@ const NewLeads = () => {
                         reports={reports}
                         onClick={handleClick}
                         tobecontacted={tobecontacted}
+                        usersContact={usersContact}
+                        updateToBeContacted={updateToBeContacted}
                       />
                     </div>
                   </li>
