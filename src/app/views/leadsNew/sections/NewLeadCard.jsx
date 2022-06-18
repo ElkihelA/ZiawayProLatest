@@ -264,10 +264,13 @@ const NewLeadCard = ({
                             <i className="i-Dollar-Sign-2"></i>
                           </span>
                         )}
+                      </div>
 
-                        {/* <div className="mt-1">Contact Information</div> */}
+                      <div className="mt-1 text-center">
+                        Customer Value Ziaway
                       </div>
                     </div>
+
                     {prospect === true ? null : data?.broker[0]?.brokerId ===
                       profile.userId ? (
                       <div className="mt-2 text-11">
@@ -411,7 +414,8 @@ const NewLeadCard = ({
                           {t("Leads.31")}
                         </button>
                       </div>
-                      {prospect === true ? null : (
+                      {prospect === true ||
+                      data?.broker[0]?.brokerId !== profile.userId ? null : (
                         <>
                           <div className={"mt-2"}>
                             <button
@@ -443,27 +447,32 @@ const NewLeadCard = ({
                           </button>
                         </div>
                       )}
-                      <div className={"mt-2"}>
-                        <button
-                          type="button"
-                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
-                          onClick={() => setShow(true)}
-                          style={{ whiteSpace: "normal" }}
-                        >
-                          {t("Leads.80")}
-                        </button>
-                      </div>
-                      <div className={"mt-2"}>
-                        <button
-                          type="button"
-                          className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} ${
-                            tabs === 5 ? "btn-primary" : "btn-outline-primary"
-                          }`}
-                          onClick={() => HandleTabs(5)}
-                        >
-                          {t("Leads.36")}
-                        </button>
-                      </div>
+
+                      {data?.broker[0]?.brokerId !== profile.userId ? null : (
+                        <div className={"mt-2"}>
+                          <button
+                            type="button"
+                            className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} `}
+                            onClick={() => setShow(true)}
+                            style={{ whiteSpace: "normal" }}
+                          >
+                            {t("Leads.80")}
+                          </button>
+                        </div>
+                      )}
+                      {data?.broker[0]?.brokerId !== profile.userId ? null : (
+                        <div className={"mt-2"}>
+                          <button
+                            type="button"
+                            className={`btn btn-sm text-uppercase rounded-lg w-100 ${"btn-outline-primary"} ${
+                              tabs === 5 ? "btn-primary" : "btn-outline-primary"
+                            }`}
+                            onClick={() => HandleTabs(5)}
+                          >
+                            {t("Leads.36")}
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -601,7 +610,6 @@ const NewLeadCard = ({
                           listsTwo={prospect ? null : listsTwo}
                           prospect={prospect}
                           contactShow={
-                            data?.broker.length &&
                             data?.broker[0]?.brokerId !== profile.userId
                           }
                         />

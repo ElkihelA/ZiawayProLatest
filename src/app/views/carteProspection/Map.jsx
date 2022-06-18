@@ -35,6 +35,7 @@ const Map = compose(
   //Fonction a refaire trop harcodé
   const urlSetter = (data) => {
     if (data.ouiContacterParProfessionnel === "oui") {
+      console.log("first condition running for", data);
       return { url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png" };
     } else {
       return {
@@ -88,6 +89,7 @@ const Map = compose(
 
   return (
     <div>
+      {console.log("markers", props?.markers)}
       <GoogleMap
         defaultZoom={7}
         defaultCenter={{ lat: 46.1908572, lng: -74.5489687 }}

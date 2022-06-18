@@ -3,11 +3,13 @@ import Map from "../carteProspection/Map";
 import { useTranslation } from "react-i18next";
 import TabsSection from "./sections/TabsSection";
 import { Loading } from "@gull";
-import moment from 'moment';
+import moment from "moment";
 import Filters from "./filters";
-import firebase, {cloudFunctions} from "../../services/firebase/firebase";
+import firebase, { cloudFunctions } from "../../services/firebase/firebase";
+import { useSelector } from "react-redux";
 
 const NewLeads = () => {
+  const profile = useSelector((state) => state.firebase.profile);
   const { t } = useTranslation();
   const [All, setAll] = useState(null);
   const [allProspects, setAllProspects] = useState(null);
@@ -20,7 +22,7 @@ const NewLeads = () => {
   const [defaultFilters, setDefaultFilters] = useState({});
   const [filters, setFilters] = useState({});
   const [userFilters, setUserFilters] = useState({});
-  const [reports, setReports] = useState([])
+  const [reports, setReports] = useState([]);
   const [selectedMarker, setSelectedMarkers] = useState(false);
   const [cities, setCities] = useState(null);
   const [muncipalities, setMuncipal] = useState(null);
@@ -37,78 +39,84 @@ const NewLeads = () => {
   const [ownerValue, setOwnerValue] = useState(null);
   const [dateInfo, setDate] = useState(false);
 
-  const [dateFilterType, setDateFilterType] = useState('31days');
+  console.log("reports", reports);
+
+  const [dateFilterType, setDateFilterType] = useState("31days");
 
   const getUserFilters = () => {
-    const httpCallable = cloudFunctions.httpsCallable('defaultFilters');
-    httpCallable().then(res => {
-      const cities = [];
-      for(const [key, val] of Object.entries(res.data.filters)) {
-        cities.push(key);
-        if(key === res.data.defaultFilters.city) {
-          setMuncipal(formatter(val.municipalities));
+    const httpCallable = cloudFunctions.httpsCallable("defaultFilters");
+    httpCallable()
+      .then((res) => {
+        const cities = [];
+        for (const [key, val] of Object.entries(res.data.filters)) {
+          cities.push(key);
+          if (key === res.data.defaultFilters.city) {
+            setMuncipal(formatter(val.municipalities));
+          }
         }
-      }
-      if(res.data.defaultFilters.dateFilterType === 'custom') {
-        setInitialDate(res.data.defaultFilters.startDate);
-        setFinalDate(res.data.defaultFilters.endDate);
-      }
-      setDateFilterType(res.data.defaultFilters.dateFilterType);
-      setCities(formatter(cities));
-      setFilters(res.data.filters);
-      const city = res.data.defaultFilters.city;
-      const municipalite = res.data.defaultFilters.municipalite;
-      setCityValue({label: city, value: city});
-      setMunciValue({label: municipalite, value: municipalite});
-      setUserFilters(res.data.defaultFilters);
-      setDefaultFilters(res.data.defaultFilters);
-      setLoading(false)
-    }).catch(err => {
-      console.log(err)
-    })
-  }
+        if (res.data.defaultFilters.dateFilterType === "custom") {
+          setInitialDate(res.data.defaultFilters.startDate);
+          setFinalDate(res.data.defaultFilters.endDate);
+        }
+        setDateFilterType(res.data.defaultFilters.dateFilterType);
+        setCities(formatter(cities));
+        setFilters(res.data.filters);
+        const city = res.data.defaultFilters.city;
+        const municipalite = res.data.defaultFilters.municipalite;
+        setCityValue({ label: city, value: city });
+        setMunciValue({ label: municipalite, value: municipalite });
+        setUserFilters(res.data.defaultFilters);
+        setDefaultFilters(res.data.defaultFilters);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   const getUserData = (filters = {}) => {
     setLoading(true);
-    const httpCallable = cloudFunctions.httpsCallable('newleads');
+    const httpCallable = cloudFunctions.httpsCallable("newleads");
     httpCallable(filters)
-        .then(res => {
+      .then((res) => {
         setLoading(false);
         const reports = res.data.data || [];
-        setUserData(reports.filter(item => item.estProprietaireReponse));
-      }).catch(err => {
-        console.log('err', err)
+        setUserData(reports.filter((item) => item.estProprietaireReponse));
       })
-  }
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
 
   useEffect(() => {
     getUserFilters();
-  },[]);
+  }, []);
 
   useEffect(() => {
-      getToBeContactedData();
+    getToBeContactedData();
   }, []);
 
   const getToBeContactedData = async () => {
     const httpCallable = cloudFunctions.httpsCallable("loadUsersContacts");
-    httpCallable().then(res => {
-      if(!res.error) {
-        setUsersContacts(res.data.contacts);
-      }else {
-        console.log("contacts error", res.data.emessage);
-      }
-    }).catch(err => {
-      console.log('err', err)
-    })
-  }
+    httpCallable()
+      .then((res) => {
+        if (!res.error) {
+          setUsersContacts(res.data.contacts);
+        } else {
+          console.log("contacts error", res.data.emessage);
+        }
+      })
+      .catch((err) => {
+        console.log("err", err);
+      });
+  };
 
   useEffect(() => {
-    if(userFilters.city) {
+    if (userFilters.city) {
       getUserData(userFilters);
     }
-    console.log('userFilters', userFilters)
-  }, [userFilters])
-
+    console.log("userFilters", userFilters);
+  }, [userFilters]);
 
   const handleClick = (marker, event) => {
     setSelectedMarkers(marker);
@@ -128,35 +136,55 @@ const NewLeads = () => {
         filters.push(data[i]);
       }
     }
-    const idx = filters.findIndex(item => item === "");
-    if(idx >= 0) {
-      filters[idx] = "RecherchInformations"
+    const idx = filters.findIndex((item) => item === "");
+    if (idx >= 0) {
+      filters[idx] = "RecherchInformations";
     }
     return filters;
   };
 
   const setUserData = (reports = []) => {
-    const seller = reports?.filter((v) => v.estProprietaireReponse === "oui");
-    const buyer = reports?.filter((v) => v.estProprietaireReponse === "non");
-    const tobecontacted = reports?.filter((v) => v.ouiContacterParProfessionnel === "oui");
-    const toBeProspected = reports?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
+    const filtered = reports.filter(
+      (v) =>
+        v?.broker?.length === 0 || v?.broker[0]?.brokerId === profile.userId
+    );
+    const seller = filtered?.filter((v) => v.estProprietaireReponse === "oui");
+    const buyer = filtered?.filter((v) => v.estProprietaireReponse === "non");
+    const tobecontacted = filtered?.filter(
+      (v) => v.ouiContacterParProfessionnel === "oui"
+    );
+    const toBeProspected = filtered?.filter(
+      (v) =>
+        !v.ouiContacterParProfessionnel ||
+        v.ouiContacterParProfessionnel === "non"
+    );
 
     setBuyers(buyer);
     setSellers(seller);
     setAllProspects(toBeProspected);
     setProspects(toBeProspected);
-    setAll(reports);
-    setEvals(reports);
+    setAll(filtered);
+    setEvals(filtered);
     setToBeContacted(tobecontacted);
-    setReports(reports);
-  }
+    setReports(filtered);
+  };
 
   useEffect(() => {
     if (evaluations) {
-      const seller = evaluations?.filter((v) => v.estProprietaireReponse === "oui");
-      const buyer = evaluations?.filter((v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non");
-      const tobecontacted = evaluations?.filter((v) => v.ouiContacterParProfessionnel === "oui");
-      const toBeProspected = evaluations?.filter((v) => !v.ouiContacterParProfessionnel || v.ouiContacterParProfessionnel === "non");
+      const seller = evaluations?.filter(
+        (v) => v.estProprietaireReponse === "oui"
+      );
+      const buyer = evaluations?.filter(
+        (v) => !v.estProprietaireReponse || v.estProprietaireReponse === "non"
+      );
+      const tobecontacted = evaluations?.filter(
+        (v) => v.ouiContacterParProfessionnel === "oui"
+      );
+      const toBeProspected = evaluations?.filter(
+        (v) =>
+          !v.ouiContacterParProfessionnel ||
+          v.ouiContacterParProfessionnel === "non"
+      );
       setBuyers(buyer);
       setSellers(seller);
       setToBeContacted(tobecontacted);
@@ -176,7 +204,8 @@ const NewLeads = () => {
       title: t("Leads.13"),
       value: "$57.2m",
       subTitle: `${buyers?.length}`,
-      subValue: buyers?.length === 0
+      subValue:
+        buyers?.length === 0
           ? "0%"
           : `${((buyers?.length * 100) / reports?.length).toFixed()}%`,
       subValueColor:
@@ -188,7 +217,8 @@ const NewLeads = () => {
       title: t("Leads.14"),
       value: "14.3%",
       subTitle: `${sellers?.length}`,
-      subValue: sellers?.length === 0
+      subValue:
+        sellers?.length === 0
           ? "0%"
           : `${((sellers?.length * 100) / reports?.length).toFixed()}%`,
       subValueColor:
@@ -200,12 +230,19 @@ const NewLeads = () => {
 
   const onCityChange = (e) => {
     setDate(false);
-    setCityValue(e)
-    for(const [key, val] of Object.entries(filters)) {
-      if(key === e.value) {
+    setCityValue(e);
+    for (const [key, val] of Object.entries(filters)) {
+      if (key === e.value) {
         setMuncipal(formatter(val.municipalities));
-        setMunciValue({value: val.municipalities[0], label: val.municipalities[0]});
-        setUserFilters({...userFilters, city: e.value, municipalite: val.municipalities[0]});
+        setMunciValue({
+          value: val.municipalities[0],
+          label: val.municipalities[0],
+        });
+        setUserFilters({
+          ...userFilters,
+          city: e.value,
+          municipalite: val.municipalities[0],
+        });
       }
     }
   };
@@ -213,7 +250,7 @@ const NewLeads = () => {
   const onMuncipleChange = (e) => {
     setDate(false);
     setMunciValue(e);
-    setUserFilters({...userFilters, municipalite: e.value});
+    setUserFilters({ ...userFilters, municipalite: e.value });
   };
 
   const onOwnerChange = (e) => {
@@ -238,59 +275,84 @@ const NewLeads = () => {
 
   const onStatusChange = (e) => {
     setProjectValue(e);
-    const value = e.value === "RecherchInformations" ? "":e.value;
+    const value = e.value === "RecherchInformations" ? "" : e.value;
     setDate(false);
     if (ownerValue && ownerValue.value === "non") {
-      const evals = All.filter((v) => v.estProprietaireReponse === "non" && v.statutRecherche === value);
+      const evals = All.filter(
+        (v) => v.estProprietaireReponse === "non" && v.statutRecherche === value
+      );
       setEvals(evals);
     } else {
-      const evals = All.filter((v) => v.estProprietaireReponse === "oui" && v.envisageVendreBienReponse === value);
+      const evals = All.filter(
+        (v) =>
+          v.estProprietaireReponse === "oui" &&
+          v.envisageVendreBienReponse === value
+      );
       setEvals(evals);
     }
   };
 
   const onDateChange = () => {
-    setUserFilters({...userFilters, endDate: finalDate, startDate: initialDate, dateFilterType: 'custom'});
+    setUserFilters({
+      ...userFilters,
+      endDate: finalDate,
+      startDate: initialDate,
+      dateFilterType: "custom",
+    });
   };
 
   const onDaysSubtract = (value) => {
-    const endDate = moment().format('YYYY-MM-DD');
-    const startDate = moment().subtract(value, 'days').format('YYYY-MM-DD');
+    const endDate = moment().format("YYYY-MM-DD");
+    const startDate = moment().subtract(value, "days").format("YYYY-MM-DD");
     setInitialDate(null);
     setFinalDate(null);
-    setDateFilterType(value == 7 ? '7days': '31days');
-    setUserFilters({...userFilters, endDate, startDate, dateFilterType: value == 7 ? '7days': '31days'});
+    setDateFilterType(value == 7 ? "7days" : "31days");
+    setUserFilters({
+      ...userFilters,
+      endDate,
+      startDate,
+      dateFilterType: value == 7 ? "7days" : "31days",
+    });
   };
 
   const refreshFilter = () => {
     setEvals(All);
     setProspects(allProspects);
-    setCityValue({label: defaultFilters.city, value: defaultFilters.city});
-    setMunciValue({label: defaultFilters.municipalite, value: defaultFilters.municipalite});
+    setCityValue({ label: defaultFilters.city, value: defaultFilters.city });
+    setMunciValue({
+      label: defaultFilters.municipalite,
+      value: defaultFilters.municipalite,
+    });
     setDateFilterType(defaultFilters.dateFilterType);
     setProjectValue(null);
     setBuyerCheck(null);
     setOwnerValue(null);
     setDate(false);
-    setUserFilters({...userFilters, city: defaultFilters.city, municipalite: defaultFilters.municipalite})
+    setUserFilters({
+      ...userFilters,
+      city: defaultFilters.city,
+      municipalite: defaultFilters.municipalite,
+    });
   };
 
   useEffect(() => {
     return () => {
-      firebase.firestore()
-          .collection('newleads-default-filters')
-          .doc(userFilters.id).set(userFilters)
-          .then((res) => {
-            console.log('Testing Updates')
-          });
-    }
-  }, [])
+      firebase
+        .firestore()
+        .collection("newleads-default-filters")
+        .doc(userFilters.id)
+        .set(userFilters)
+        .then((res) => {
+          console.log("Testing Updates");
+        });
+    };
+  }, []);
 
-  const updateToBeContacted = item => {
-    const idx = tobecontacted.findIndex(elem => elem.id === item.id);
+  const updateToBeContacted = (item) => {
+    const idx = tobecontacted.findIndex((elem) => elem.id === item.id);
     tobecontacted[idx] = item;
     setToBeContacted(tobecontacted);
-  }
+  };
 
   return (
     <>
@@ -298,28 +360,28 @@ const NewLeads = () => {
       <section className="pb-4">
         <div className="mb-4">
           <Filters
-              cities={cities}
-              cityValue={cityValue}
-              onCityChange={onCityChange}
-              muncipalities={muncipalities}
-              munciValue={munciValue}
-              onMuncipleChange={onMuncipleChange}
-              ownerValue={ownerValue}
-              onOwnerChange={onOwnerChange}
-              buyerCheck={buyerCheck}
-              onStatusChange={onStatusChange}
-              onDaysSubtract={onDaysSubtract}
-              refreshFilter={refreshFilter}
-              onDateChange={onDateChange}
-              setDate={setDate}
-              finalDate={finalDate}
-              setFinalDate={setFinalDate}
-              initialDate={initialDate}
-              setInitialDate={setInitialDate}
-              projectValue={projectValue}
-              projectStatus={projectStatus}
-              dateFilterType={dateFilterType}
-              setDateFilterType={setDateFilterType}
+            cities={cities}
+            cityValue={cityValue}
+            onCityChange={onCityChange}
+            muncipalities={muncipalities}
+            munciValue={munciValue}
+            onMuncipleChange={onMuncipleChange}
+            ownerValue={ownerValue}
+            onOwnerChange={onOwnerChange}
+            buyerCheck={buyerCheck}
+            onStatusChange={onStatusChange}
+            onDaysSubtract={onDaysSubtract}
+            refreshFilter={refreshFilter}
+            onDateChange={onDateChange}
+            setDate={setDate}
+            finalDate={finalDate}
+            setFinalDate={setFinalDate}
+            initialDate={initialDate}
+            setInitialDate={setInitialDate}
+            projectValue={projectValue}
+            projectStatus={projectStatus}
+            dateFilterType={dateFilterType}
+            setDateFilterType={setDateFilterType}
           />
         </div>
         <div>

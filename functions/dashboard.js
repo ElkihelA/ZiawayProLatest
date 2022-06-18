@@ -4,17 +4,17 @@ const _ = require("lodash");
 const moment = require("moment");
 const cors = require("cors")({ origin: "*" });
 
-// const courtierCheckfunction = (courtier) => {
+const courtierCheckfunction = (courtier, id) => {
+  var found = false;
+  for (var i = 0; i < courtier.length; i++) {
+    if (courtier[i].numeroPermis === id) {
+      found = true;
+      break;
+    }
+  }
 
-//   var found = false;
-// for(var i = 0; i < courtier.length; i++) {
-//     if (courtier[i].Name == 'Magenic') {
-//         found = true;
-//         break;
-//     }
-// }
-
-// }
+  return found;
+};
 
 exports.dashboard = functions.https.onCall(async (data, context) => {
   try {
@@ -37,7 +37,10 @@ exports.dashboard = functions.https.onCall(async (data, context) => {
       const data = item.data();
       leads.push(data);
       if (data.courtiers && data.courtiers.length) {
-        impressionTotal += data.courtiers.length;
+        if (courtierCheckfunction(data.courtiers, data.id) === true) {
+          impressionTotal++;
+        }
+        // impressionTotal += data.courtiers.length;
       }
       if (data.ouiContacterParProfessionnel === "oui") {
         totalContacts++;
