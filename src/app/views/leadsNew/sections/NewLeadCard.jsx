@@ -43,6 +43,12 @@ const NewLeadCard = ({
 
   const HandleTabs = (index) => setTabs(index);
 
+  useEffect(() => {
+    if(!openCard) {
+      setTabs(0)
+    }
+  }, [openCard])
+
   const projectFields = () => {
     if (data?.estProprietaireReponse === "oui") {
       return [
