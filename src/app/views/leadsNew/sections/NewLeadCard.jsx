@@ -23,6 +23,7 @@ const NewLeadCard = ({
   reports = [],
   showAddButton,
   setUpdatedData,
+  updateMyLeads
 }) => {
   console.log("data", data);
   const { t } = useTranslation();
@@ -160,7 +161,7 @@ const NewLeadCard = ({
       .update({ broker: [values] })
       .then((res) => {
         data.broker = [values];
-        //updateMyLeads(data);
+        updateMyLeads(data);
         axios
           .post(
             "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",

@@ -6,10 +6,9 @@ import { Loading } from "@gull";
 import moment from "moment";
 import Filters from "./filters";
 import firebase, { cloudFunctions } from "../../services/firebase/firebase";
-import { useSelector } from "react-redux";
+import { useSelector, connect } from "react-redux";
 
-const NewLeads = () => {
-  const profile = useSelector((state) => state.firebase.profile);
+const NewLeads = ({profile}) => {
   const { t } = useTranslation();
   const [All, setAll] = useState(null);
   const [allProspects, setAllProspects] = useState(null);
@@ -38,7 +37,8 @@ const NewLeads = () => {
   const [projectValue, setProjectValue] = useState(null);
   const [ownerValue, setOwnerValue] = useState(null);
   const [dateInfo, setDate] = useState(false);
-
+  const [usersProspects, setUsersProspects] = useState([]);
+  
   console.log("reports", reports);
 
   const [dateFilterType, setDateFilterType] = useState("31days");
@@ -93,6 +93,12 @@ const NewLeads = () => {
   }, []);
 
   useEffect(() => {
+    if(profile && profile.bookmarks) {
+      setUsersProspects(profile.bookmarks || [])
+    }
+  }, [profile])
+
+  useEffect(() => {
     getToBeContactedData();
   }, []);
 
@@ -119,6 +125,7 @@ const NewLeads = () => {
   }, [userFilters]);
 
   const handleClick = (marker, event) => {
+    console.log('userProspects', usersProspects);
     setSelectedMarkers(marker);
   };
 
@@ -398,7 +405,7 @@ const NewLeads = () => {
                 <Map
                   selectedMarker={selectedMarker}
                   q
-                  markers={reports}
+                  markers={[...reports, ...usersContact, ...usersProspects]}
                   onClick={handleClick}
                   googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyCd2d_otf6zxLsyj9OVyzJoZVAPiGgpfsY&v=3.exp&libraries=geometry,drawing,places"
                   loadingElement={<div style={{ height: `500px` }} />}
@@ -482,5 +489,5 @@ const NewLeads = () => {
     </>
   );
 };
-
-export default NewLeads;
+const mapStateToProps = (state) => ({profile: state.firebase.profile})
+export default connect(mapStateToProps)(NewLeads);

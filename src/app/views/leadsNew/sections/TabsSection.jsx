@@ -124,7 +124,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[],
               {
                 currentTab === 'MyLeads' &&
                   <ul className="nav flex-column gy-2">
-                    {sortedData(myLeads, ssort).map((item) => (
+                    {myLeads.map((item) => (
                         <li>
                           <NewLeadCard data={item} onClick={onClick} reports={reports} setUpdatedData={setUpdatedData} />
                         </li>
