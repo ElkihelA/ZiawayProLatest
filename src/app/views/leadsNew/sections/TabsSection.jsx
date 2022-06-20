@@ -18,6 +18,7 @@ const TabsSection = ({ data, onClick, prospects, reports = [], tobecontacted=[],
     const idx = myLeads.findIndex(item => item.id === id);
     myLeads[idx].broker = broker;
     setMyLeads(myLeads);
+    updateToBeContacted(myLeads[idx])
   }
 
   useEffect(()=> {
