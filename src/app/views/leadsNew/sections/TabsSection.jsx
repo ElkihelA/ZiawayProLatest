@@ -76,7 +76,7 @@ const TabsSection = ({
   };
 
   const handlePageClick = (event) => {
-    const indexOfLastPost = event.selected * 5;
+    const indexOfLastPost = (event.selected + 1) * 5;
     const indexOfFirstPost = indexOfLastPost - 5;
     if (event.selected === 0) {
       setFirstIndex(0);
@@ -88,9 +88,9 @@ const TabsSection = ({
   };
 
   const handleContactPage = (event) => {
-    console.log("selected", event.selected);
-    const indexOfLastPost = event.selected * 5;
+    const indexOfLastPost = (event.selected + 1) * 5;
     const indexOfFirstPost = indexOfLastPost - 5;
+    console.log("selected", event.selected, indexOfLastPost, indexOfFirstPost);
     if (event.selected === 0) {
       setFirstIndexContact(0);
       setLastIndexContact(5);
@@ -102,7 +102,7 @@ const TabsSection = ({
 
   const handleToContactPage = (event) => {
     console.log("selected", event.selected);
-    const indexOfLastPost = event.selected * 5;
+    const indexOfLastPost = (event.selected + 1) * 5;
     const indexOfFirstPost = indexOfLastPost - 5;
     if (event.selected === 0) {
       setFirstIndexToContact(0);
@@ -114,7 +114,7 @@ const TabsSection = ({
   };
 
   const handleToProspectPage = (event) => {
-    const indexOfLastPost = event.selected * 5;
+    const indexOfLastPost = (event.selected + 1) * 5;
     const indexOfFirstPost = indexOfLastPost - 5;
     if (event.selected === 0) {
       setFirstIndexToProspect(0);
