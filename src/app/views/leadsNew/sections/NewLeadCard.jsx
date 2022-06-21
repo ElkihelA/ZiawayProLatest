@@ -23,7 +23,7 @@ const NewLeadCard = ({
   reports = [],
   showAddButton,
   setUpdatedData,
-  updateMyLeads
+  updateMyLeads,
 }) => {
   console.log("data", data);
   const { t } = useTranslation();
@@ -44,10 +44,10 @@ const NewLeadCard = ({
   const HandleTabs = (index) => setTabs(index);
 
   useEffect(() => {
-    if(!openCard) {
-      setTabs(0)
+    if (!openCard) {
+      setTabs(0);
     }
-  }, [openCard])
+  }, [openCard]);
 
   const projectFields = () => {
     if (data?.estProprietaireReponse === "oui") {

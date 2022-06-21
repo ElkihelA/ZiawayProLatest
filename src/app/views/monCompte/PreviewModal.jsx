@@ -20,6 +20,8 @@ const PreviewModal = ({ show, onClose }) => {
 
   // The link doesn't have http or https.
 
+  console.log("profile", profile);
+
   return (
     <Fragment>
       {profile === null ? (
@@ -81,6 +83,15 @@ const PreviewModal = ({ show, onClose }) => {
 
                   <div className="mt-2 border-bottom pb-2">
                     <span className="text-15 font-weight-bold mr-2">
+                      Agency:
+                    </span>
+                    <span className="text-15">
+                      {profile?.regulatory?.agency}
+                    </span>
+                  </div>
+
+                  <div className="mt-2 border-bottom pb-2">
+                    <span className="text-15 font-weight-bold mr-2">
                       Phone:
                     </span>
                     <a
@@ -90,6 +101,7 @@ const PreviewModal = ({ show, onClose }) => {
                       {profile?.officialInformation?.officialPhoneNumber}
                     </a>
                   </div>
+
                   <div className="mt-2 border-bottom pb-2">
                     <span className="text-15 font-weight-bold mr-2">
                       Practice:
