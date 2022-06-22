@@ -356,9 +356,10 @@ const NewLeads = ({profile}) => {
   }, []);
 
   const updateToBeContacted = (item) => {
-    const idx = tobecontacted.findIndex((elem) => elem.id === item.id);
-    tobecontacted[idx] = item;
-    setToBeContacted(tobecontacted);
+    const tbc = [...tobecontacted];
+    const idx = tbc.findIndex((elem) => elem.id === item.id);
+    tbc[idx] = item;
+    setToBeContacted(tbc);
   };
 
   return (

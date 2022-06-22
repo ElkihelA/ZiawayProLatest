@@ -25,9 +25,7 @@ const NewLeadCard = ({
   setUpdatedData,
   updateMyLeads,
 }) => {
-  console.log("data", data);
   const { t } = useTranslation();
-  const history = useHistory();
   const [joinMeeting, setJoinMeeting] = useState(false);
 
   const profile = useSelector((state) => state.firebase.profile);
@@ -35,7 +33,6 @@ const NewLeadCard = ({
   const [tabs, setTabs] = useState(0);
   const [openCard, setOpenCard] = useState(false);
   const [avaliableMenu, setAvaliableMenu] = useState(false);
-  const [key, setKey] = useState(null);
   const [participant, setParticipant] = useState(null);
   const [token, setToken] = useState(
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2IxOGE4ZGYxNTVjNDBjNTE5MzA1ZDYxODg0NWYwOWU4LTE2NDk5NDc4OTYiLCJncmFudHMiOnsiaWRlbnRpdHkiOiJzaGFoemFkIiwidmlkZW8iOnt9fSwiaWF0IjoxNjQ5OTQ3ODk2LCJleHAiOjE2NDk5NTE0OTYsImlzcyI6IlNLYjE4YThkZjE1NWM0MGM1MTkzMDVkNjE4ODQ1ZjA5ZTgiLCJzdWIiOiJBQzEyODZiNGI4YzA0MDVlZjgxYjVlOGFiZjZjMTczNjA3In0.UlK4IvMnwaYBR2uPgzzDPbYGffGYuF_g89RDet4Mmi4"
@@ -187,7 +184,6 @@ const NewLeadCard = ({
     const test = reports?.filter(
       (v) => v.location?.value === data?.location?.value
     );
-    console.log("count", test?.length);
     //setCount(test?.length);
   }, [data, reports]);
 
