@@ -57,8 +57,8 @@ export function resetPassword({ email }) {
   };
 }
 
-export function facebookLogin(t, resp, nextStep, isRegister = false) {
-  return (dispatch) => {
+export function facebookLogin(t, resp, goToStep, isRegister = false) {
+  return (dispatch, getState) => {
     // const firestore = getFirestore();
     dispatch({
       type: actions.SET_STATE,
@@ -98,14 +98,16 @@ export function facebookLogin(t, resp, nextStep, isRegister = false) {
           payload: { loading: false }
         })
         swal.fire(t("swal.1"), res.data.error.message, "error");
-      } else if (nextStep) {
+      } else if (goToStep) {
         dispatch({
           type: actions.SET_STATE,
           payload: { loading: false }
         })
         // redirect to next step
-        dispatch(setSubscriptionData({ current: res.data.user }))
-        nextStep()
+        dispatch(setSubscriptionData({ current: res.data.user }));
+        const state = getState()
+        const fromSite = state.subscription.fromSite;
+        goToStep(fromSite?3:2);
       }
 
     }).catch(e => {
@@ -119,7 +121,7 @@ export function facebookLogin(t, resp, nextStep, isRegister = false) {
   };
 }
 
-export function googleLogin(t, resp, nextStep, isRegister = false) {
+export function googleLogin(t, resp, goToStep, isRegister = false) {
   return (dispatch, getState) => {
     // const firestore = getFirestore();
     dispatch({
@@ -160,14 +162,16 @@ export function googleLogin(t, resp, nextStep, isRegister = false) {
           payload: { loading: false }
         })
         swal.fire(t("swal.1"), t("swal.10"), "error");
-      } else if (nextStep) {
+      } else if (goToStep) {
         dispatch({
           type: actions.SET_STATE,
           payload: { loading: false }
         })
         // redirect to next step
         dispatch(setSubscriptionData({ current: res.data.user }))
-        nextStep()
+        const state = getState()
+        const fromSite = state.subscription.fromSite;
+        goToStep(fromSite?3:2);
       }
 
     }).catch(e => {

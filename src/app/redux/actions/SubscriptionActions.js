@@ -16,8 +16,8 @@ export function setSubscriptionData(data) {
         })
     }
 }
-export function createNewAccount(values) {
-  return (dispatch) => {
+export function createNewAccount(values, goToStep) {
+  return (dispatch, getState) => {
     dispatch({
         type: actions.SET_STATE,
         payload: {isSubmitting: true}
@@ -31,9 +31,12 @@ export function createNewAccount(values) {
         })
         toast(res.data.message)
       } else {
+          const state = getState()
+          const fromSite = state.subscription.fromSite;
+          goToStep(fromSite?3:2);
           dispatch({
               type: actions.SET_STATE,
-              payload: {current: res.data, isSubmitting: false, step: 2}
+              payload: {current: res.data, isSubmitting: false, step: fromSite?3:2}
           })
       }
       return res
@@ -43,16 +46,20 @@ export function createNewAccount(values) {
   }
 }
 
-export function getAllPlans() {
+export function getAllPlans(priceId) {
   return (dispatch) => {
     const httpsCallable = cloudFunctions.httpsCallable("getAllPlans");
-    httpsCallable().then(res => {
+    httpsCallable({priceId}).then(res => {
       if(res.data && res.data.error) {
         toast.error(res.data.message);
       } else {
         dispatch({
           type: actions.SET_STATE,
-          payload: {plans: res.data}
+          payload: {
+            plans: res.data.plans,
+            plan: res.data.selectedPlan,
+            fromSite: priceId ? true : false
+          }
         })
       }
     }).catch(err => {

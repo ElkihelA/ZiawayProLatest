@@ -1,18 +1,17 @@
 import React, { Component, Fragment } from "react";
-import history from "@history.js";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import { setUserData } from "../redux/actions/UserActions";
 import jwtAuthService from "../services/jwtAuthService";
 import localStorageService from "../services/localStorageService";
 import firebaseAuthService from "../services/firebase/firebaseAuthService";
-import { useSelector } from "react-redux";
+import { withRouter } from "react-router-dom";
 class Auth extends Component {
   state = {};
 
   constructor(props) {
     super(props);
-
+    const {history} = props;
     this.props.setUserData(localStorageService.getItem("auth_user"));
     //this.checkJwtAuth();
     if (history.location.pathname === "/evaluation-bien") {
@@ -33,7 +32,8 @@ class Auth extends Component {
   checkFirebaseAuth = () => {
     console.log("profile", this.props.profile);
 
-    const user = firebaseAuthService.checkAuthStatus((user) => {
+    firebaseAuthService.checkAuthStatus((user) => {
+      const {history, location} = this.props;
       if (user) {
         // if (user.emailVerified === false) {
         //   history.push({
@@ -44,7 +44,7 @@ class Auth extends Component {
         //   pathname: "/dashboard/v0",
         // });
         console.log("user found");
-      } else {
+      } else if(!location.search.includes('selected-plan-id=')) {
         history.push({
           pathname: "/homepage",
         });
@@ -65,4 +65,4 @@ const mapStateToProps = (state) => ({
   profile: state.firebase.profile,
 });
 
-export default connect(mapStateToProps, { setUserData })(Auth);
+export default withRouter(connect(mapStateToProps, { setUserData })(Auth));

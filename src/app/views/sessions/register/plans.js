@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, Tab, Tabs, Button, TabContent, Nav } from "react-bootstrap";
+import React, { useState} from "react";
+import { Tab, Nav } from "react-bootstrap";
 import SimpleCard from "@gull/components/cards/SimpleCard";
 import { connect } from "react-redux";
 import {
@@ -7,12 +7,18 @@ import {
   setSubscriptionData,
 } from "../../../redux/actions/SubscriptionActions";
 import { Loading } from "@gull";
+import { withRouter } from "react-router-dom";
 
-const PlansList = ({ subscription = {}, dispatch, ...props }) => {
+const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => {
   const { loading = true, plans = {} } = subscription;
   const [period, setPeriod] = useState("week");
   React.useEffect(() => {
-    dispatch(getAllPlans());
+    const search = location.search;
+    if(search && search.includes("?selected-plan-id=")) {
+      dispatch(getAllPlans(search.split("?selected-plan-id=")[1]))
+    } else {
+      dispatch(getAllPlans());
+    }
   }, []);
 
   const selectOffer = (plan) => {
@@ -119,4 +125,4 @@ const PlansList = ({ subscription = {}, dispatch, ...props }) => {
 const mapStateProps = (state) => ({
   subscription: state.subscription,
 });
-export default connect(mapStateProps)(PlansList);
+export default withRouter(connect(mapStateProps)(PlansList));

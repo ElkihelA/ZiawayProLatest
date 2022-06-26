@@ -82,17 +82,17 @@ function App() {
             <Route exact path="/contact" component={ContactUsPage} />
             <Route exact path="/faq" component={FaqPage} />
           </Router> */}
-          <Auth>
-            <Suspense fallback={<Loading></Loading>}>
-              <Router history={history}>
-                <ScrollToTop />
-                <ToastContainer />
-                <CallingTest />
-                <Route exact path="/landing" component={Landing} />
-                {renderRoutes(RootRoutes)}
-              </Router>
-            </Suspense>
-          </Auth>
+          <Router history={history}>
+            <Auth>
+              <Suspense fallback={<Loading></Loading>}>
+                  <ScrollToTop />
+                  <ToastContainer />
+                  <CallingTest />
+                  <Route exact path="/landing" component={Landing} />
+                  {renderRoutes(RootRoutes)}
+              </Suspense>
+            </Auth>
+          </Router>
         </ReactReduxFirebaseProvider>
       </Provider>
     </AppContext.Provider>

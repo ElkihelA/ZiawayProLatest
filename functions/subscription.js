@@ -72,7 +72,7 @@ async function checkUserInFirebase(email) {
 }
 
 exports.getAllPlans = functions.https.onCall(async (data, context) => {
-  const response = await getStripePlans();
+  const response = await getStripePlans(data.priceId);
   return response;
 });
 
@@ -349,12 +349,16 @@ exports.createOrLoginWithFacebook = functions.https.onCall(
     }
   );
 
-const getStripePlans = async () => {
+const getStripePlans = async (priceId) => {
   try {
     // get products
+    let selectedPlan = null;
     const products = (await stripe.products.list({ active: true })).data;
     let plans = (await stripe.plans.list({ active: true })).data;
     plans = plans.filter((item) => {
+      if(priceId === item.id) {
+        selectedPlan = item;
+      }
       const product = products.find((elem) => elem.id === item.product);
       if (product) {
         item.name = product.name;
@@ -372,7 +376,21 @@ const getStripePlans = async () => {
     });
     plans = _.sortBy(plans, "amount", "asc");
     plans = _.groupBy(plans, "interval");
-    return plans;
+    for(const [key, value] of Object.entries(plans)) {
+      for(let i = 0; i<value.length; i++) {
+        let metadata = value[i].metadata;
+        for(let j = 0; j < metadata.length; j++) {
+          const split = metadata[j].key.split(":");
+          metadata[j].key = split[0];
+          metadata[j].order = split[1] || j;
+          metadata[j].enabled = split[2] || true;
+        }
+        metadata = _.orderBy(metadata, 'order', 'asc');
+        value[i].metadata = metadata;
+      }
+      plans[key] = value;
+    }
+    return {plans, selectedPlan};
   } catch (e) {
     return { error: true, message: e.message };
   }
@@ -381,6 +399,6 @@ const getStripePlans = async () => {
 exports.getZiawayPlans = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     const response = await getStripePlans();
-    res.json(response)
+    res.json(response.plans)
   })
 })

@@ -56,11 +56,13 @@ function Signup(props) {
     const [error, setError] = useState(false)
     const [brokers, setBrokers] = useState([])
     const dispatch = useDispatch();
+    const { goToStep } = props;
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: SignupSchema,
         onSubmit: (values) => {
-            dispatch(createNewAccount(values))
+            debugger;
+            dispatch(createNewAccount(values, goToStep))
         },
     });
 
@@ -81,21 +83,12 @@ function Signup(props) {
         return test;
     }
 
-    useEffect(() => {
-        console.log("props", props);
-        if(subscription.step === 2) {
-            props.nextStep()
-        }
-    }, [subscription.step]);
-
     const responseGoogle = (resp) => {
-        const { nextStep } = props;
-        props.googleLogin(t, resp, nextStep, true)
+        props.googleLogin(t, resp, goToStep, true)
     }
 
     const responseFacebook = (resp) => {
-        const {nextStep} = props;
-        props.facebookLogin(t, resp, nextStep, true);
+        props.facebookLogin(t, resp, goToStep, true);
     }
 
     return (
