@@ -11,7 +11,7 @@ import { withRouter } from "react-router-dom";
 
 const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => {
   const { loading = true, plans = {} } = subscription;
-  const [period, setPeriod] = useState("week");
+  const [period, setPeriod] = useState("month");
   React.useEffect(() => {
     const search = location.search;
     if(search && search.includes("?selected-plan-id=")) {
@@ -29,7 +29,7 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
     <>
       {loading && <Loading />}
       <SimpleCard>
-        <Tab.Container id="left-tabs-example" defaultActiveKey="week">
+        <Tab.Container id="left-tabs-example" defaultActiveKey={period}>
           <Nav variant="pills" className="px-2 d-flex justify-content-center mb-5">
             <Nav.Item className="mr-2" onClick={() => setPeriod("week")}>
               <Nav.Link eventKey="week">Weekly</Nav.Link>
@@ -52,9 +52,8 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                           return (
                             <div
                               key={idx}
-                              className="col-md-12 col-lg-4 col-xl-4"
+                              className={`col-md-12 col-lg-4 col-xl-4 ul-pricing__table-2 ${item.name === 'Performance' && item.interval === 'month' ? 'ul-pricing__table-2_selected':''}`}
                             >
-                              <div className="ul-pricing__table-2">
                                 {item.image && (
                                   <div className="ul-pricing__image text-primary m-0">
                                     <img style={{width: 100}} src={item.image} alt="price" />
@@ -67,7 +66,7 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                                 </div>
                                 {item.trial_period_days && (
                                   <div className="ul-pricing__text text-mute">
-                                    {item.trial_period_days} days free trial
+                                    {item.trial_period_days} jours d'essai gratuit
                                     period
                                   </div>
                                 )}
@@ -86,8 +85,8 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                                 </div>
                                 {item.metadata.map((meta, index) => {
                                     return (
-                                        <div key={index} className="ul-pricing__list">
-                                            <h4 className="heading text-primary">{meta.key}</h4>
+                                        <div key={index} className={`ul-pricing__list${meta.enabled === 'true' ? '':'_disabled'}`}>
+                                            <h4 className={`heading text-primary`}>{meta.key}</h4>
                                             <div className="ul-pricing__table-listing mb-4">
                                                 <ul>
                                                     {meta.value.map(val => (
@@ -98,7 +97,6 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                                         </div>
                                     )
                                 })}
-                                
                                 <button
                                   type="button"
                                   className="btn btn-lg btn-default btn-rounded btn-primary m-1"
@@ -106,7 +104,6 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                                 >
                                   Select Offer
                                 </button>
-                              </div>
                             </div>
                           );
                         })}

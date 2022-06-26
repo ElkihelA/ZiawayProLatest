@@ -15,6 +15,11 @@
 }
 .ul-pricing__list {
     margin-bottom: 2.1rem;
+    &_disabled {
+        .t-font-bolder, .text-primary {
+            color: #21252975 !important;
+        }
+    }
 }
 .ul-pricing__main-number {
     margin: 20px 0;
@@ -34,20 +39,22 @@
 }
 .ul-pricing__table-2{
     text-align: center;
-   
     border-right: 1px solid $gray-200;
     padding-bottom: 15px;
+    &_selected {
+        position: relative;
+        z-index: 2;
+        background-color: $gray-200;
+    }
 }
 .ul-pricing__month {
     font-size: 18px;
 }
 
 .ul-pricing__table-2:hover{
-    transform: scale(1.1);
-    transition: 0.6s ease-in-out;
     position: relative;
     z-index: 2;
-    background-color: $gray-100;
+    background-color: $gray-200;
 }
 .ul-pricing__header {
     margin-bottom: 30px;
