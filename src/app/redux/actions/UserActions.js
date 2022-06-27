@@ -171,7 +171,7 @@ export function manageSubscription() {
 export function getUserSubscriptionDetails() {
   return (dispatch, getState) => {
     const state = getState();
-    const uid = state.firebase.profile.id;
+    const uid = state.firebase.auth.uid;
     firebase.firestore().collection("account").doc(uid).get().then(res => {
       if(res.exists) {
         dispatch(setUserData({account: {id: res.id, ...res.data()}, loading: false}));

@@ -8,9 +8,9 @@ import {
 import { Loading } from "@gull";
 
 const ManageSubscription = (props) => {
-  const { loading = false, account = {}, profile = {}, t } = props;
+  const { loading = false, account = {}, profile = {}, t, auth = {} } = props;
   useEffect(() => {
-    if (profile.id) {
+    if (auth.uid) {
       props.getUserSubscriptionDetails();
     }
   }, [profile]);
@@ -68,6 +68,7 @@ const mapStateToProps = (state) => ({
   profile: state.firebase.profile,
   loading: state.user.loading,
   account: state.user.account,
+  auth: state.firebase.auth
 });
 
 const mapStateToDispatch = {

@@ -278,19 +278,24 @@ const TabsSection = ({
                         />
                       </li>
                     ))}
-                  <ReactPaginate
-                    previousLabel={"Previous"}
-                    nextLabel={"Next"}
-                    breakLabel={"..."}
-                    breakClassName={"break-me"}
-                    pageCount={Math.ceil(profile?.bookmarks.length / 5)}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={5}
-                    onPageChange={handleToProspectPage}
-                    containerClassName={"pagination"}
-                    subContainerClassName={"pages pagination"}
-                    activeClassName={"active"}
-                  />
+                    {
+                      profile.bookmarks ? <ReactPaginate
+                      previousLabel={"Previous"}
+                      nextLabel={"Next"}
+                      breakLabel={"..."}
+                      breakClassName={"break-me"}
+                      pageCount={Math.ceil(profile?.bookmarks.length / 5)}
+                      marginPagesDisplayed={2}
+                      pageRangeDisplayed={5}
+                      onPageChange={handleToProspectPage}
+                      containerClassName={"pagination"}
+                      subContainerClassName={"pages pagination"}
+                      activeClassName={"active"}
+                    />
+                    :
+                    <></>
+                    }
+                  
                 </ul>
               )}
             </Tab.Pane>

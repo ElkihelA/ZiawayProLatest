@@ -123,7 +123,7 @@ const NewLeadCard = ({
 
     const values = {
       brokerId: profile.userId,
-      brokerName: profile.displayName,
+      brokerName: profile.displayName || profile.username,
       brokerEmail: profile.email,
       dateofAcceptance: date,
       phoneNumber: profile.phoneNumber,

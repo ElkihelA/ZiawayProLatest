@@ -19,7 +19,7 @@ const phoneRegExp = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 const SignupSchema = (t) =>
     yup.object().shape({
         username: yup.string().required("Le nom et prénom sont obligatoire"),
-        phoneno: yup
+        phoneNumber: yup
             .string()
             .required("Le numéro de téléphone est requis")
             .matches(
@@ -188,20 +188,20 @@ function Signup(props) {
                                 )}
                             </div>
                             <div className="form-group">
-                                <label htmlFor="phoneno">
+                                <label htmlFor="phoneNumber">
                                     {t("Sign_up.12")}*
                                 </label>
                                 <input
                                     className="form-control form-control-rounded"
-                                    name="phoneno"
+                                    name="phoneNumber"
                                     type="text"
                                     onChange={formik.handleChange}
                                     onBlur={formik.handleBlur}
-                                    value={formik.values.phoneno}
+                                    value={formik.values.phoneNumber}
                                 />
-                                {formik.errors.phoneno && formik.touched.phoneno && (
+                                {formik.errors.phoneNumber && formik.touched.phoneNumber && (
                                     <div className="text-danger mt-1 ml-2">
-                                        {formik.errors.phoneno}
+                                        {formik.errors.phoneNumber}
                                     </div>
                                 )}
                             </div>
