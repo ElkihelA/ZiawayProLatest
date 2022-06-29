@@ -67,6 +67,14 @@ const Header = () => {
               >
                 {t("Header.7")}
               </a>
+              <a
+                className="my-3 my-lg-0 mx-3 text-15"
+                href="https://pro.ziaway.ca/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Espace Courtier
+              </a>
             </div>
             <div className="ml-auto">
               <Dropdown>
@@ -113,16 +121,16 @@ const Header = () => {
               </Dropdown>
             </div>
             <div className="ml-auto">
-              <Button onClick={() => setSmShow(true)}>
-                <div className="d-flex justify-content-between align-items-center">
+              <Link to="/session/signin">
+                <div className="d-flex btn btn-primary justify-content-between align-items-center">
                   {t("Header.8")}{" "}
-                  <FontAwesomeIcon
+                  {/* <FontAwesomeIcon
                     className="ml-2"
                     onClick={() => setSmShow(false)}
                     icon={faChevronDown}
-                  />
+                  /> */}
                 </div>
-              </Button>
+              </Link>
               <Modal
                 className="container-xxl mx-auto"
                 dialogClassName="modal-pos"

@@ -157,8 +157,12 @@ const UserMessages = () => {
                           </li>
                         </ul>
                       </div>
-                      <div className="px-3">
-                        <Button block type="submit" disabled={isSubmitting}>
+                      <div className="mt-2">
+                        <Button
+                          className="px-5"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
                           {t("NProfile.25")}
                         </Button>
                       </div>

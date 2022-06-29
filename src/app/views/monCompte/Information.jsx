@@ -330,7 +330,11 @@ const Information = () => {
                           )}
                         </div>
                         <div className="px-3">
-                          <Button block type="submit" disabled={isSubmitting}>
+                          <Button
+                            className="px-5"
+                            type="submit"
+                            disabled={isSubmitting}
+                          >
                             Update
                           </Button>
                         </div>

@@ -17,6 +17,7 @@ const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
   ];
 
   const onProgressChange = (data) => {
+    console.log("i am running", data, id);
     const values = {
       brokerId: profile.userId,
       brokerName: profile.displayName,
@@ -53,6 +54,8 @@ const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
       vmodule: "Brokers_Leads",
     };
 
+    console.log("values", values);
+
     firebase
       .firestore()
       .collection("RapportsEvaluations")
@@ -68,7 +71,7 @@ const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
             }
           )
           .then((res) => {
-            setUpdatedData(id, [values])
+            setUpdatedData(id, [values]);
             console.log(res);
           })
           .catch((err) => console.log(err));

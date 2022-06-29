@@ -432,15 +432,15 @@ const Regulatory = () => {
                                   </div>
                                 )}
                             </div>
-                            <div className="px-3">
-                              <Button
-                                block
-                                type="submit"
-                                disabled={isSubmitting}
-                              >
-                                {t("NProfile.84")}
-                              </Button>
-                            </div>
+                          </div>
+                          <div className="mt-2">
+                            <Button
+                              type="submit"
+                              className="px-5"
+                              disabled={isSubmitting}
+                            >
+                              {t("NProfile.84")}
+                            </Button>
                           </div>
                         </div>
                       </div>
