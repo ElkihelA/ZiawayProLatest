@@ -47,6 +47,32 @@ function Payment(props) {
         },
     });
 
+    useEffect(() => {
+        if(elements) {
+            elements.getElement(CardNumberElement).on('change', event => {
+                if(event.error) {
+                    document.getElementById('CardNumberElementERROR').textContent = event.error.message;
+                } else{
+                    document.getElementById('CardNumberElementERROR').textContent = '';
+                } 
+            })
+            elements.getElement(CardCvcElement).on('change', event => {
+                if(event.error) {
+                    document.getElementById('CardCvcElementERROR').textContent = event.error.message;
+                } else{
+                    document.getElementById('CardCvcElementERROR').textContent = '';
+                } 
+            });
+            elements.getElement(CardExpiryElement).on('change', event => {
+                if(event.error) {
+                    document.getElementById('CardExpiryElementERROR').textContent = event.error.message;
+                } else{
+                    document.getElementById('CardExpiryElementERROR').textContent = '';
+                } 
+            });
+        }
+    }, [elements])
+
     const submitPayment = async (values) => {
         if (!stripe || !elements) {
             return;
@@ -54,7 +80,7 @@ function Payment(props) {
         setError(false)
         dispatch(setSubscriptionData({ loading: true }));
         const cardElement = elements.getElement(CardNumberElement);
-        const { token, error } = await stripe.createToken(cardElement)
+        const { token, error } = await stripe.createToken(cardElement);
         if (error) {
             console.log('[error]', error);
             setError(error.message);
@@ -95,11 +121,14 @@ function Payment(props) {
                         
                         <div className="cardNubmer mb-3">
                             <CardNumberElement options={ELEMENT_OPTIONS} />
+                            <div className="text-danger mt-1 ml-2" id="CardNumberElementERROR" />
                         </div>
                         <div className="cvc-data-container">
                             <CardExpiryElement options={ELEMENT_OPTIONS} />
                             <CardCvcElement options={ELEMENT_OPTIONS} />
                         </div>
+                        <div className="text-danger mt-1 ml-2" id="CardExpiryElementERROR" />
+                        <div className="text-danger mt-1 ml-2" id="CardCvcElementERROR" />
                         <div>
                             <button
                                 className="btn btn-primary btn-block btn-rounded mt-3"
