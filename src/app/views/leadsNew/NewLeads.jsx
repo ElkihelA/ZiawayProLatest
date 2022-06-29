@@ -102,6 +102,12 @@ const NewLeads = ({profile}) => {
     getToBeContactedData();
   }, []);
 
+  const refreshUserData = () => {
+    getUserData(userFilters);
+    setProjectValue(null);
+    setOwnerValue(null)
+  }
+
   const getToBeContactedData = async () => {
     const httpCallable = cloudFunctions.httpsCallable("loadUsersContacts");
     httpCallable()
@@ -478,6 +484,7 @@ const NewLeads = ({profile}) => {
                         tobecontacted={tobecontacted}
                         usersContact={usersContact}
                         updateToBeContacted={updateToBeContacted}
+                        refreshUserData={refreshUserData}
                       />
                     </div>
                   </li>

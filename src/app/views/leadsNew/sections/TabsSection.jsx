@@ -16,6 +16,7 @@ const TabsSection = ({
   tobecontacted = [],
   usersContact = [],
   updateToBeContacted,
+  refreshUserData
 }) => {
   const { t } = useTranslation();
   const profile = useSelector((state) => state.firebase.profile);
@@ -180,6 +181,7 @@ const TabsSection = ({
                           reports={reports}
                           setUpdatedData={setUpdatedData}
                           updateMyLeads={updateMyLeads}
+                          refreshUserData={refreshUserData}
                         />
                       </li>
                     ))}

@@ -8,11 +8,10 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import ContactCard from "./ContactCard";
 import CurrencyFormat from "react-currency-format";
-import notesModal from "./NotesModal";
+import swal from "sweetalert2";
 import NotesModal from "./NotesModal";
 import MyNotes from "./MyNotes";
 import Zoom from "./Zoom";
-import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import axios from "axios";
 
@@ -24,6 +23,7 @@ const NewLeadCard = ({
   showAddButton,
   setUpdatedData,
   updateMyLeads,
+  refreshUserData
 }) => {
   const { t } = useTranslation();
   const [joinMeeting, setJoinMeeting] = useState(false);
@@ -113,71 +113,93 @@ const NewLeadCard = ({
   const handleOnChange = (data, leadEmail) => {
     setAvaliableMenu(false);
     const id = data.id;
-    const today = new Date();
-    var date =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate();
+    firebase.firestore().collection("RapportsEvaluations")
+    .doc(id).get().then(snap => {
+      const snapdata = snap.data();
+      if(snapdata.broker && snapdata.broker.length > 0) {
+          swal.fire({
+            titleText: 'The lead has been deleted or accepted by another broker, click on OK button to refresh the data',
+            showCancelButton: false,
+            confirmButtonText: 'Refresh',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+              setOpenCard(false);
+              refreshUserData();
+            },
+            allowOutsideClick: () => !swal.isLoading()
+          }).then(res => {
+            console.log(res);
+          })
+        // refresh data of the current user
+        return;
+      }
+      const today = new Date();
+      var date =
+        today.getFullYear() +
+        "-" +
+        (today.getMonth() + 1) +
+        "-" +
+        today.getDate();
 
-    const values = {
-      brokerId: profile.userId,
-      brokerName: profile.displayName || profile.username,
-      brokerEmail: profile.email,
-      dateofAcceptance: date,
-      phoneNumber: profile.phoneNumber,
-      projectStatus: "Accepted",
-      projectProgress: "New Prospect",
-    };
+      const values = {
+        brokerId: profile.userId,
+        brokerName: profile.displayName || profile.username,
+        brokerEmail: profile.email,
+        dateofAcceptance: date,
+        phoneNumber: profile.phoneNumber,
+        projectStatus: "Accepted",
+        projectProgress: "New Prospect",
+      };
 
-    const dateAccepted = new Date();
-    const [month, day, year] = [
-      ("0" + (dateAccepted.getMonth() + 1)).slice(-2),
-      ("0" + dateAccepted.getDate()).slice(-2),
-      dateAccepted.getFullYear(),
-    ];
-    const [hour, minutes, seconds] = [
-      ("0" + dateAccepted.getHours()).slice(-2),
-      ("0" + dateAccepted.getMinutes()).slice(-2),
-      ("0" + dateAccepted.getSeconds()).slice(-2),
-    ];
+      const dateAccepted = new Date();
+      const [month, day, year] = [
+        ("0" + (dateAccepted.getMonth() + 1)).slice(-2),
+        ("0" + dateAccepted.getDate()).slice(-2),
+        dateAccepted.getFullYear(),
+      ];
+      const [hour, minutes, seconds] = [
+        ("0" + dateAccepted.getHours()).slice(-2),
+        ("0" + dateAccepted.getMinutes()).slice(-2),
+        ("0" + dateAccepted.getSeconds()).slice(-2),
+      ];
 
-    const json_data = {
-      info: {
-        data: [
-          {
-            Name: leadEmail,
-            Broker_License_Number: profile?.licenseId,
-            Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
-            Statut_Event: "New Prospect",
-          },
-        ],
-      },
-      vmodule: "Brokers_Leads",
-    };
-
-    firebase
-      .firestore()
-      .collection("RapportsEvaluations")
-      .doc(id)
-      .update({ broker: [values] })
-      .then((res) => {
-        data.broker = [values];
-        updateMyLeads(data);
-        axios
-          .post(
-            "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
-            json_data,
+      const json_data = {
+        info: {
+          data: [
             {
-              crossdomain: true,
-            }
-          )
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
-        HandleTabs(4);
-      })
-      .catch((err) => console.log(err));
+              Name: leadEmail,
+              Broker_License_Number: profile?.licenseId,
+              Date_Event: `${year}-${month}-${day}T${hour}:${minutes}:${seconds}-04:00`,
+              Statut_Event: "New Prospect",
+            },
+          ],
+        },
+        vmodule: "Brokers_Leads",
+      };
+
+      firebase
+        .firestore()
+        .collection("RapportsEvaluations")
+        .doc(id)
+        .update({ broker: [values] })
+        .then((res) => {
+          data.broker = [values];
+          updateMyLeads(data);
+          axios
+            .post(
+              "https://us-central1-ziaapp-ac0eb.cloudfunctions.net/zohoPostNewLead",
+              json_data,
+              {
+                crossdomain: true,
+              }
+            )
+            .then((res) => console.log(res))
+            .catch((err) => console.log(err));
+          HandleTabs(4);
+        })
+        .catch((err) => console.log(err));
+    })
+    
   };
 
   useEffect(() => {
