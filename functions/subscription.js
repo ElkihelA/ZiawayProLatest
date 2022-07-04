@@ -43,7 +43,6 @@ exports.createNewAccount = functions.https.onCall(async (data, context) => {
         ...data,
         userId: user.uid,
         userEmail: data.email,
-        licenseId: data.licenseId,
         id: user.uid,
         displayName: data.username
     });
@@ -80,7 +79,7 @@ exports.getAllPlans = functions.https.onCall(async (data, context) => {
 
 exports.createSubscription = functions.https.onCall(async (data, context) => {
   try {
-    const { user, source } = data;
+    const { user, source, licenseId } = data;
     /**
      * 1: Get plan by it's id and verify it's active
      */
@@ -122,6 +121,7 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
         customerId: customer.id,
         role: "membre",
         disabled: false,
+        licenseId,
       },
       { merge: true }
     );

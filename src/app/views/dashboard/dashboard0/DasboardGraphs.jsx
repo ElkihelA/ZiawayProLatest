@@ -442,7 +442,7 @@ const DashboardGraphs = () => {
                                 user.status
                               )}`}
                             >
-                              {user.status}
+                              {t("Dashboard."+user.status.replaceAll(" ", "_"))}
                             </span>
                           </td>
                         </tr>

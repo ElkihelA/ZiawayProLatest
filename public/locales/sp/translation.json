@@ -41,7 +41,15 @@
     "21": "Recherche de courtiers",
     "22": "Agence",
     "23": " bien(s) vendu(s) comparable(s) à vos recherches",
-    "24": "total des ventes"
+    "24": "total des ventes",
+    "New_Prospect":"Nouveau prospect",
+    "Contacted":"Contacté",
+    "Scheduled":"Planifié",
+    "In_Progress":"En cours",
+    "Offer_Submitted":"Offre soumise",
+    "Signed_Mandate":"Mandat signé",
+    "To_be_restarted":"A relancer",
+    "Lost/Completion":"Perdu/Complété"
   },
   "DGraphs": {
     "1": "Visibilité",
@@ -144,7 +152,7 @@
     "69": "Ajouter une note",
 
     "70": "Nom",
-    "71": "Téléphoner",
+    "71": "Téléphone",
     "72": "E-mail",
     "73": "Adresse",
     "74": "Meilleur moment pour appeler",

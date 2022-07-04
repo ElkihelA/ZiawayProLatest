@@ -15,6 +15,7 @@ import GoogleLogin from "react-google-login";
 import axios from "axios";
 import Select from "react-select";
 
+
 const phoneRegExp = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
 const SignupSchema = (t) =>
     yup.object().shape({
@@ -54,34 +55,15 @@ function Signup(props) {
     const { t } = useTranslation();
     const {subscription = {}} = props
     const [error, setError] = useState(false)
-    const [brokers, setBrokers] = useState([])
     const dispatch = useDispatch();
     const { goToStep } = props;
     const formik = useFormik({
         initialValues: initialValues,
         validationSchema: SignupSchema,
         onSubmit: (values) => {
-            debugger;
             dispatch(createNewAccount(values, goToStep))
         },
     });
-
-    useEffect(() => {
-        axios
-        .get("https://us-central1-ziaapp-ac0eb.cloudfunctions.net/GetAllBrokers")
-        .then((res) => {
-            setBrokers(formatter(res.data))
-        })
-      .catch((err) => console.log(err));
-    }, [])
-
-    const formatter = (data) => {
-        const test = data.map((v) => ({
-          label: v.numeroPermis,
-          value: v.numeroPermis,
-        }));
-        return test;
-    }
 
     const responseGoogle = (resp) => {
         props.googleLogin(t, resp, goToStep, true)
@@ -171,22 +153,7 @@ function Signup(props) {
                                     </div>
                                 )}
                             </div>
-                            <div className="form-group">
-                                <label htmlFor="licenseId">License No*</label>
-                                <Select
-                                name="licenseId"
-                                onChange={(option) => {
-                                    formik.setFieldValue("licenseId", option.value);
-                                }}
-                                onBlur={formik.handleBlur}
-                                options={brokers}
-                                ></Select>
-                                {formik.errors.licenseId && formik.touched.licenseId && (
-                                <div className="text-danger mt-1 ml-2">
-                                    {formik.errors.licenseId}
-                                </div>
-                                )}
-                            </div>
+                            
                             <div className="form-group">
                                 <label htmlFor="phoneNumber">
                                     {t("Sign_up.12")}*
@@ -316,9 +283,12 @@ function Signup(props) {
         </>
     )
 }
+
+
 const mapStateToProps = (state) => ({
     subscription: state.subscription
 });
+
 
 export default connect(mapStateToProps,{
     googleLogin,

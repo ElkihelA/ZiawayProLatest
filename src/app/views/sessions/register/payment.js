@@ -4,9 +4,13 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import "./style.scss"
 import { createSubscription, setSubscriptionData } from "app/redux/actions/SubscriptionActions";
 import { Loading } from "@gull";
+import DropDown from "react-dropdown-select";
 import { useTranslation } from "react-i18next";
 import { useFormik } from "formik";
+import styled from "@emotion/styled";
 import * as yup from "yup";
+import axios from "axios";
+import DropdownList from "react-widgets/DropdownList";
 
 const ELEMENT_OPTIONS = {
     style: {
@@ -35,7 +39,10 @@ const validationSchema = (t) =>
 function Payment(props) {
     const { subscription = {}, dispatch } = props;
     const {t} = useTranslation();
-    const [error, setError] = useState(false)
+    const [error, setError] = useState(false);
+    const [brokers, setBrokers] = useState([]);
+    const [selectData, setSelectData] = useState([]);
+    const [searchV, setSearchV] = useState();
     const stripe = useStripe();
     const elements = useElements();
 
@@ -46,6 +53,15 @@ function Payment(props) {
             submitPayment(values)
         },
     });
+
+    useEffect(() => {
+        axios
+        .get("https://us-central1-ziaapp-ac0eb.cloudfunctions.net/GetAllBrokers")
+        .then((res) => {
+            setBrokers(res.data);
+        })
+      .catch((err) => console.log(err));
+    }, [])
 
     useEffect(() => {
         if(elements) {
@@ -73,8 +89,17 @@ function Payment(props) {
         }
     }, [elements])
 
+    const brokerSelected = (v)  => {
+        setSearchV(v);
+        document.getElementById("BorkerERROR").textContent = "";
+    }
+
     const submitPayment = async (values) => {
         if (!stripe || !elements) {
+            return;
+        }
+        if(!searchV) {
+            document.getElementById("BorkerERROR").textContent = "Please Select Your License Id";
             return;
         }
         setError(false)
@@ -87,7 +112,7 @@ function Payment(props) {
             dispatch(setSubscriptionData({ loading: true }));
         } else {
             console.log('[PaymentMethod]', token);
-            dispatch(createSubscription({source: token.id, plan: subscription.plan, user: subscription.current, cardName: values.name}, props.goToStep, t))
+            dispatch(createSubscription({source: token.id, plan: subscription.plan, user: subscription.current, cardName: values.name, licenseId: searchV.numeroPermis}, props.goToStep, t))
         }
 
     };
@@ -117,7 +142,17 @@ function Payment(props) {
                                         {formik.errors.name}
                                     </div>
                                 )}
-                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="licenseId">License No*</label>
+                            <DropdownList
+                                data={brokers}
+                                textField='numeroPermis'
+                                dataKey='numeroPermis'
+                                onSelect={brokerSelected}
+                                />
+                            <div className="text-danger mt-1 ml-2" id="BorkerERROR" />
+                        </div>
                         
                         <div className="cardNubmer mb-3">
                             <CardNumberElement options={ELEMENT_OPTIONS} />
@@ -142,7 +177,60 @@ function Payment(props) {
                 </div>
             </div></>
     )
-}
+};
+const Items = styled.div`
+  overflow: auto;
+  min-height: 10px;
+  max-height: 200px;
+`;
+
+const Item = styled.div`
+  display: flex;
+  margin: 10px;
+  align-items: baseline;
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+
+  :hover {
+    border-bottom: 1px dotted #ccc;
+  }
+
+  ${({ disabled }) =>
+    disabled
+      ? `
+  	opacity: 0.5;
+  	pointer-events: none;
+  	cursor: not-allowed;
+  `
+      : ""}
+`;
+
+const ItemLabel = styled.div`
+  margin: 5px 10px;
+`;
+
+
+const dropdownRenderer = ({ props, state, methods }) => {
+    const regexp = new RegExp(state.search, "i");
+    return (
+      <Items>
+            {props.options
+              .filter(item =>
+                regexp.test(item[props.searchBy] || item[props.labelField])
+              ).slice(0,3)
+              .map(option => {
+                return (
+                  <Item
+                    key={option[props.valueField]}
+                    onClick={() => methods.addItem(option)}
+                  >
+                    <ItemLabel>{option[props.label]}</ItemLabel>
+                  </Item>
+                );
+              })}
+      </Items>
+    )
+  }
 const mapStateToProps = (state) => ({
     subscription: state.subscription
 })

@@ -30,3 +30,11 @@
           }
       }
 }
+
+.rw-popup {
+  max-height: 107px;
+  overflow: hidden;
+  .rw-list {
+    overflow: hidden;
+  }
+}
