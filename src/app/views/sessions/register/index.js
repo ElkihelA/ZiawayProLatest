@@ -10,19 +10,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import Payment from "./payment";
 import { Loading } from "@gull";
 import { actions } from "app/redux/actions/SubscriptionActions";
-import 'antd/dist/antd.css';
-import { Select } from 'antd';
 const stripePromise = loadStripe(process.env.REACT_APP_API_STRIPE_PUBLIC_KEY);
 
-
-const { Option } = Select;
-const children = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
-const handleChange = (value) => {
-  console.log(`selected ${value}`);
-};
 const Register = ({t, subscription = {}, dispatch}) => {
   useEffect(() => {
     dispatch({

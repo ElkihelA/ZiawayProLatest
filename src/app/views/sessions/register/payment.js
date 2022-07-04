@@ -109,7 +109,7 @@ function Payment(props) {
         if (error) {
             console.log('[error]', error);
             setError(error.message);
-            dispatch(setSubscriptionData({ loading: true }));
+            dispatch(setSubscriptionData({ loading: false }));
         } else {
             console.log('[PaymentMethod]', token);
             dispatch(createSubscription({source: token.id, plan: subscription.plan, user: subscription.current, cardName: values.name, licenseId: searchV.numeroPermis}, props.goToStep, t))
