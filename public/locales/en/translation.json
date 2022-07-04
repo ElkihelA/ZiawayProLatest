@@ -41,7 +41,15 @@
     "21": "Broker search",
     "22": "Agency",
     "23": "properties (s) sold comparable to your research",
-    "24": "total sales"
+    "24": "total sales",
+    "New_Prospect":"New Prospect",
+    "Contacted":"Contacted",
+    "Scheduled":"Scheduled",
+    "In_Progress":"In Progress",
+    "Offer_Submitted":"Offer Submitted",
+    "Signed_Mandate":"Signed Mandate",
+    "To_be_restarted":"To be restarted",
+    "Lost/Completion":"Lost/Completion"
   },
   "DGraphs": {
     "1": "Visibility",

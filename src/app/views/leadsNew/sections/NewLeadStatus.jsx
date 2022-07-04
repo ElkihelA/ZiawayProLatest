@@ -2,9 +2,11 @@ import React from "react";
 import firebase from "../../../services/firebase/firebase";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
   const profile = useSelector((state) => state.firebase.profile);
+  const {t} = useTranslation();
   const list = [
     { name: "New Prospect" },
     { name: "Contacted" },
@@ -97,7 +99,7 @@ const NewLeadStatus = ({ progress, id, date, email, setUpdatedData }) => {
                 onClick={() => onProgressChange(item.name)}
               />
               <label class="form-check-label" for={i}>
-                {item.name}
+                {t("Dashboard."+item.name.replaceAll(" ", "_"))}
               </label>
             </div>
           </li>
