@@ -94,10 +94,10 @@ const UserMessages = () => {
                 initialValues={{
                   emailText: profile?.messages?.emailText
                     ? profile?.messages?.emailText
-                    : "",
+                    : "Je vous confirme avoir bien reçu votre demande et vous remercie de votre confiance. ​\nJe vous contacterai très prochainement pour avoir plus d'informations sur votre projet avant de convenir d'un rendez-vous dans les meilleurs délais. ​\n ​\nN'hésitez pas à me contacter directement, vous trouverez mes coordonnées ci-dessous.​\n ​\nDans l'attente de notre prochaine rencontre, je vous souhaite une très belle journée.​\n",
                   smsText: profile?.messages?.smsText
                     ? profile?.messages?.smsText
-                    : "",
+                    : "Je confirme que j'ai bien reçu votre demande et je vous remercie de votre confiance. ​\nJe vous contacterai très prochainement ​\n",
                 }}
                 enableReinitialize={true}
                 validate={(values) => {
@@ -124,35 +124,32 @@ const UserMessages = () => {
                 }) => (
                   <form onSubmit={handleSubmit}>
                     <div className="p-3 border-2">
-                      <h4 className="mb-3 text-capitalize">
-                        {t("NProfile.24")}
-                      </h4>
                       <div>
                         <ul className="nav row row-cols-1 row-cols-md-2">
                           <li className="px-3 py-2">
+                            <h4 className="mb-3 text-capitalize">
+                              {t("NProfile.26")}
+                            </h4>
                             <textarea
                               className="form-control"
                               rows={10}
                               name="emailText"
-                              defaultValue={
-                                "I confirm that I have received your request and I thank you for your confidence. ​\n I will contact you very soon to have more information on your project before agreeing on an appointment as soon as possible. ​\n ​\n Feel free to contact me directly, you will find my contact information below.​\n ​\n I look forward to our next meeting and wish you a very nice day.​\n xxxxxx​"
-                              }
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              // value={values?.emailText}
+                              value={values.emailText}
                             />
                           </li>
                           <li className="px-3 py-2">
+                            <h4 className="mb-3 text-capitalize">
+                              {t("NProfile.27")}
+                            </h4>
                             <textarea
                               className="form-control"
                               rows={10}
                               name="smsText"
-                              defaultValue={
-                                " I confirm that I have received your request and I thank you for your confidence. ​\n I will contact you very soon ​\n xxxxxx​​"
-                              }
                               onChange={handleChange}
                               onBlur={handleBlur}
-                              // value={values?.smsText}
+                              value={values.smsText}
                             />
                           </li>
                         </ul>

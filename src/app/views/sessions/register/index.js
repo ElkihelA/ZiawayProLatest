@@ -32,18 +32,22 @@ const Register = ({t, subscription = {}, dispatch}) => {
         {subscription.loading && <Loading />}
         <div className="auth-content ">
           <div className=" d-flex flex-column text-align-center  justify-content-center">
-            {/* <h2
+            <h1 
+              style={{ textAlign: "center", color: "white" }}
+              className="font-weight-bold text-align-center">
+              {t("Sign_up.18")}
+            </h1>
+            <h2
               className="font-weight-bold text-align-center"
-              style={{ textAlign: "center", color: "white", fontSize: "50px" }}
+              style={{ textAlign: "center", color: "white" }}
             >
-              Dernière étape
-            </h2> */}
-
+              {t("Sign_up.19")}
+            </h2>
             <p
               className="font-weight-bold text-align-center"
               style={{ textAlign: "center", color: "white", fontSize: "15px" }}
             >
-              {t("Sign_up.17")}
+              {t("Sign_up.20")}
             </p>
           </div>
 

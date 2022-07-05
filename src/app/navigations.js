@@ -60,7 +60,7 @@ export const navigations = (t) => {
       role: authRoles.membre,
     },
     {
-      name: "Prospects & Contacts",
+      name: "Prospecter",
       description: "Lorem ipsum dolor sit.",
       type: "link",
       path: "/newleads",

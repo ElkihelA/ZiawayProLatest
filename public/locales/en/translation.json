@@ -390,7 +390,10 @@
     "14": "Read the privacy policy",
     "15": "Sign in with Google",
     "16": "Sign in with Facebook",
-    "17": "Please create an account to take as many free evaluations as you like."
+    "17": "Please create an account to take as many free evaluations as you like.",
+    "18": "Ziaway",
+    "19": "The platform for your growth",
+    "20": "Thank you for creating an account to capture a maximum of prospects whatever their project"
   },
   "landing_nav": {
     "1": "Buyers",
@@ -652,6 +655,8 @@
 
     "24": "Message that will be sent when contacting prospects /Contacts",
     "25": "Update",
+    "26": "Mail message",
+    "27": "SMS message",
 
     "80": "Licence Holder's Number",
     "81": "Authorized Field of Practice",

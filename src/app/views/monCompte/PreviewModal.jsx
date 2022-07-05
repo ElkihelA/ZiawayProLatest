@@ -1,12 +1,14 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { useTranslation } from "react-i18next";
+import { withTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 
 // images
 
 const PreviewModal = ({ show, onClose }) => {
   const profile = useSelector((state) => state.firebase.profile);
-
+  const { t } = useTranslation();
   const validateURL = (link) => {
     if (link?.indexOf("http://") === 0 || link?.indexOf("https://") === 0) {
       return link;
@@ -124,7 +126,7 @@ const PreviewModal = ({ show, onClose }) => {
                 <div className="form-row">
                   <div className="form-group col-md-12 border-bottom pb-2">
                     <b className="text-primary text-17 font-weight-bold d-block mb-2">
-                      Email Text
+                      {t("NProfile.26")}:
                     </b>
                     <p className="mb-0 white-space-pre-line text-15">
                       {profile?.messages?.emailText}
@@ -132,7 +134,7 @@ const PreviewModal = ({ show, onClose }) => {
                   </div>
                   <div className="form-group col-md-12 border-bottom pb-2">
                     <b className="text-primary text-17 font-weight-bold d-block mb-2">
-                      SMS Text:
+                    {t("NProfile.27")}:
                     </b>
                     <p className="mb-0 white-space-pre-line text-15">
                       {profile?.messages?.smsText}
