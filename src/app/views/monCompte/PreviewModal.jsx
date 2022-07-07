@@ -39,14 +39,15 @@ const PreviewModal = ({ show, onClose }) => {
           scrollable={true}
         >
           <Modal.Header closeButton>
-            <div className="d-flex">
+            <div className="d-flex align-items-center">
               <div>
                 <h4>
                   Preview
                 </h4>
               </div>
-              <div style={{padding: "0px 15px"}}>
-                Chaque mise en relation est une opportunité de renforcer votre notoriété et de capter de nouveaux clients sVérifiez les informations qui seront reçues par votre contact.
+              <div style={{padding: "0px 15px"}} className="text-15 ml-5">
+              Chaque mise en relation est une opportunité de renforcer votre notoriété et de capter de nouveaux clients. <br />
+              Vérifiez les informations qui seront reçues par votre contact.
               </div>
             </div>
           </Modal.Header>

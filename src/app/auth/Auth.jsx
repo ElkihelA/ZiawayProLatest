@@ -6,8 +6,11 @@ import jwtAuthService from "../services/jwtAuthService";
 import localStorageService from "../services/localStorageService";
 import firebaseAuthService from "../services/firebase/firebaseAuthService";
 import { withRouter } from "react-router-dom";
+import { Loading } from "@gull";
 class Auth extends Component {
-  state = {};
+  state = {
+    loading: true
+  };
 
   constructor(props) {
     super(props);
@@ -34,19 +37,12 @@ class Auth extends Component {
 
     firebaseAuthService.checkAuthStatus((user) => {
       const {history, location} = this.props;
+      this.setState({loading: false})
       if (user) {
-        // if (user.emailVerified === false) {
-        //   history.push({
-        //     pathname: "/emailnotVerfied",
-        //   });
-        // }
-        // history.push({
-        //   pathname: "/dashboard/v0",
-        // });
         console.log("user found");
       } else if(!location.search.includes('selected-plan-id=')) {
         history.push({
-          pathname: "/homepage",
+          pathname: "/session/signin",
         });
         console.log("not logged in");
       }
@@ -55,8 +51,9 @@ class Auth extends Component {
 
   render() {
     const { children } = this.props;
+    const {loading} = this.state;
 
-    return <Fragment>{children}</Fragment>;
+    return <Fragment>{loading ? <Loading /> : children}</Fragment>;
   }
 }
 

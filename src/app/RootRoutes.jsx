@@ -21,19 +21,12 @@ import contactRoutes from "./views/app/contact/contactRoutes";
 import carteProspectionRoutes from "./views/carteProspection/carteProspectionRoute";
 import rapportEvaluationRoutes from "./views/rapportEvaluation/rapportEvaluationRoute";
 import mesBiensRoutes from "./views/mesbiens/mesBiensRoute";
-import evaluationRoutes from "./views/evaluationDeBien/evaluationRoutes";
 import monCompteRoutes from "./views/monCompte/monCompteRoutes";
 import formationsRoutes from "./views/formations/formationsRoutes";
 import landingRoute from "./views/landing/landingRoute";
 import leadsRoutes from "./views/leads/leadsRoutes";
 import newLeadRoutes from "./views/leadsNew/newLeadsRoutes";
 import videoCallRoutes from "./views/videoCall/videoCallRoutes";
-import {
-  homeRoute,
-  blogRoute,
-  contactRoute,
-  faqRoute,
-} from "./views/pages/home/homeRoute";
 import { faqRouteLogIn } from "./views/pages/home/faqRoute";
 
 const redirectRoute = [
@@ -52,12 +45,6 @@ const errorRoute = [
 
 const routes = [
   ...sessionsRoutes,
-  ...evaluationRoutes,
-  ...homeRoute,
-  ...blogRoute,
-  ...faqRoute,
-  ...contactRoute,
-
   {
     path: "/",
     component: AuthGuard,
