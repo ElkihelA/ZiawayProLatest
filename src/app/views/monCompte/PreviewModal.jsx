@@ -162,16 +162,6 @@ const PreviewModal = ({ show, onClose }) => {
                     Contact Me
                   </b>
                   <div className="d-flex">
-                  {profile?.email &&
-                    <Button
-                      href={`mailto:${profile?.email}`}
-                      target="_blank"
-                      className="box-icon-primary rounded-circle mr-3 d-flex align-items-center justify-content-center"
-                      style={{ height: "2rem", width: "2rem" }}
-                      rel="noreferrer noopener"
-                    >
-                      <i className="i-Mail-with-At-Sign"></i>
-                    </Button>}
                     {profile?.officialInformation?.website &&
                     <Button
                       href={validateURL(profile?.officialInformation?.website)}
