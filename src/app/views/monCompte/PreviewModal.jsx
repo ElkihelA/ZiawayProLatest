@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const PreviewModal = ({ show, onClose }) => {
   const profile = useSelector((state) => state.firebase.profile);
+  const [showContactMe, setShowContactMe] = useState(false)
   const { t } = useTranslation();
   const validateURL = (link) => {
     if (link?.indexOf("http://") === 0 || link?.indexOf("https://") === 0) {
@@ -18,11 +19,14 @@ const PreviewModal = ({ show, onClose }) => {
     }
   };
 
-  validateURL("www.yogeshchauhan.com/");
-
-  // The link doesn't have http or https.
-
   console.log("profile", profile);
+
+  useEffect(() => {
+    if(profile.officialInformation && 
+      (profile.officialInformation.facebook || profile.officialInformation.website || profile.officialInformation.insta || profile.officialInformation.linkedIn || profile.officialInformation )) {
+        setShowContactMe(true)
+      }
+  }, [profile])
 
   return (
     <Fragment>
@@ -152,6 +156,7 @@ const PreviewModal = ({ show, onClose }) => {
                   </div>
                 </div>
 
+                {showContactMe && 
                 <div>
                   <b className="text-primary text-17 font-weight-bold d-block mb-2">
                     Contact Me
@@ -215,7 +220,7 @@ const PreviewModal = ({ show, onClose }) => {
                       <i className="i-Twitter-2"></i>
                     </Button>}
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
           </Modal.Body>
