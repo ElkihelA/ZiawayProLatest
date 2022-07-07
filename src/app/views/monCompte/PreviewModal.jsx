@@ -39,7 +39,16 @@ const PreviewModal = ({ show, onClose }) => {
           scrollable={true}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Preview</Modal.Title>
+            <div className="d-flex">
+              <div>
+                <h4>
+                  Preview
+                </h4>
+              </div>
+              <div style={{padding: "0px 15px"}}>
+                Chaque mise en relation est une opportunité de renforcer votre notoriété et de capter de nouveaux clients sVérifiez les informations qui seront reçues par votre contact.
+              </div>
+            </div>
           </Modal.Header>
           <Modal.Body className="scroll-box">
             <div className="row">
@@ -147,6 +156,7 @@ const PreviewModal = ({ show, onClose }) => {
                     Contact Me
                   </b>
                   <div className="d-flex">
+                    {profile?.officialInformation?.website &&
                     <Button
                       href={validateURL(profile?.officialInformation?.website)}
                       target="_blank"
@@ -155,8 +165,8 @@ const PreviewModal = ({ show, onClose }) => {
                       rel="noreferrer noopener"
                     >
                       <i className="i-Wordpress"></i>
-                    </Button>
-                    <Button
+                    </Button>}
+                    {profile?.officialInformation?.facebook && <Button
                       href={validateURL(profile?.officialInformation?.facebook)}
                       target="_blank"
                       className="box-icon-primary rounded-circle mr-3 d-flex align-items-center justify-content-center"
@@ -164,8 +174,8 @@ const PreviewModal = ({ show, onClose }) => {
                       rel="noreferrer noopener"
                     >
                       <i className="i-Facebook-2"></i>
-                    </Button>
-                    <Button
+                    </Button>}
+                    {profile?.officialInformation?.linkedIn && <Button
                       href={validateURL(profile?.officialInformation?.linkedIn)}
                       target="_blank"
                       className="box-icon-primary rounded-circle mr-3 d-flex align-items-center justify-content-center"
@@ -173,8 +183,8 @@ const PreviewModal = ({ show, onClose }) => {
                       rel="noreferrer noopener"
                     >
                       <i className="i-Linkedin-2"></i>
-                    </Button>
-                    <Button
+                    </Button>}
+                    {profile?.officialInformation?.insta && <Button
                       href={validateURL(profile?.officialInformation?.insta)}
                       target="_blank"
                       className="box-icon-primary rounded-circle mr-3 d-flex align-items-center justify-content-center"
@@ -182,8 +192,8 @@ const PreviewModal = ({ show, onClose }) => {
                       rel="noreferrer noopener"
                     >
                       <i className="i-Instagram"></i>
-                    </Button>
-                    <Button
+                    </Button>}
+                    {profile?.officialInformation?.twitter && <Button
                       //   onClick={(e) => e.preventDefault()}
                       href={validateURL(profile?.officialInformation?.twitter)}
                       target="_blank"
@@ -192,7 +202,7 @@ const PreviewModal = ({ show, onClose }) => {
                       rel="noreferrer noopener"
                     >
                       <i className="i-Twitter-2"></i>
-                    </Button>
+                    </Button>}
                   </div>
                 </div>
               </div>

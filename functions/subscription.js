@@ -8,7 +8,8 @@ if (process.env.NODE_ENV === "production") {
   stripeConfig = require("./config/stripe.json").prod;
 }
 const stripe = require("stripe")(stripeConfig.stripe_private_key);
-
+const emailText = "Je vous confirme avoir bien reçu votre demande et vous remercie de votre confiance. ​\nJe vous contacterai très prochainement pour avoir plus d'informations sur votre projet avant de convenir d'un rendez-vous dans les meilleurs délais. ​\n ​\nN'hésitez pas à me contacter directement, vous trouverez mes coordonnées ci-dessous.​\n ​\nDans l'attente de notre prochaine rencontre, je vous souhaite une très belle journée.​\n";
+const smsText = "Je confirme que j'ai bien reçu votre demande et je vous remercie de votre confiance. ​\nJe vous contacterai très prochainement ​\n";
 exports.createNewAccount = functions.https.onCall(async (data, context) => {
   try {
     const auth = admin.auth();
@@ -122,6 +123,10 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
         role: "membre",
         disabled: false,
         licenseId,
+        messages: {
+          emailText,
+          smsText
+        }
       },
       { merge: true }
     );
