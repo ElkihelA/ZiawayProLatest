@@ -7,7 +7,7 @@ const newLeadRoutes = [
   {
     path: "/newleads",
     component: Leads,
-    auth: authRoles.membre,
+    auth: authRoles.Performance,
   },
 ];
 

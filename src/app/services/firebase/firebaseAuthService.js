@@ -115,14 +115,14 @@ class FirebaseAuthService {
     });
   };
 
-  getUserData = (docId) => {
+   getUserData = async (docId) => {
     //   generally it's better to use uid for docId
-    this.firestore
+    return this.firestore
       .collection("users")
       .doc(docId)
       .get()
       .then((doc) => {
-        console.log(doc.data());
+        return doc.data();
       });
   };
 

@@ -2,8 +2,6 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import { setUserData } from "../redux/actions/UserActions";
-import jwtAuthService from "../services/jwtAuthService";
-import localStorageService from "../services/localStorageService";
 import firebaseAuthService from "../services/firebase/firebaseAuthService";
 import { withRouter } from "react-router-dom";
 import { Loading } from "@gull";
@@ -14,44 +12,36 @@ class Auth extends Component {
 
   constructor(props) {
     super(props);
-    this.props.setUserData(localStorageService.getItem("auth_user"));
     this.checkFirebaseAuth();
   }
 
-  checkJwtAuth = () => {
-    jwtAuthService.loginWithToken().then((user) => {
-      this.props.setUserData(user);
-    });
-  };
-
   checkFirebaseAuth = () => {
-    console.log("profile", this.props.profile);
-
-    firebaseAuthService.checkAuthStatus((user) => {
+    firebaseAuthService.checkAuthStatus(async (user) => {
       const {history, location} = this.props;
-      this.setState({loading: false})
       if (user) {
         console.log("user found");
+        const profile = await firebaseAuthService.getUserData(user.uid);
+        this.props.setUserData({profile, loading: false});
       } else if(!location.search.includes('selected-plan-id=')) {
         history.push({
           pathname: "/session/signin",
         });
+        this.props.setUserData({loading: false});
         console.log("not logged in");
       }
     });
   };
 
   render() {
-    const { children } = this.props;
-    const {loading} = this.state;
-
-    return <Fragment>{loading ? <Loading /> : children}</Fragment>;
+    const { children, user = {} } = this.props;
+    return <Fragment>{user.loading ? <Loading /> : children}</Fragment>;
   }
 }
 
 const mapStateToProps = (state) => ({
   setUserData: PropTypes.func.isRequired,
   profile: state.firebase.profile,
+  user: state.user,
 });
 
 export default withRouter(connect(mapStateToProps, { setUserData })(Auth));

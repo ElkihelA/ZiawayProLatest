@@ -58,7 +58,7 @@ class AuthGuard extends Component {
     const { location, history } = props;
     const { pathname } = location;
     console.log("redirecting routes", pathname);
- 
+    history.push("/dashboard/v0")
   }
 
   render() {
