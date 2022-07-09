@@ -14,16 +14,8 @@ class Auth extends Component {
 
   constructor(props) {
     super(props);
-    const {history} = props;
     this.props.setUserData(localStorageService.getItem("auth_user"));
-    //this.checkJwtAuth();
-    if (history.location.pathname === "/evaluation-bien") {
-      history.push({
-        pathname: "/evaluation-bien",
-      });
-    } else {
-      this.checkFirebaseAuth();
-    }
+    this.checkFirebaseAuth();
   }
 
   checkJwtAuth = () => {

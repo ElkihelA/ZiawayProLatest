@@ -190,8 +190,6 @@ export function firebaseloginVMZform(value, t) {
     FirebaseAuthService.signInWithEmailAndPassword(value.email, value.password)
       .then((user) => {
         if (user && user.user.uid) {
-          const state = getState();
-
           const userid = user.user.uid;
           const firebase = getFirebase();
           const firestore = firebase.firestore();

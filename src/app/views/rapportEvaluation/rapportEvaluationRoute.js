@@ -7,7 +7,7 @@ const rapportEvaluationRoute = [
   {
     path: "/prospection/rapportEvaluation/:id",
     component: RapportEvaluation,
-    auth:authRoles.membre
+    auth:authRoles.Essentiel
   }
 ];
 

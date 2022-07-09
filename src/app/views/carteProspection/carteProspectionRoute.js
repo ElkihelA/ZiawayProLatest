@@ -8,12 +8,12 @@ const carteProspectionRoute = [
   {
     path: "/mes-biens",
     component: CarteProspection,
-    auth:authRoles.Essentiel
+    auth: authRoles.Essentiel
   },
   {
     path: "/prospection/profilcourtier",
     component: detailsCourtiers,
-    auth:authRoles.Essentiel
+    auth: authRoles.Essentiel
   },
 ];
 

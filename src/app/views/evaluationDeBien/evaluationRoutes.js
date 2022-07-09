@@ -7,7 +7,7 @@ const evaluationRoute = [
   {
     path: "/evaluation-bien",
     component: FormulaireVMZLanding,
-    auth: authRoles.Essentiel,
+    auth: authRoles.membre,
   },
 ];
 
