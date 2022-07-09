@@ -141,8 +141,9 @@ class Layout1Sidenav extends Component {
   render() {
     let { settings } = this.props;
     const { t } = this.props;
+    const {role} = this.props.user;
     const navigationRole = navigations(t).filter((item) => {
-      if (item.role == this.props.user.role) {
+      if (item.role && item.role.includes(role)) {
         return item;
       }
     });

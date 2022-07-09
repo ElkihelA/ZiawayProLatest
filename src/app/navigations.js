@@ -8,56 +8,23 @@ export const navigations = (t) => {
       type: "link",
       path: "/dashboard/v0",
       icon: "i-Home1",
-      role: authRoles.membre,
-      // sub: [
-      //   {
-      //     icon: "i-Clock-4",
-      //     name: "Version 0",
-      //     path: "/dashboard/v0",
-      //     type: "link",
-      //     role: authRoles.membre,
-      //   },
-      //   {
-      //     icon: "i-Clock-3",
-      //     name: "Version 1",
-      //     path: "/dashboard/v1",
-      //     type: "link",
-      //     role: authRoles.membre,
-      //   },
-      //   {
-      //     icon: "i-Clock-4",
-      //     name: "Version 2",
-      //     path: "/dashboard/v2",
-      //     type: "link",
-      //     role: "ADMIN"
-      //   }
-      // ]
+      role: authRoles.Essentiel,
     },
-
     {
       name: t("SideNav.2"),
       description: "Lorem ipsum dolor sit.",
       type: "link",
       path: "/evaluation-bien",
       icon: "i-Money-Bag",
-      role: authRoles.membre,
+      role: authRoles.Essentiel,
     },
-    // {
-    //   name: 'leads',
-    //   description: 'Lorem ipsum dolor sit.',
-    //   type: 'link',
-    //   path: '/leads',
-    //   icon: 'i-Money-Bag',
-    //   role: authRoles.membre,
-    // },
-
     {
       name: t("SideNav.3"),
       description: "Lorem ipsum dolor sit.",
       type: "link",
       path: "/mes-biens",
       icon: "i-Library",
-      role: authRoles.membre,
+      role: authRoles.Essentiel,
     },
     {
       name: "Prospecter",
@@ -65,71 +32,24 @@ export const navigations = (t) => {
       type: "link",
       path: "/newleads",
       icon: "i-Target",
-      role: authRoles.membre,
+      role: authRoles.Performance,
     },
-    // {
-    //   name: t("SideNav.4"),
-    //   description: "Lorem ipsum dolor sit.",
-    //   type: "link",
-    //   path: "/formations",
-    //   icon: "i-Book",
-    //   role: authRoles.membre,
-    // },
+    {
+      name: t("SideNav.6"),
+      description: "Lorem ipsum dolor sit.",
+      type: "link",
+      path: "/retains",
+      icon: "i-retain",
+      role: authRoles.Expert,
+    },
     {
       name: t("SideNav.5"),
       description: "Lorem ipsum dolor sit.",
       type: "link",
       path: "/moncompte",
       icon: "i-Administrator",
-      role: authRoles.membre,
+      role: authRoles.Essentiel,
     },
-    // {
-    //   name: "Mon compte",
-    //   description: "Lorem ipsum dolor sit.",
-    //   type: "link",
-    //   path: "/moncompte",
-    //   icon: "i-File-Clipboard-File--Text",
-    //   role: authRoles.membre,
-    // },
-    // {
-    //   name: "Widgets",
-    //   description: "Lorem ipsum dolor sit.",
-    //   type: "dropDown",
-    //   icon: "i-Windows-2",
-    //   sub: [
-    //     {
-    //       icon: "i-Receipt-4",
-    //       name: "Card",
-    //       path: "/widgets/card",
-    //       type: "link"
-    //     },
-    //     {
-    //       icon: "i-Receipt-4",
-    //       name: "Statistics",
-    //       path: "/widgets/statistics",
-    //       type: "link"
-    //     },
-    //     {
-    //       icon: "i-Receipt-4",
-    //       name: "List",
-    //       path: "/widgets/list",
-    //       type: "link"
-    //     },
-    //     {
-    //       icon: "i-Receipt-4",
-    //       name: "App",
-    //       path: "/widgets/app",
-    //       type: "link"
-    //     },
-    //     {
-    //       icon: "i-Receipt-4",
-    //       name: "Weather App",
-    //       path: "/widgets/weather-app",
-    //       type: "link"
-    //     }
-    //   ]
-    // },
-
     {
       name: "Data Tables",
       description: "Lorem ipsum dolor sit.",

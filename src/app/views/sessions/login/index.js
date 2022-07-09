@@ -27,6 +27,25 @@ const Login = ({t, subscription, dispatch}) => {
         }}
       >
         <div className="auth-content ">
+        <div className=" d-flex flex-column text-align-center  justify-content-center">
+            <h1 
+              style={{ textAlign: "center", color: "white" }}
+              className="font-weight-bold text-align-center">
+              {t("Sign_in.23")}
+            </h1>
+            <h2
+              className="font-weight-bold text-align-center"
+              style={{ textAlign: "center", color: "white" }}
+            >
+              {t("Sign_in.24")}
+            </h2>
+            <p
+              className="font-weight-bold text-align-center"
+              style={{ textAlign: "center", color: "white", fontSize: "15px" }}
+            >
+              {t("Sign_in.25")}
+            </p>
+          </div>
           <div className="card o-hidden">
             <div className="row">
               <div className="col-md-12">

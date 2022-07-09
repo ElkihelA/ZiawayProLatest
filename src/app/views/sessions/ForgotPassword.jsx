@@ -80,7 +80,7 @@ class ForgotPassword extends Component {
                           className="btn btn-rounded btn-primary btn-block mt-2"
                           type="submit"
                         >
-                          Réinitialisser le mot de passe 
+                          Réinitialiser le mot de passe 
                         </button>
                       </form>
                     )}

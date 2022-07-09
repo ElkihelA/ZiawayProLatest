@@ -7,7 +7,7 @@ const carteProspectionRoute = [
   {
     path: "/mes",
     component: MesBiens,
-    auth: authRoles.membre,
+    auth: authRoles.Essentiel,
   },
 ];
 

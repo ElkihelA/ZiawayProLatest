@@ -40,6 +40,8 @@ const updateSubscription = async (subscription) => {
             })
             const planName = products.find(item => item.id === subscription.plan.product).name
             // Update user depends on the new plan
+
+            await admin.firestore().collection("users").doc(data.id).update({role: planName});
             
             await admin.firestore().collection("account").doc(data.id).set({
                 ...data.data(),

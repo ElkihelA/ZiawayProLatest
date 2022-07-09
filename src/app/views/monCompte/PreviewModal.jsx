@@ -159,7 +159,7 @@ const PreviewModal = ({ show, onClose }) => {
                 {showContactMe && 
                 <div>
                   <b className="text-primary text-17 font-weight-bold d-block mb-2">
-                    Contact Me
+                    {t("NProfile.28")}
                   </b>
                   <div className="d-flex">
                     {profile?.officialInformation?.website &&

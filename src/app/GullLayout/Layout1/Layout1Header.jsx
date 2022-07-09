@@ -275,7 +275,7 @@ class Layout1Header extends Component {
           </Dropdown>
           */}
           <div className="d-none d-lg-block align-self-end">
-            <Link className="dropdown-item cursor-pointer bg-primary rounded">
+            <Link to="#" className="dropdown-item cursor-pointer bg-primary rounded">
               <span className="text-16 text-white text-bold text-capitalize">
                 {t("Header.5")} {profile.displayName}
               </span>

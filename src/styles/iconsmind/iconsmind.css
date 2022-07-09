@@ -1839,3 +1839,6 @@ i {
 .i-Align-Right:before {
   content: "\f11f";
 }
+.i-retain:before {
+  content: "\e900"
+}

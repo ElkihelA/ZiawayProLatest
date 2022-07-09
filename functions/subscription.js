@@ -120,7 +120,7 @@ exports.createSubscription = functions.https.onCall(async (data, context) => {
     await admin.firestore().collection("users").doc(user.id).set(
       {
         customerId: customer.id,
-        role: "membre",
+        role: data.plan.name,
         disabled: false,
         licenseId,
         messages: {

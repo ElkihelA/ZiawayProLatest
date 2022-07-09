@@ -15,7 +15,8 @@
     "2": "Estimate a property",
     "3": "Previous estimates",
     "4": "Training",
-    "5": "Profile"
+    "5": "Profile",
+    "6": "Retain"
   },
   "Dashboard": {
     "1": "Welcome",
@@ -371,7 +372,10 @@
     "19": "Password is required",
     "20": "Check me out",
     "21": "Accept Terms & Conditions is required",
-    "22": "Password must be at least 8 characters long"
+    "22": "Password must be at least 8 characters long",
+    "23": "Ziaway",
+    "24": "La plateforme de votre croissance",
+    "25": "Connectez-vous à votre application"
   },
   "Sign_up": {
     "1": "Do you have an account?",
@@ -657,6 +661,8 @@
     "25": "Update",
     "26": "Mail message",
     "27": "SMS message",
+    "28": "Contact Me",
+
 
     "80": "Licence Holder's Number",
     "81": "Authorized Field of Practice",

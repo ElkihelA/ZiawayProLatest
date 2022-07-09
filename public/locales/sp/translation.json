@@ -15,7 +15,8 @@
     "2": "Estimer une propriété",
     "3": "Estimations précédentes",
     "4": "Formations",
-    "5": "Profil"
+    "5": "Profil",
+    "6": "Fidéliser"
   },
   "Dashboard": {
     "1": "Bienvenue",
@@ -372,7 +373,10 @@
     "19": "Le mot de passe est requis",
     "20": "Vérifiez-moi",
     "21": "Accepter les conditions générales est requis",
-    "22": "Le mot de passe doit être formé d'au moins 8 caractères"
+    "22": "Le mot de passe doit être formé d'au moins 8 caractères",
+    "23": "Ziaway",
+    "24": "La plateforme de votre croissance",
+    "25": "Connectez-vous à votre application"
   },
   "Sign_up": {
     "1": "Vous avez un compte ?",
@@ -657,6 +661,7 @@
     "25": "Mise à jour",
     "26": "Message courriel",
     "27": "Message SMS",
+    "29": "Me contacter",
 
     "80": "Numéro de permis",
     "81": "Champ de pratique autorisé",

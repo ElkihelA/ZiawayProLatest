@@ -102,7 +102,7 @@ const PlansList = ({ subscription = {}, dispatch, location = {}, ...props }) => 
                                   className="btn btn-lg btn-default btn-rounded btn-primary m-1"
                                   onClick={() => selectOffer(item)}
                                 >
-                                  Select Offer
+                                  Je m'abonne
                                 </button>
                             </div>
                           );
