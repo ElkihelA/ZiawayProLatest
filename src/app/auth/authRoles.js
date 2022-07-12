@@ -4,7 +4,7 @@ export const authRoles = {
   editor: ["SA", "ADMIN", "EDITOR"],
   guest: ["guest"],
   membre: ["membre", "Expert", "Essentiel"],
-  Expert: ["Expert"],
-  Performance: ["Performance", "Expert"],
-  Essentiel: ["Essentiel","Performance", "Expert"],
+  Expert: ["Expert", "admin"],
+  Performance: ["Performance", "Expert", "admin"],
+  Essentiel: ["Essentiel","Performance", "Expert", "admin"],
 };

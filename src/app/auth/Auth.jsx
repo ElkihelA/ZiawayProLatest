@@ -21,6 +21,9 @@ class Auth extends Component {
       if (user) {
         console.log("user found");
         const profile = await firebaseAuthService.getUserData(user.uid);
+        if(location.pathname.startsWith("/session")) {
+          history.push("/")
+        }
         this.props.setUserData({profile, loading: false});
       } else if(!location.search.includes('selected-plan-id=')) {
         history.push({
