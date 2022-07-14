@@ -146,7 +146,6 @@ class Layout1Sidenav extends Component {
       item.disabled = !(item.role && item.role.includes(role))
       return item;
     });
-    console.log("navigationRole", navigationRole);
     return (
       <div className="side-content-wrap sidebar-dark-purple">
         <Srcollbar
@@ -154,7 +153,6 @@ class Layout1Sidenav extends Component {
             "sidebar-left o-hidden rtl-ps-none ": true,
             open: settings.layout1Settings.leftSidebar.open,
           })}
-          // id="mainsidenav"
         >
           <ul className="navigation-left">
             {navigationRole.map((item, i) => (

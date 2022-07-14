@@ -1,49 +1,36 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 import { PropTypes } from "prop-types";
 import { setUserData } from "../redux/actions/UserActions";
-import firebaseAuthService from "../services/firebase/firebaseAuthService";
 import { withRouter } from "react-router-dom";
 import { Loading } from "@gull";
-class Auth extends Component {
-  state = {
-    loading: true
-  };
+import { useEffect } from "react";
 
-  constructor(props) {
-    super(props);
-    this.checkFirebaseAuth();
-  }
 
-  checkFirebaseAuth = () => {
-    firebaseAuthService.checkAuthStatus(async (user) => {
-      const {history, location} = this.props;
-      if (user) {
-        console.log("user found");
-        const profile = await firebaseAuthService.getUserData(user.uid);
-        if(location.pathname.startsWith("/session")) {
-          history.push("/")
-        }
-        this.props.setUserData({profile, loading: false});
-      } else if(!location.search.includes('selected-plan-id=')) {
-        history.push({
-          pathname: "/session/signin",
-        });
+const Auth = ({children, profile = {}, history = {}, location = {}, setUserData}) => {
+
+  useEffect(() => {
+    console.log("profile", profile);
+    if(profile.isLoaded && !profile.isEmpty) {
+      if(location.pathname.startsWith("/session")) {
+        history.push("/");
       }
-      this.props.setUserData({loading: false});
-    });
-  };
+      setUserData({profile, loading: false});
+    } else if(profile.isLoaded && profile.isEmpty && !location.search.includes('selected-plan-id=')) {
+      debugger;
+      history.push({
+        pathname: "/session/signin",
+      });
+    }
+    setUserData({loading: false});
+  }, [profile]);
 
-  render() {
-    const { children, user = {} } = this.props;
-    return <Fragment>{user.loading ? <Loading /> : children}</Fragment>;
-  }
+  return (<Fragment>{!profile.isLoaded ? <Loading /> : children}</Fragment>);
 }
 
 const mapStateToProps = (state) => ({
   setUserData: PropTypes.func.isRequired,
   profile: state.firebase.profile,
-  user: state.user,
 });
 
 export default withRouter(connect(mapStateToProps, { setUserData })(Auth));
