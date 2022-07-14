@@ -142,11 +142,11 @@ class Layout1Sidenav extends Component {
     let { settings } = this.props;
     const { t } = this.props;
     const {role} = this.props.user;
-    const navigationRole = navigations(t).filter((item) => {
-      if (item.role && item.role.includes(role)) {
-        return item;
-      }
+    const navigationRole = navigations(t).map((item) => {
+      item.disabled = !(item.role && item.role.includes(role))
+      return item;
     });
+    console.log("navigationRole", navigationRole);
     return (
       <div className="side-content-wrap sidebar-dark-purple">
         <Srcollbar
@@ -161,6 +161,7 @@ class Layout1Sidenav extends Component {
               <li
                 className={classList({
                   "nav-item": true,
+                  "nav-item-disabled": item.disabled,
                   active: this.state.selectedItem === item,
                 })}
                 onMouseEnter={() => {
@@ -170,13 +171,13 @@ class Layout1Sidenav extends Component {
                 key={i}
               >
                 {item.path && item.type !== "extLink" && (
-                  <NavLink className="nav-item-hold" to={item.path}>
+                  <NavLink className={`nav-item-hold ${item.disabled ? "disabled": ""}`} to={item.disabled ? "#":item.path}>
                     <i className={`nav-icon ${item.icon}`}></i>
                     <span className="nav-text">{item.name}</span>
                   </NavLink>
                 )}
                 {item.path && item.type === "extLink" && (
-                  <a className="nav-item-hold" href={item.path}>
+                  <a className={`nav-item-hold ${item.disabled ? "disabled": ""}`} href={item.path}>
                     <i className={`nav-icon ${item.icon}`}></i>
                     <span className="nav-text">{item.name}</span>
                   </a>

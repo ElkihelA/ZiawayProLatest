@@ -498,3 +498,18 @@ code {
     }
   }
 }
+
+a.disabled {
+  color: #47404f96 !important;
+  pointer-events: none;
+  cursor: not-allowed;
+  span {
+    font-weight: 400 !important;
+  }
+}
+
+.navigation-left {
+  .nav-item-disabled {
+    cursor: not-allowed !important;
+  }
+}
