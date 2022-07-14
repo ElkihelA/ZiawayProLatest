@@ -29,9 +29,8 @@ class Auth extends Component {
         history.push({
           pathname: "/session/signin",
         });
-        this.props.setUserData({loading: false});
-        console.log("not logged in");
       }
+      this.props.setUserData({loading: false});
     });
   };
 
