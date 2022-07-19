@@ -39,8 +39,6 @@ const NewLeads = ({profile}) => {
   const [dateInfo, setDate] = useState(false);
   const [usersProspects, setUsersProspects] = useState([]);
   
-  console.log("reports", reports);
-
   const [dateFilterType, setDateFilterType] = useState("31days");
 
   const getUserFilters = () => {
@@ -366,7 +364,39 @@ const NewLeads = ({profile}) => {
     const idx = tbc.findIndex((elem) => elem.id === item.id);
     tbc[idx] = item;
     setToBeContacted(tbc);
+    saveAllTobeContactedWithSameAddress(item)
   };
+
+  const saveAllTobeContactedWithSameAddress = (lead) => {
+    const {location = {}, broker = []} = lead
+    const allElem = [...All];
+    const tbc = [...tobecontacted];
+    for(let i = 0; i< allElem.length; i++) {
+      const item = allElem[i];
+      if(item.ouiContacterParProfessionnel === "oui" 
+        && item.location.value === location.value 
+        && item.userEmail === lead.userEmail) {
+        item.broker = broker;
+        allElem[i] = item;
+        const idx = tbc.findIndex((elem) => elem.id === item.id);
+        if(idx >= 0) {
+          tbc[idx] = item;
+          addBrokerToLead(item)
+        }
+      }
+    }
+    setAll(allElem);
+    setToBeContacted(tbc);
+  }
+
+  const addBrokerToLead = (lead) => {
+    firebase
+        .firestore()
+        .collection("RapportsEvaluations")
+        .doc(lead.id)
+        .update({ broker: lead.broker })
+        .catch((err) => console.log(err));
+  }
 
   return (
     <>
