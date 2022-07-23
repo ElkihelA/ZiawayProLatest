@@ -12,12 +12,15 @@ const Auth = ({children, profile = {}, history = {}, location = {}, setUserData}
   useEffect(() => {
     console.log("profile", profile);
     if(profile.isLoaded && !profile.isEmpty) {
-      if(location.pathname.startsWith("/session")) {
+      if(location.pathname.startsWith("/session") && profile.customerId) {
         history.push("/");
+      } else if(!profile.customerId) {
+        history.push({
+          pathname: "/session/signin",
+        });
       }
       setUserData({profile, loading: false});
     } else if(profile.isLoaded && profile.isEmpty && !location.search.includes('selected-plan-id=')) {
-      debugger;
       history.push({
         pathname: "/session/signin",
       });
@@ -26,6 +29,7 @@ const Auth = ({children, profile = {}, history = {}, location = {}, setUserData}
   }, [profile]);
 
   return (<Fragment>{!profile.isLoaded ? <Loading /> : children}</Fragment>);
+  // return (<Fragment>{children}</Fragment>);
 }
 
 const mapStateToProps = (state) => ({

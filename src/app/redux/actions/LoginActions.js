@@ -256,8 +256,6 @@ export function firebaseLoginEmailPassword(value, t, nextStep) {
     FirebaseAuthService.signInWithEmailAndPassword(value.email, value.password)
       .then((user) => {
         if (user && user.user.uid) {
-          const state = getState();
-
           const userid = user.user.uid;
           const firebase = getFirebase();
           const firestore = firebase.firestore();
@@ -267,25 +265,59 @@ export function firebaseLoginEmailPassword(value, t, nextStep) {
             .get({})
             .then((res) => {
               const role = res.data().role;
-              dispatch(
-                setUserData({
-                  userId: user.uid,
-                  role: role,
-                  displayName: user.displayName,
-                  email: user.email,
-                  photoURL: "/assets/images/face-7.jpg",
-                  age: 25,
-                  token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
-                  ...user,
+              const customerId = res.data().customerId;
+              if(customerId) {
+                dispatch(
+                  setUserData({
+                    userId: user.uid,
+                    role: role,
+                    displayName: user.displayName,
+                    email: user.email,
+                    photoURL: "/assets/images/face-7.jpg",
+                    age: 25,
+                    token: "faslkhfh423oiu4h4kj432rkj23h432u49ufjaklj423h4jkhkjh",
+                    ...user,
+                  })
+                );
+                history.push({
+                  pathname: "/dashboard/v0",
+                });
+                return dispatch({
+                  type: LOGIN_SUCCESS,
+                });
+              } else {
+                console.log("i am running", user);
+                swal.fire({
+                  title: 'Your account has been suspended, please reactive your subscription by clicking on Continue',
+                  showCancelButton: true,
+                  confirmButtonText: 'Continue',
+                  showLoaderOnConfirm: true,
+                  preConfirm: () => {
+                    const httpsCallable = cloudFunctions.httpsCallable("fixCustomerSubscription");
+                    return httpsCallable({email: value.email}).then(res => {
+                      if(res.data.error) {
+                        swal.fire(t("swal.1"), t("swal.9"), "error");
+                      } else {
+                        dispatch(setSubscriptionData({current: {...res.data.current, id: res.data.current.uid}}))
+                        if(nextStep) {
+                          nextStep()
+                        }
+                      }
+                    }).catch(err => {
+                      swal.showValidationMessage(
+                        `Request failed: ${err.message}`
+                      )
+                    })
+                  },
+                  allowOutsideClick: () => !swal.isLoading()
+                }).then(res => {
+                  console.log(res);
                 })
-              );
-              history.push({
-                pathname: "/dashboard/v0",
-              });
-
-              return dispatch({
-                type: LOGIN_SUCCESS,
-              });
+                return dispatch({
+                  type: LOGIN_ERROR,
+                  payload: "Login Failed",
+                });
+              }
             });
         } else {
           console.log("i am running", user);
@@ -309,7 +341,7 @@ export function firebaseLoginEmailPassword(value, t, nextStep) {
                   if(res.data.error) {
                     swal.fire(t("swal.1"), t("swal.9"), "error");
                   } else {
-                    dispatch(setSubscriptionData({current: res.data.current}))
+                    dispatch(setSubscriptionData({current: {...res.data.current, id: res.data.current.uid}}))
                     if(nextStep) {
                       nextStep()
                     }

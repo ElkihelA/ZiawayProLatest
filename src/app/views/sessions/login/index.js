@@ -11,7 +11,7 @@ import Payment from "../register/payment";
 import { setSubscriptionData } from "app/redux/actions/SubscriptionActions";
 const stripePromise = loadStripe(process.env.REACT_APP_API_STRIPE_PUBLIC_KEY);
 
-const Login = ({t, subscription, dispatch}) => {
+const Login = ({t, dispatch}) => {
 
     useEffect(() => {
         return () => {
